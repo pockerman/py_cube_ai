@@ -1,7 +1,7 @@
 import gym
 from tensorboardX import SummaryWriter
 
-from algorithms.q_iteration import QIteration
+from algorithms.dp.q_iteration import QIteration
 from algorithms.algorithm_base import TrainMode
 from utils import INFO
 

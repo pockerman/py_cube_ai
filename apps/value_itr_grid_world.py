@@ -1,7 +1,7 @@
 import numpy as np
 from algorithms.algorithm_base import TrainMode
 from environments.gridworld import GridworldEnv
-from algorithms.value_iteration import ValueIteration
+from algorithms.dp.value_iteration import ValueIteration
 
 if __name__ == '__main__':
 

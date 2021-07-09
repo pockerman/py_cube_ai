@@ -2,18 +2,20 @@ from typing import Any
 import numpy as np
 
 from algorithms.algorithm_base import AlgorithmBase
+from algorithms.dp.utils import state_actions_from_v as q_s_a
+from algorithms.dp.utils import q_from_v
 
 
 class IterativePolicyEvaluator(AlgorithmBase):
 
     def __init__(self, n_max_iterations: int, tolerance: float,
                  env: Any, gamma: float, policy_init: Any) -> None:
-        super(IterativePolicyEvaluator, self).__init__(n_max_iterations=n_max_iterations, tolerance=tolerance, env=env)
+        super(IterativePolicyEvaluator, self).__init__(n_max_iterations=n_max_iterations,
+                                                       tolerance=tolerance, env=env)
         self._gamma = gamma
         # 1D numpy array for the value function
         self._v = None
-        self._policy = None
-        self._policy_init = policy_init
+        self._policy = policy_init
 
     @property
     def v(self) -> np.array:
@@ -22,6 +24,25 @@ class IterativePolicyEvaluator(AlgorithmBase):
     @property
     def gamma(self) -> float:
         return self._gamma
+
+    @property
+    def policy(self) -> Any:
+        return self._policy
+
+    @property
+    def q(self) -> dict:
+        """
+        Returns the state-action value function for the
+        approximated value function
+        """
+        return q_from_v(env=self.train_env, v=self._v, gamma=self.gamma)
+
+    def state_actions_from_v(self, state: int) -> np.ndarray:
+        """
+        Given the state index returns the list of actions under the
+        established value functions
+        """
+        return q_s_a(env=self.train_env, v=self._v, gamma=self.gamma, state=state)
 
     def actions_after_training_iterations(self, **options) -> None:
         """
@@ -40,7 +61,7 @@ class IterativePolicyEvaluator(AlgorithmBase):
         super(IterativePolicyEvaluator, self).actions_before_training_iterations(**options)
 
         # reinitialize the policy
-        self._policy = self._policy_init()
+        #self._policy = self._policy_init()
 
         # zero the value function
         self._v = np.zeros(self.train_env.observation_space.n)

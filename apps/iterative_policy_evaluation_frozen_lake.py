@@ -3,7 +3,7 @@ import numpy as np
 from typing import Any
 import matplotlib.pyplot as plt
 
-from algorithms.iterative_policy_evaluation import IterativePolicyEvaluator
+from algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator
 
 
 class Agent(IterativePolicyEvaluator):

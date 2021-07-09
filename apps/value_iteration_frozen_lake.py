@@ -1,7 +1,6 @@
 import gym
 from tensorboardX import SummaryWriter
-import collections
-from algorithms.value_iteration import ValueIteration
+from algorithms.dp.value_iteration import ValueIteration
 from algorithms.algorithm_base import TrainMode
 from utils import INFO
 
