@@ -41,8 +41,9 @@ if __name__ == '__main__':
     policy_init = UniformPolicy(env=env, init_val=None)
     policy_adaptor = StochasticAdaptorPolicy()
 
-    agent = Agent(env=env, n_max_itrs=1, n_policy_eval_steps=100, gamma=1.0,
-                  tolerance=1.0e-8, polic_init=policy_init,
+    agent = Agent(env=env, n_max_itrs=100, n_policy_eval_steps=100,
+                  gamma=1.0,
+                  tolerance=1.0e-7, polic_init=policy_init,
                   policy_adaptor=policy_adaptor)
 
     ctrl_res = agent.train()
@@ -50,5 +51,8 @@ if __name__ == '__main__':
     print(f"Converged {ctrl_res.converged}")
     print(f"Number of iterations {ctrl_res.n_itrs}")
     print(f"Residual {ctrl_res.residual}")
+
+    print("\nOptimal Policy (LEFT = 0, DOWN = 1, RIGHT = 2, UP = 3):")
+    print(agent.policy.values, "\n")
 
     plot_values(agent.v)
