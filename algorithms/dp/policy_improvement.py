@@ -1,21 +1,21 @@
 import numpy as np
 from typing import Any
 from algorithms.algorithm_base import AlgorithmBase
+from algorithms.dp.dp_algorithm_base import DPAlgoBase
 from algorithms.dp.utils import state_actions_from_v as q_s_a
 from utils.policies.policy_base import PolicyBase
 from utils.policies.policy_adaptor_base import PolicyAdaptorBase
 
 
-class PolicyImprovement(AlgorithmBase):
+class PolicyImprovement(DPAlgoBase):
     """
     Implementation of policy improvement
     """
 
     def __init__(self, env: Any, v: np.array, gamma: float, policy_init: PolicyBase,
                  policy_adaptor: PolicyAdaptorBase) -> None:
-        super(PolicyImprovement, self).__init__(env=env, tolerance=1.0e-4, n_max_iterations=1)
+        super(PolicyImprovement, self).__init__(env=env, tolerance=1.0e-4, n_max_iterations=1, gamma=gamma)
         self._v = v
-        self._gamma = gamma
         self._policy = policy_init
         self._policy_adaptor = policy_adaptor
 
