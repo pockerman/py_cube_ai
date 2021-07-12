@@ -3,12 +3,19 @@ Value iteration algorithm.
 Code edited from Deep Reinforcement Learning Hands-On
 by Maxim Lapan and from https://github.com/dennybritz/reinforcement-learning
 """
+
 import numpy as np
 import collections
-from algorithms.algorithm_base import AlgorithmBase, TrainMode
+from typing import Any
+
+from algorithms.dp.dp_algorithm_base import DPAlgoBase
+from algorithms.dp.policy_improvement import PolicyImprovement
+from algorithms.dp.utils import state_actions_from_v as q_s_a
+from utils.policies.policy_base import PolicyBase
+from utils.policies.policy_adaptor_base import PolicyAdaptorBase
 
 
-class ValueIteration(AlgorithmBase):
+class ValueIteration(DPAlgoBase):
     """
     Value iteration algorithm encapsulated into a class
     The algorithm has two similar implementations regulated
@@ -23,77 +30,38 @@ class ValueIteration(AlgorithmBase):
     former implementation.
     """
 
-    def __init__(self, env, gamma: float, train_mode: TrainMode = TrainMode.DEFAULT,
-                 n_max_itrs: int = 1000, tolerance: float = 1.0e-5,
-                 update_values_on_start_itrs: bool = True) -> None:
+    def __init__(self, n_max_iterations: int, tolerance: float,
+                 env: Any, gamma: float, policy_init: PolicyBase,
+                 policy_adaptor: PolicyAdaptorBase) -> None:
         """
         Constructor
-        :param env:  environment: OpenAI env
-        :param tolerance: We stop evaluation once our value
-        function change is less than tolerance for all states.
-        :param gamma: Gamma discount factor
         """
-        super(ValueIteration, self).__init__(n_max_iterations=n_max_itrs,
-                                             tolerance=tolerance, env=env)
+        super(ValueIteration, self).__init__(n_max_iterations=n_max_iterations, gamma=gamma,
+                                             tolerance=tolerance, env=env, policy=policy_init)
 
-        self._gamma = gamma
-        self._v = collections.defaultdict(float)
-        self._policy = None
+        self._p_imprv = PolicyImprovement(env=env, v=self.v, gamma=gamma,
+                                          policy_init=policy_init, policy_adaptor=policy_adaptor)
+
         self._rewards = collections.defaultdict(float)
         self._transits = collections.defaultdict(collections.Counter)
-        self._update_values_on_start_itrs = update_values_on_start_itrs
-        self._train_mode: TrainMode = train_mode
-
-    @property
-    def gamma(self) -> float:
-        return self._gamma
-
-    @property
-    def values(self) -> collections.defaultdict:
-        return self._v
-
-    def actions_before_training_iterations(self, **options) -> None:
-        """
-        Execute any actions the algorithm needs before
-        starting the iterations
-        """
-
-        # call base class typically this should
-        # reset the environment
-        super(ValueIteration, self).actions_before_training_iterations(**options)
-
-        if self._update_values_on_start_itrs:
-            self._v = collections.defaultdict(float)
-
-    def actions_before_stepping(self, **options) -> None:
-        """
-        Actions to be performed before episodes start
-        """
-        pass
-
-    def actions_after_training_iterations(self, **options) -> None:
-        """
-        Actions to be performed after episodes finish
-        """
-        if self._train_mode == TrainMode.STOCHASTIC:
-            # if using a stochastic train mode establish
-            # the value function table
-            self._value_iteration()
 
     def step(self, **options) -> None:
         """
-        Value Iteration Algorithm.
+        Do one step .
         """
+        delta = 0
+        for s in range(self.train_env.observation_space.n):
+            v = self.v[s]
+            self.v[s] = max(q_s_a(env=self.train_env, v=self.v, state=s, gamma=self.gamma))
+            delta = max(delta, abs(self.v[s] - v))
 
-        if self._train_mode == TrainMode.DEFAULT:
-            self._step_default()
-        elif self._train_mode == TrainMode.STOCHASTIC:
-            self._step_stochastic()
-        else:
-            raise ValueError("Invalid train mode. "
-                             "Mode {0} not in [{1}, {2}]".format(self._train_mode,
-                                                                 TrainMode.DEFAULT.name, TrainMode.STOCHASTIC.name))
+        self.itr_control.residual = delta
 
+        self._p_imprv.v = self.v
+        self._p_imprv.step()
+        self.policy = self._p_imprv.policy
+
+    '''
     def select_action(self, state: int, update_tables: bool=False) -> int:
             best_action, best_value = None, None
             for action in range(self.train_env.action_space.n):
@@ -200,7 +168,7 @@ class ValueIteration(AlgorithmBase):
                 for action in range(self.train_env.action_space.n)
             ]
             self.values[state] = max(state_values)
-
+    '''
 
 
 
