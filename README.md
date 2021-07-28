@@ -1,6 +1,9 @@
 ## rl-python
 
-Implementation of reinforcement learning algorithms
+Implementation of reinforcement learning algorithms. Algorithms have been refactored
+from various resources such as:
+
+- <a href="https://github.com/udacity/deep-reinforcement-learning">Udacity DRL repository</a>
 
 ## Dependencies
 
@@ -16,6 +19,8 @@ Implementation of reinforcement learning algorithms
 
 ### Monte Carlo
 
+- <a href="apps/mc_prediction_black_jack.py">Monte Carlo prediction on Blackjack-v0</a>
+
 ### Temporal differencing
 
 - <a href="#">SARSA </a> 
@@ -24,5 +29,7 @@ Implementation of reinforcement learning algorithms
 
 
 ### DQN
+
+- <a href="apps/dqn_lunar_lander.py">Vanilla DQN on LunarLander-v2</a>
 
 
