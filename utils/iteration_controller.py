@@ -26,6 +26,15 @@ class ItrControlResult(object):
     def converged(self):
         return self.residual < self.tolerance
 
+    def __str__(self) -> str:
+        repr = " Tolernac=  " + str(self.tolerance) + "\n"
+        repr += "Residual=  " + str(self.residual) + "\n"
+        repr += "Total time=" + str(self.total_time) + "\n"
+        repr += "Num itrs=  " + str(self.n_itrs) + "\n"
+        repr += "Max itrs=  " + str(self.n_max_itrs) + "\n"
+        repr += "Converged= " + str(self.converged) + "\n"
+        return repr
+
 
 class IterationController(object):
     """
