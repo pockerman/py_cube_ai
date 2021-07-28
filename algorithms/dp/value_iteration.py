@@ -1,7 +1,8 @@
 """
 Value iteration algorithm.
-Code edited from Deep Reinforcement Learning Hands-On
-by Maxim Lapan and from https://github.com/dennybritz/reinforcement-learning
+Implementation refactored from
+https://github.com/udacity/deep-reinforcement-learning
+
 """
 
 import numpy as np

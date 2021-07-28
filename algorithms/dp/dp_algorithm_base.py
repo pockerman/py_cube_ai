@@ -1,3 +1,7 @@
+"""
+Base class for dynamic programming
+algorithms
+"""
 from typing import Any
 import numpy as np
 from algorithms.algorithm_base import AlgorithmBase

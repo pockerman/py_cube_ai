@@ -1,7 +1,11 @@
 """
 Implementation of Policy iteration algorithm. In policy
 iteration at each step we do one policy evaluation and one policy
-improvement
+improvement.
+
+Implementation refactored from
+https://github.com/udacity/deep-reinforcement-learning
+
 """
 
 import numpy as np

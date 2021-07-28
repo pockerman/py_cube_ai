@@ -1,3 +1,8 @@
+"""
+Iterative policy evaluation
+Implementation refactored from
+https://github.com/udacity/deep-reinforcement-learning
+"""
 from typing import Any
 import numpy as np
 

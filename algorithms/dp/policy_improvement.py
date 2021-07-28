@@ -1,3 +1,9 @@
+"""
+Policy improvement
+Implementation refactored from
+https://github.com/udacity/deep-reinforcement-learning
+"""
+
 import numpy as np
 from typing import Any
 
