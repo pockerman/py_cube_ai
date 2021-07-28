@@ -1,4 +1,11 @@
+"""
+Monte Carlo prediction algorithm
+Implementation refactored from
+https://github.com/udacity/deep-reinforcement-learning
+"""
 from collections import defaultdict
+from typing import Any
+import numpy as np
 from algorithms.policy_sampler import PolicySampler
 from algorithms.algorithm_base import AlgorithmBase
 
@@ -8,67 +15,64 @@ class MCPrediction(AlgorithmBase):
     Monte Carlo prediction algorithm. Calculates the value function
     for a given policy using sampling.
     """
-    def __init__(self, episodes: int, itrs_per_episode: int,
-                 tol: float, discount_factor: float, policy: PolicySampler) -> None:
+    def __init__(self, env: Any, n_max_iterations: int, gamma: float,  episode_generator: Any) -> None:
 
-        super(MCPrediction, self).__init__(n_max_iterations=episodes, tolerance=tol)
-        self._itrs_per_episode = itrs_per_episode
-        self._discount_factor = discount_factor
-        # An episode is an array of (state, action, reward) tuples
-        self._episode = []
-        self._state = None
-        self._returns_sum = None
-        self._returns_count = None
-        self._v = None
-        self._policy = policy
+        super(MCPrediction, self).__init__(env=env, n_max_iterations=n_max_iterations, tolerance=1.0e-4)
 
-    def actions_before_stepping(self, env, **options) -> None:
+        self._gamma = gamma
+        self._episode_generator = episode_generator
+        self._returns_sum = None #defaultdict(lambda: np.zeros(env.action_space.n))
+        self._N = None #defaultdict(lambda: np.zeros(env.action_space.n))
+        self._q = None #defaultdict(lambda: np.zeros(env.action_space.n))
+
+    @property
+    def gamma(self) -> float:
+        return self._gamma
+
+    @property
+    def q(self):
+        return self._q
+
+    def actions_before_training_iterations(self, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the iterations
         """
-        self._episode = []
-        self._state = env.reset()
+        super(MCPrediction, self).actions_before_training_iterations(**options)
 
-    def actions_before_training_iterations(self, env, **options) -> None:
+        self._returns_sum = defaultdict(lambda: np.zeros(self.train_env.action_space.n))
+        self._N = defaultdict(lambda: np.zeros(self.train_env.action_space.n))
+        self._q = defaultdict(lambda: np.zeros(self.train_env.action_space.n))
+
+    def step(self, **options) -> None:
         """
-        Execute any actions the algorithm needs before
-        starting the iterations
+        Do one step in the iteration space.
+        :param options:
+        :return:
         """
 
-        # Keeps track of sum and count of returns for each state
-        # to calculate an average. We could use an array to save all
-        # returns (like in the book) but that's memory inefficient.
-        self._returns_sum = defaultdict(float)
-        self._returns_count = defaultdict(float)
+        # generate an episode
+        episode = self._episode_generator()
 
-        # The final value function
-        self._v = defaultdict(float)
+        states, actions, rewards = zip(*episode)
+        # prepare for discounting
+        discounts = np.array([self.gamma ** i for i in range(len(rewards) + 1)])
+        # update the sum of the returns, number of visits, and action-value
+        # function estimates for each state-action pair in the episode
+        for i, state in enumerate(states):
+            self._returns_sum[state][actions[i]] += sum(rewards[i:] * discounts[:-(1 + i)])
+            self._N[state][actions[i]] += 1.0
+            self._q[state][actions[i]] = self._returns_sum[state][actions[i]] / self._N[state][actions[i]]
 
-    def step(self, env, **options) -> None:
+    def actions_after_training_iterations(self, **options) -> None:
+        """
+        Execute any actions the algorithm needs after
+        the iterations are finished
+        """
+        pass
 
-        for t in range(self._itrs_per_episode):
-            action = self._policy(self._state)
-            next_state, reward, done, _ = env.step(action)
-            self._episode.append((self._state, action, reward))
-            if done:
-                break
-            self._state = next_state
 
-        # Find all states the we've visited in this episode
-        # We convert each state to a tuple so that we can use it as a dict key
-        states_in_episode = set([tuple(x[0]) for x in self._episode])
-        for state in states_in_episode:
-            # Find the first occurance of the state in the episode
-            first_occurence_idx = next(i for i, x in enumerate(self._episode) if x[0] == state)
 
-            # Sum up all rewards since the first occurance
-            G = sum([x[2] * (self._discount_factor ** i) for i, x in enumerate(self._episode[first_occurence_idx:])])
-
-            # Calculate average return for this state over all sampled episodes
-            self._returns_sum[state] += G
-            self._returns_count[state] += 1.0
-            self._v[state] = self._returns_sum[state] / self._returns_count[state]
 
 
 
