@@ -4,6 +4,7 @@ from typing import Any
 import matplotlib.pyplot as plt
 
 from algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator
+from utils.policies.uniform_policy import UniformPolicy
 
 
 class Agent(IterativePolicyEvaluator):
@@ -12,15 +13,6 @@ class Agent(IterativePolicyEvaluator):
                  tolerance: float, gamma: float, polic_init: Any) -> None:
         super(Agent, self).__init__(n_max_iterations=n_max_itrs, tolerance=tolerance,
                                     env=env, policy_init=polic_init, gamma=gamma)
-
-
-class PolicyInit(object):
-
-    def __init__(self, env: Any) -> None:
-        self.env = env
-
-    def __call__(self, *args, **kwargs):
-        return np.ones([self.env.nS, self.env.nA]) / self.env.nA
 
 
 def plot_values(v):
@@ -40,8 +32,8 @@ def plot_values(v):
 
 if __name__ == '__main__':
     env = gym.make("FrozenLake-v0")
-    policy_init = PolicyInit(env=env)
-    agent = Agent(env=env, n_max_itrs=100, gamma=1.0,
+    policy_init = UniformPolicy(env=env)
+    agent = Agent(env=env, n_max_itrs=1, gamma=1.0,
                   tolerance=1.0e-8, polic_init=policy_init)
 
     ctrl_res = agent.train()

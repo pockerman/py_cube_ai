@@ -50,7 +50,6 @@ class IterativePolicyEvaluator(DPAlgoBase):
             # the first sum
             value_s = 0.0
             for action, action_prob in enumerate(self._policy[s]):
-
                 # this is the second sum
                 for prob, next_state, reward, done in self.train_env.P[s][action]:
                     value_s += action_prob * prob * (reward + self.gamma * self.v[next_state])
