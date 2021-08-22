@@ -4,7 +4,7 @@ from typing import Any
 import matplotlib.pyplot as plt
 
 from algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator
-from utils.policies.uniform_policy import UniformPolicy
+from policies.uniform_policy import UniformPolicy
 
 
 class Agent(IterativePolicyEvaluator):

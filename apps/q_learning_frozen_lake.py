@@ -3,7 +3,7 @@ Train a Q-learning agent on Frozen Lake
 """
 import gym
 from tensorboardX import SummaryWriter
-from algorithms.q_learning import QLearning
+from algorithms.td.q_learning import QLearning
 from algorithms.algorithm_base import TrainMode
 
 
