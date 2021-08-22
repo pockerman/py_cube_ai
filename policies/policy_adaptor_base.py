@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from utils.policies.policy_base import PolicyBase
+from policies.policy_base import PolicyBase
 
 class PolicyAdaptorBase(ABC):
 

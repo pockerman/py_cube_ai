@@ -1,6 +1,6 @@
 import numpy as np
-from utils.policies.policy_base import PolicyBase
-from utils.policies.policy_adaptor_base import PolicyAdaptorBase
+from policies.policy_base import PolicyBase
+from policies.policy_adaptor_base import PolicyAdaptorBase
 
 
 class MaxActionPolicyAdaptor(PolicyAdaptorBase):
