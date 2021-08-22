@@ -15,8 +15,8 @@ import copy
 from algorithms.algorithm_base import AlgorithmBase
 from algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator
 from algorithms.dp.policy_improvement import PolicyImprovement
-from utils.policies.policy_base import PolicyBase
-from utils.policies.policy_adaptor_base import PolicyAdaptorBase
+from policies.policy_base import PolicyBase
+from policies.policy_adaptor_base import PolicyAdaptorBase
 
 
 class PolicyIteration(AlgorithmBase):

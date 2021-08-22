@@ -5,7 +5,7 @@ algorithms
 from typing import Any
 import numpy as np
 from algorithms.algorithm_base import AlgorithmBase
-from utils.policies.policy_base import PolicyBase
+from policies.policy_base import PolicyBase
 
 
 class DPAlgoBase(AlgorithmBase):

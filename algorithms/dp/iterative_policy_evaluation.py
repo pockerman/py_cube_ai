@@ -9,7 +9,7 @@ import numpy as np
 from algorithms.dp.dp_algorithm_base import DPAlgoBase
 from algorithms.dp.utils import state_actions_from_v as q_s_a
 from algorithms.dp.utils import q_from_v
-from utils.policies.policy_base import PolicyBase
+from policies.policy_base import PolicyBase
 
 
 class IterativePolicyEvaluator(DPAlgoBase):

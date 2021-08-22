@@ -1,6 +1,6 @@
 import unittest
-from algorithms.mc_control_importance_sampling import MCControlImportanceSampling
-from algorithms.policy_sampler import PolicySampler, DummyPolicySampler
+from algorithms.mc.mc_control_importance_sampling import MCControlImportanceSampling
+from algorithms.policy_sampler import DummyPolicySampler
 
 
 class TestMCControlImportanceSampling(unittest.TestCase):

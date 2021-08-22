@@ -5,15 +5,14 @@ https://github.com/udacity/deep-reinforcement-learning
 
 """
 
-import numpy as np
 import collections
 from typing import Any
 
 from algorithms.dp.dp_algorithm_base import DPAlgoBase
 from algorithms.dp.policy_improvement import PolicyImprovement
 from algorithms.dp.utils import state_actions_from_v as q_s_a
-from utils.policies.policy_base import PolicyBase
-from utils.policies.policy_adaptor_base import PolicyAdaptorBase
+from policies.policy_base import PolicyBase
+from policies.policy_adaptor_base import PolicyAdaptorBase
 
 
 class ValueIteration(DPAlgoBase):

@@ -52,6 +52,14 @@ class AlgorithmBase(ABC):
     def itr_control(self) -> IterationController:
         return self._itr_ctrl
 
+    @property
+    def n_max_iterations(self) -> int:
+        return self.itr_control.n_max_itrs
+
+    @property
+    def current_itr_index(self) -> int:
+        return self._itr_ctrl.current_itr_counter
+
     def reset(self) -> None:
         """
         Reset the underlying data
@@ -74,6 +82,8 @@ class AlgorithmBase(ABC):
         self.actions_before_training_iterations(**options)
 
         while self._itr_ctrl.continue_itrs():
+            print(">Episode {0} of {1}, ({2}% done)".format(self._itr_ctrl.current_itr_counter,
+                                                            self.itr_control.n_max_itrs, (self._itr_ctrl.current_itr_counter / self.itr_control.n_max_itrs)*100.0))
             self.step(**options)
 
         self.actions_after_training_iterations(**options)

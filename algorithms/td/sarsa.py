@@ -1,42 +1,48 @@
-import numpy as np
-import random
-from collections import defaultdict
-from algorithms.algorithm_base import AlgorithmBase
+from typing import Any
+from algorithms.td.td_algorithm_base import TDAlgoBase
+from policies.policy_base import PolicyBase
 
 
-class Sarsa(AlgorithmBase):
+class Sarsa(TDAlgoBase):
     """
     SARSA algorithm: On-policy TD control.
     Finds the optimal epsilon-greedy policy.
     """
 
-    def __init__(self, episodes: int, itrs_per_episode: int, tol: float,
-           discount_factor: float=1.0, alpha: float=0.5, epsilon: float=0.1) -> None:
-        super(AlgorithmBase, self).__init__(n_max_iterations=episodes, tolerance=tol)
-        self._max_num_iterations_per_episode = itrs_per_episode
-        self._discount_factor = discount_factor
-        self._alpha = alpha
-        self._epsilon = epsilon
-        self._state = None
-        self._Q = None
-        self._policy = None
-        self._action = None
+    def __init__(self, n_max_iterations: int, tolerance: float,
+                 env: Any,  gamma: float, alpha: float,
+                 max_num_iterations_per_episode: int, policy: PolicyBase) -> None:
 
-    def step(self, env, **options):
+        super().__init__(n_max_iterations=n_max_iterations, tolerance=tolerance,
+                         env=env, gamma=gamma, alpha=alpha)
+        self._max_num_iterations_per_episode = max_num_iterations_per_episode
+        self._policy = policy
+
+    def step(self,  **options):
         """
         Perform one step of the algorithm
         """
+        score = 0.0
+        state = self.train_env.reset()
+
+        # select an action
+        action = self._policy(self._q, self.train_env.action_space.n)
 
         for itr in range(self._max_num_iterations_per_episode):
             # Take a step
-            next_state, reward, done, _ = env.step(self._action)
+            next_state, reward, done, _ = self.train_env.step(self._action)
+            score += reward
 
-            # Pick the next action
-            next_action = self._epsilon_greedy(state=next_state, env=env, eps=self._epsilon)
+            if not done:
+                next_action = self._policy(self._q, self.train_env.action_space.n)
+                self.update_q_table(next_action=next_action)
+                state = next_state
+                action = next_action
 
-            # Update statistics
-            #stats.episode_rewards[i_episode] += reward
-            #stats.episode_lengths[i_episode] = t
+            if done:
+                self.update_q_table(next_action=0)
+                self._tmp_scores.append(score)  # append score
+                break
 
             # TD Update
             td_target = reward + self._discount_factor * self._Q[next_state][next_action]
@@ -49,34 +55,10 @@ class Sarsa(AlgorithmBase):
             self._action = next_action
             self._state = next_state
 
-    def actions_before_stepping(self, env, **options) -> None:
-        """
-        Any action before the iteration starts
-        """
-        # Reset the environment and pick the first action
-        self._state = env.reset()
-        self._action = self._epsilon_greedy(self._state, env=env, eps=self._epsilon)
+    def update_q_table(self, next_action: int) -> None:
+        pass
 
-    def actions_before_training_iterations(self, env, **options) -> None:
-        """
-        Execute any actions the algorithm needs before
-        starting the iterations
-        """
-        # The final action-value function.
-        # A nested dictionary that maps state -> (action -> action-value).
-        self._Q = defaultdict(lambda: np.zeros(env.action_space.n))
 
-    def _epsilon_greedy(self, state, env, eps):
-
-        """
-        Selects epsilon-greedy action for the given state.
-        """
-
-        # select greedy action with probability epsilon
-        if random.random() > eps:
-            return np.argmax(self._Q[state])
-        else:  # otherwise, select an action randomly
-            return random.choice(np.arange(env.action_space.n))
 
 
 
