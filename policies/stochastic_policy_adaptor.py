@@ -16,5 +16,8 @@ class StochasticAdaptorPolicy(PolicyAdaptorBase):
 
     def __call__(self, s: int, state_actions: np.ndarray, policy: PolicyBase) -> PolicyBase:
         best_a = np.argwhere(state_actions == np.max(state_actions)).flatten()
+        mat = [np.eye(policy.env.action_space.n)[i] for i in best_a]
+
+        s = np.sum(mat, axis=0)
         policy[s] = np.sum([np.eye(policy.env.action_space.n)[i] for i in best_a], axis=0) / len(best_a)
         return policy
