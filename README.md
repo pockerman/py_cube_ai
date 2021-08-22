@@ -1,21 +1,19 @@
 ## rl-python
 
-Implementation of reinforcement learning algorithms. Algorithms have been refactored
+Implementation of reinforcement learning algorithms. Algorithms have been refactored/reimplemented
 from various resources such as:
 
 - <a href="https://github.com/udacity/deep-reinforcement-learning">Udacity DRL repository</a>
-
-## Dependencies
 
 
 ## Examples
 
 ### Dynamic programming
 
-- <a href="apps/iterative_policy_evaluation_frozen_lake.py">Iterative policy evaluation on FrozenLake-v0</a>
-- <a href="apps/policy_improvement_frozen_lake.py">Policy improvement on FrozenLake-v0</a>
-- <a href="apps/policy_iteration_frozen_lake.py">Policy iteration on FrozenLake-v0</a>
-- <a href="apps/value_iteration_frozen_lake.py">Value iteration on FrozenLake-v0</a>
+- <a href="apps/dp/iterative_policy_evaluation_frozen_lake.py">Iterative policy evaluation on FrozenLake-v0</a>
+- <a href="apps/dp/policy_improvement_frozen_lake.py">Policy improvement on FrozenLake-v0</a>
+- <a href="apps/dp/policy_iteration_frozen_lake.py">Policy iteration on FrozenLake-v0</a>
+- <a href="apps/dp/value_iteration_frozen_lake.py">Value iteration on FrozenLake-v0</a>
 
 ### Monte Carlo
 
@@ -23,8 +21,8 @@ from various resources such as:
 
 ### Temporal differencing
 
-- <a href="#">SARSA </a> 
-- <a href="#">Q-learning  </a> 
+- <a href="apps/td/cliff_walking_q_learning.py">SARSA on Cliffwalking </a> 
+- <a href="apps/td/cliff_walking_q_learning.py">Q-learning on Cliffwalking  </a> 
 - <a href="#">Expected SARSA  </a> 
 
 
