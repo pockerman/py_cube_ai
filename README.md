@@ -33,3 +33,16 @@ from various resources such as:
 - <a href="apps/dqn_lunar_lander.py">Vanilla DQN on LunarLander-v2</a>
 
 
+## Images
+
+ <figure>
+  <img src="images/state_value_function_frozen_lake.png" alt="Trulli" style="width:100%">
+  <figcaption>Iterative policy evaluation on FrozenLake.</figcaption>
+</figure> 
+
+ <figure>
+  <img src="images/q_learning_state_value.png" alt="Trulli" style="width:100%">
+  <figcaption>Q-learning on Cliffwalking .</figcaption>
+</figure> 
+
+
