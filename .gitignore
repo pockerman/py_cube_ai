@@ -7,3 +7,14 @@ policies/__pycache__/
 algorithms/dqn/__pycache__/
 algorithms/mc/__pycache__/
 algorithms/td/__pycache__/
+src/policies/__pycache__/
+src/utils/__pycache__/
+src/networks/__pycache__/
+src/algorithms/td/
+src/networks/
+src/agents/__pycache__
+src/algorithms/dp/__pycache__/
+src/algorithms/mc/__pycache__/
+src/algorithms/__pycache__/
+src/actions/__pycache__/
+src/algorithms/dqn/__pycache__/
