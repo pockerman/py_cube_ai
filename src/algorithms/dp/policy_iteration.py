@@ -12,11 +12,11 @@ import numpy as np
 from typing import Any
 import copy
 
-from algorithms.algorithm_base import AlgorithmBase
-from algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator
-from algorithms.dp.policy_improvement import PolicyImprovement
-from policies.policy_base import PolicyBase
-from policies.policy_adaptor_base import PolicyAdaptorBase
+from src.algorithms.algorithm_base import AlgorithmBase
+from src.algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator
+from src.algorithms.dp.policy_improvement import PolicyImprovement
+from src.policies.policy_base import PolicyBase
+from src.policies.policy_adaptor_base import PolicyAdaptorBase
 
 
 class PolicyIteration(AlgorithmBase):

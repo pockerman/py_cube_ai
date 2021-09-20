@@ -1,8 +1,10 @@
 from functools import wraps
 import time
 
-from utils.iteration_controller import ItrControlResult
-from utils import INFO
+from src.utils.iteration_controller import ItrControlResult
+from src.utils import INFO
+
+
 def time_fn(func):
     """
     Simple timing wrapper

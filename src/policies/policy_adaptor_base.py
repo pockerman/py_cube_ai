@@ -1,7 +1,13 @@
 from abc import ABC, abstractmethod
-from policies.policy_base import PolicyBase
+
+from src.policies.policy_base import PolicyBase
+
 
 class PolicyAdaptorBase(ABC):
+    """
+    Base class for deriving adaptors
+    for policies
+    """
 
     def __init__(self):
         pass

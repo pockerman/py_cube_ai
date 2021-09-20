@@ -2,7 +2,8 @@ import random
 import numpy as np
 from enum import Enum
 from typing import Any
-from policies.policy_base import PolicyBase
+
+from src.policies.policy_base import PolicyBase
 
 
 class EpsilonDecreaseOption(Enum):

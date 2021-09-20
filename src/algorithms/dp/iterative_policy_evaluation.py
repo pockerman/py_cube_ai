@@ -6,10 +6,10 @@ https://github.com/udacity/deep-reinforcement-learning
 from typing import Any
 import numpy as np
 
-from algorithms.dp.dp_algorithm_base import DPAlgoBase
-from algorithms.dp.utils import state_actions_from_v as q_s_a
-from algorithms.dp.utils import q_from_v
-from policies.policy_base import PolicyBase
+from src.algorithms.dp.dp_algorithm_base import DPAlgoBase
+from src.algorithms.dp.utils import state_actions_from_v as q_s_a
+from src.algorithms.dp.utils import q_from_v
+from src.policies.policy_base import PolicyBase
 
 
 class IterativePolicyEvaluator(DPAlgoBase):

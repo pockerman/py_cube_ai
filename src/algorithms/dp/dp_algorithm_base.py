@@ -4,8 +4,9 @@ algorithms
 """
 from typing import Any
 import numpy as np
-from algorithms.algorithm_base import AlgorithmBase
-from policies.policy_base import PolicyBase
+
+from src.algorithms.algorithm_base import AlgorithmBase
+from src.policies.policy_base import PolicyBase
 
 
 class DPAlgoBase(AlgorithmBase):

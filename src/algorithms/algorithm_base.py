@@ -6,8 +6,8 @@ from enum import Enum
 from abc import abstractmethod, ABC
 from typing import Any
 
-from utils.wrappers import time_fn
-from utils.iteration_controller import ItrControlResult, IterationController
+from src.utils.wrappers import time_fn
+from src.utils.iteration_controller import ItrControlResult, IterationController
 
 
 class TrainMode(Enum):

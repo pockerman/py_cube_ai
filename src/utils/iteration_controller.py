@@ -3,7 +3,7 @@ Utility class for controlling iteration
 """
 
 import sys
-from utils import INFO
+from src.utils import INFO
 
 
 class ItrControlResult(object):

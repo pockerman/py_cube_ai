@@ -7,10 +7,10 @@ https://github.com/udacity/deep-reinforcement-learning
 import numpy as np
 from typing import Any
 
-from algorithms.dp.dp_algorithm_base import DPAlgoBase
-from algorithms.dp.utils import state_actions_from_v as q_s_a
-from policies.policy_base import PolicyBase
-from policies.policy_adaptor_base import PolicyAdaptorBase
+from src.algorithms.dp.dp_algorithm_base import DPAlgoBase
+from src.algorithms.dp.utils import state_actions_from_v as q_s_a
+from src.policies.policy_base import PolicyBase
+from src.policies.policy_adaptor_base import PolicyAdaptorBase
 
 
 class PolicyImprovement(DPAlgoBase):
