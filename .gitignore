@@ -18,3 +18,4 @@ src/algorithms/mc/__pycache__/
 src/algorithms/__pycache__/
 src/actions/__pycache__/
 src/algorithms/dqn/__pycache__/
+src/__pycache__/
