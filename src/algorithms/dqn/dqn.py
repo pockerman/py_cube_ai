@@ -22,7 +22,7 @@ class DQN(AlgorithmBase):
     DQN algorithm implementation
     """
 
-    def __init__(self, env: Any, target_network: NNBase, local_net: NNBase,
+    def __init__(self, env: Any, target_network: NNBase, policy_net: NNBase,
                  n_max_iterations: int, tolerance: float, update_frequency: int,
                  batch_size: int, gamma: float, optimizer: Any, tau: float,
                  steps_per_iteration: int, state_size: int, action_size: int,
@@ -31,7 +31,7 @@ class DQN(AlgorithmBase):
 
         super(DQN, self).__init__(n_max_iterations=n_max_iterations, tolerance=tolerance, env=env)
         self._net = target_network
-        self._local_net = local_net
+        self._local_net = policy_net
         self._memory = ReplayBuffer(batch_size=batch_size, action_size=action_size, device=device,
                                     buffer_size=buffer_size, seed=seed)
         self._optimizer = optimizer

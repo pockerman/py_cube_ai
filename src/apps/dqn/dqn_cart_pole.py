@@ -14,7 +14,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import torchvision.transforms as T
 
-from src.algorithms import DQN
+from src.algorithms import CartPoleDQN
 from src.networks.nn_base import NNBase
 
 
@@ -150,7 +150,7 @@ if __name__ == '__main__':
     # the optimizer to use
     optimizer = optim.RMSprop(policy_net.parameters())
 
-    agent = DQN(env=env, target_network=target_net, local_net=policy_net,
+    agent = CartPoleDQN(env=env, target_network=target_net, policy_net=policy_net,
                  n_max_iterations=NUM_EPISODES, tolerance=1.0e-8, update_frequency=TARGET_UPDATE,
                  batch_size=BATCH_SIZE, gamma=GAMMA, optimizer=optimizer, tau=0.4,
                  steps_per_iteration=100, state_size=10, action_size=env.action_space.n,
