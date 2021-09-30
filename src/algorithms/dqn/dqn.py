@@ -30,30 +30,26 @@ class DQN(AlgorithmBase):
                  buffer_size: int = 100, seed: int = 0) -> None:
 
         super(DQN, self).__init__(n_max_iterations=n_max_iterations, tolerance=tolerance, env=env)
-        self._net = target_network
-        self._local_net = policy_net
-        self._memory = ReplayBuffer(batch_size=batch_size, action_size=action_size, device=device,
+        self.target_net = target_network
+        self.policy_net = policy_net
+        self.memory = ReplayBuffer(batch_size=batch_size, action_size=action_size, device=device,
                                     buffer_size=buffer_size, seed=seed)
-        self._optimizer = optimizer
+        self.optimizer = optimizer
         self._training_reward = 0
-        self._update_frequency = update_frequency
-        self._batch_size = batch_size
-        self._gamma = gamma
-        self._tau = tau
+        self.update_frequency = update_frequency
+        self.batch_size = batch_size
+        self.gamma = gamma
+        self.tau = tau
         self._steps_per_iteration = steps_per_iteration
         self._eps_start = eps_start
         self._eps_end = eps_end
         self._eps_decay = eps_decay
-        self._device = device
+        self.device = device
         self._state_size = state_size
         self._action_size = action_size
         self._scores = []
         self._scores_window = deque(maxlen=100)  # last 100 scores
         self._eps = eps_start
-
-    @property
-    def gamma(self) -> float:
-        return self._gamma
 
     @property
     def scores(self):
@@ -74,64 +70,14 @@ class DQN(AlgorithmBase):
     def actions_after_training_iterations(self, **options) -> None:
         pass
 
-    def step(self, **options) -> None:
-        """
-        One iteration step
-        """
-        self.state = self.train_env.reset()
-
-        score = 0
-        for itr in range(self._steps_per_iteration):
-
-            # get an action
-            action = self.act(state=self.state, eps=self._eps)
-
-            # do one step in the environemnt
-            next_state, reward, done, _ = self.train_env.step(action)
-
-            # add into the memory
-            self._memory.add(state=self.state, action=action,
-                             next_state=next_state, reward=reward, done=done)
-
-            if self.itr_control.current_itr_counter % self._update_frequency == 0:
-                if len(self._memory) > self._batch_size:
-                    experiences = self._memory.sample()
-                    self.learn(experiences=experiences)
-
-            self.state = next_state
-            self._training_reward += reward
-            score += reward
-
-            if done:
-                break
-
-            self._scores_window.append(score)  # save most recent score
-            self._scores.append(score)  # save most recent score
-
-            # decrease epsilon
-            self._eps = max(self._eps_end, self._eps_decay * self._eps)
-            print('\rEpisode {}\tAverage Score: {:.2f}'.format(self.itr_control.current_itr_counter,
-                                                               np.mean(self._scores_window)), end="")
-
-            if self.itr_control.current_itr_counter % 100 == 0:
-                print('\rEpisode {}\tAverage Score: {:.2f}'.format(self.itr_control.current_itr_counter,
-                                                                   np.mean(self._scores_window)))
-            if np.mean(self._scores_window) >= 200.0:
-                print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(self.itr_control.current_itr_counter - 100,
-                                                                                         np.mean(self._scores_window)))
-                torch.save(self._local_net.state_dict(), 'checkpoint.pth')
-
-                break
-                # update the residual so that we break
-                #self.itr_control.residual *= 10**-1
-
+    """
     def act(self, state: Any, eps: float) -> Any:
-        """Returns actions for given state as per current policy.
+        Returns actions for given state as per current policy.
 
         state (array_like): current state
         eps (float): epsilon, for epsilon-greedy action selection
-        """
-        state = torch.from_numpy(state).float().unsqueeze(0).to(self._device)
+        
+        state = torch.from_numpy(state).float().unsqueeze(0).to(self.device)
         self._local_net.eval()
         with torch.no_grad():
             action_values = self._local_net(state)
@@ -142,6 +88,7 @@ class DQN(AlgorithmBase):
             return np.argmax(action_values.cpu().data.numpy())
         else:
             return random.choice(np.arange(self._action_size))
+    """
 
     def learn(self, experiences: Any):
         """

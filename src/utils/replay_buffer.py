@@ -8,6 +8,9 @@ from collections import namedtuple, deque
 import torch
 
 
+Experience = namedtuple("Experience", field_names=["state", "action", "reward", "next_state", "done"])
+
+
 class ReplayBuffer(object):
     """
     Fixed size replay buffer
@@ -17,7 +20,7 @@ class ReplayBuffer(object):
         self._batch_size = batch_size
         self._action_size = action_size
         self._memory = deque(maxlen=buffer_size)
-        self._experience = namedtuple("Experience", field_names=["state", "action", "reward", "next_state", "done"])
+        #self._experience = namedtuple("Experience", field_names=["state", "action", "reward", "next_state", "done"])
         self._seed = seed
         self._device = device
 
@@ -26,7 +29,7 @@ class ReplayBuffer(object):
     def add(self,  state: Any, action: Any,
             reward: float, next_state: Any, done: bool):
         """Add a new experience to memory."""
-        e = self._experience(state, action, reward, next_state, done)
+        e = Experience(state, action, reward, next_state, done)
         self._memory.append(e)
 
     def sample(self) -> tuple:
