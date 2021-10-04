@@ -25,14 +25,14 @@ class DQN(AlgorithmBase):
     def __init__(self, env: Any, target_network: NNBase, policy_net: NNBase,
                  n_max_iterations: int, tolerance: float, update_frequency: int,
                  batch_size: int, gamma: float, optimizer: Any, tau: float,
-                 steps_per_iteration: int, state_size: int, action_size: int,
+                 steps_per_iteration: int, state_size: int, n_actions: int,
                  eps_start: float = 1.0, eps_end: float = 0.01, eps_decay: float = 0.995, device: str = 'cpu',
                  buffer_size: int = 100, seed: int = 0) -> None:
 
         super(DQN, self).__init__(n_max_iterations=n_max_iterations, tolerance=tolerance, env=env)
         self.target_net = target_network
         self.policy_net = policy_net
-        self.memory = ReplayBuffer(batch_size=batch_size, action_size=action_size, device=device,
+        self.memory = ReplayBuffer(batch_size=batch_size, action_size=n_actions, device=device,
                                     buffer_size=buffer_size, seed=seed)
         self.optimizer = optimizer
         self._training_reward = 0
@@ -41,15 +41,15 @@ class DQN(AlgorithmBase):
         self.gamma = gamma
         self.tau = tau
         self._steps_per_iteration = steps_per_iteration
-        self._eps_start = eps_start
-        self._eps_end = eps_end
-        self._eps_decay = eps_decay
+        self.eps_start = eps_start
+        self.eps_end = eps_end
+        self.eps_decay = eps_decay
         self.device = device
         self._state_size = state_size
-        self._action_size = action_size
+        self.n_actions = n_actions
         self._scores = []
         self._scores_window = deque(maxlen=100)  # last 100 scores
-        self._eps = eps_start
+        self.eps = eps_start
 
     @property
     def scores(self):
@@ -65,7 +65,7 @@ class DQN(AlgorithmBase):
 
         # last 100 scores
         self._scores_window = deque(maxlen=100)
-        self._eps = self._eps_start
+        self.eps = self.eps_start
 
     def actions_after_training_iterations(self, **options) -> None:
         pass
@@ -90,11 +90,12 @@ class DQN(AlgorithmBase):
             return random.choice(np.arange(self._action_size))
     """
 
+    """
     def learn(self, experiences: Any):
-        """
+        
         Learn parameters from the given experience
         experiences (Tuple[torch.Tensor]): tuple of (s, a, r, s', done) tuples
-        """
+        
 
         states, actions, rewards, next_states, dones = experiences
 
@@ -117,5 +118,5 @@ class DQN(AlgorithmBase):
 
         # ------------------- update target network ------------------- #
         soft_network_update(source=self._local_net, target=self._net, tau=self._tau)
-
+    """
 

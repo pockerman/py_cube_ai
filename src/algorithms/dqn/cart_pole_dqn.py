@@ -1,6 +1,7 @@
 """
 DQN algorithm applied on the gym cart pole
-environment
+environment. The implementation is taken from PyTorch tutorial
+from here https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
 """
 from typing import Any
 import random
@@ -30,18 +31,19 @@ class CartPoleDQN(DQN):
     def __init__(self, env, target_network: NNBase, policy_net: NNBase,
                  n_max_iterations: int, tolerance: float, update_frequency: int,
                  batch_size: int, gamma: float, optimizer: Any, tau: float,
-                 steps_per_iteration: int, state_size: int, action_size: int,
+                 steps_per_iteration: int, state_size: int, n_actions: int,
                  eps_start: float = 1.0, eps_end: float = 0.01, eps_decay: float = 0.995, device: str = 'cpu',
                  buffer_size: int = 100, seed: int = 0
                  ):
         super(CartPoleDQN, self).__init__(env=env, target_network=target_network, policy_net=policy_net,
                                           n_max_iterations=n_max_iterations, tolerance=tolerance, update_frequency=update_frequency,
                                           batch_size=batch_size, gamma=gamma, optimizer=optimizer, tau=tau,
-                                          steps_per_iteration=steps_per_iteration, state_size=state_size, action_size=action_size,
+                                          steps_per_iteration=steps_per_iteration, state_size=state_size, n_actions=n_actions,
                                           eps_start=eps_start, eps_end=eps_end, eps_decay=eps_decay, device=device, buffer_size=buffer_size, seed=seed)
 
         self._last_screen = None
         self._current_screen = None
+        self._steps_done = 0
 
     def actions_before_training_iterations(self, **options) -> None:
         """
@@ -51,6 +53,7 @@ class CartPoleDQN(DQN):
         super(CartPoleDQN, self).actions_before_training_iterations(**options)
         self._last_screen = self.get_screen()
         self._current_screen = self.get_screen()
+        self._steps_done = 0
 
     def step(self, **options) -> None:
         """
@@ -69,62 +72,67 @@ class CartPoleDQN(DQN):
             action = self.select_action(self.state)
 
             # do one step in the environemnt
-            _, reward, done, _ = self.train_env.step(action)
+            _, reward, done, _ = self.train_env.step(action.item())
+
+            self._training_reward += reward
+            score += reward
 
             reward = torch.tensor([reward], device=self.device)
 
             # Observe new state
             self._last_screen = self._current_screen
             self._current_screen = self.get_screen()
+
             if not done:
                 next_state = self._current_screen - self._last_screen
             else:
                 next_state = None
 
             # add into the memory
-            self.memory.add(state=self.state, action=action,
-                             next_state=next_state, reward=reward, done=done)
+            self.memory.add(state=self.state, action=action.item(), next_state=next_state, reward=reward, done=done)
 
-            if self.itr_control.current_itr_counter % self.update_frequency == 0:
-                if len(self.memory) > self.batch_size:
-                    experiences = self.memory.sample()
-                    self.learn(experiences=experiences)
-
+            # update the state
             self.state = next_state
-            self._training_reward += reward
-            score += reward
-
-            self.optimize_model()
-            if done:
-                break
-
             self._scores_window.append(score)  # save most recent score
             self._scores.append(score)  # save most recent score
 
+            # optimize the model
+            self.optimize_model()
+
             # decrease epsilon
-            self._eps = max(self._eps_end, self._eps_decay * self._eps)
-            print('\rEpisode {}\tAverage Score: {:.2f}'.format(self.itr_control.current_itr_counter,
-                                                               np.mean(self._scores_window)), end="")
+            self.eps = max(self.eps_end, self.eps_decay * self.eps)
+            print('\tAverage Score: {:.2f}\n'.format(np.mean(self._scores_window)), end="")
+
+            if done:
+                break
+
+            if self.itr_control.current_itr_counter % self.update_frequency == 0:
+                # update the target network
+                self.target_net.load_state_dict(self.policy_net.state_dict())
+                #if len(self.memory) > self.batch_size:
+                #    experiences = self.memory.sample()
+                #    self.learn(experiences=experiences)
 
             if self.itr_control.current_itr_counter % 100 == 0:
                 print('\rEpisode {}\tAverage Score: {:.2f}'.format(self.itr_control.current_itr_counter,
                                                                    np.mean(self._scores_window)))
-            if np.mean(self._scores_window) >= 200.0:
-                print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(self.itr_control.current_itr_counter - 100,
-                                                                                         np.mean(self._scores_window)))
+            #if np.mean(self._scores_window) >= 200.0:
+            #    print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(self.itr_control.current_itr_counter - 100,
+            #                                                                                         np.mean(self._scores_window)))
                 #torch.save(self._local_net.state_dict(), 'checkpoint.pth')
 
-                break
+            #    break
                 # update the residual so that we break
                 #self.itr_control.residual *= 10**-1
 
     def select_action(self, state):
+        """
+        Select an action given the state
+        """
 
-        global steps_done
         sample = np.random.random()
-        eps_threshold = EPS_END + (EPS_START - EPS_END) * \
-                        math.exp(-1. * steps_done / EPS_DECAY)
-        steps_done += 1
+        eps_threshold = self.eps_end + (self.eps_start - self.eps_end) * math.exp(-1. * self._steps_done / self.eps_decay)
+        self._steps_done += 1
         if sample > eps_threshold:
             with torch.no_grad():
                 # t.max(1) will return largest column value of each row.
@@ -132,14 +140,17 @@ class CartPoleDQN(DQN):
                 # found, so we pick action with the larger expected reward.
                 return self.policy_net(state).max(1)[1].view(1, 1)
         else:
-            return torch.tensor([[random.randrange(n_actions)]], device=self.device, dtype=torch.long)
+            return torch.tensor([[random.randrange(self.n_actions)]], device=self.device, dtype=torch.long)
 
     def optimize_model(self):
 
         if len(self.memory) < self.batch_size:
             return
 
-        transitions = self.memory.sample()
+        try:
+            transitions = self.memory.sample()
+        except ValueError:
+            print("Excpetion is thrown ", str(e))
         batch = Experience(*zip(transitions))
 
         # Compute a mask of non - final states and concatenate
