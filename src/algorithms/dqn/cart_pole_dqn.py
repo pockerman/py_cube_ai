@@ -89,7 +89,11 @@ class CartPoleDQN(DQN):
                 next_state = None
 
             # add into the memory
-            self.memory.add(state=self.state, action=action.item(), next_state=next_state, reward=reward, done=done)
+            self.memory.add(state=self.state,
+                            action=action,
+                            next_state=next_state,
+                            reward=reward,
+                            done=done)
 
             # update the state
             self.state = next_state
@@ -109,9 +113,6 @@ class CartPoleDQN(DQN):
             if self.itr_control.current_itr_counter % self.update_frequency == 0:
                 # update the target network
                 self.target_net.load_state_dict(self.policy_net.state_dict())
-                #if len(self.memory) > self.batch_size:
-                #    experiences = self.memory.sample()
-                #    self.learn(experiences=experiences)
 
             if self.itr_control.current_itr_counter % 100 == 0:
                 print('\rEpisode {}\tAverage Score: {:.2f}'.format(self.itr_control.current_itr_counter,
@@ -149,9 +150,9 @@ class CartPoleDQN(DQN):
 
         try:
             transitions = self.memory.sample()
-        except ValueError:
-            print("Excpetion is thrown ", str(e))
-        batch = Experience(*zip(transitions))
+            batch = Experience(*zip(*transitions))
+        except ValueError as e:
+            print("Exception is thrown ", str(e))
 
         # Compute a mask of non - final states and concatenate
         # the batch elements

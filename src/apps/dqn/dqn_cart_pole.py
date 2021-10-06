@@ -6,7 +6,9 @@ https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
 
 import numpy as np
 #import matplotlib.pyplot as plt
+from matplotlib import animation
 import gym
+import gym.wrappers as wrappers
 from PIL import Image
 import torch
 import torch.nn as nn
@@ -129,8 +131,11 @@ if __name__ == '__main__':
 
     print("Start training DQN on {}".format(ENV_NAME))
 
+    env_to_wrap = gym.make('CartPole-v0')
+    env = wrappers.Monitor(env_to_wrap, '/home/alex/qi3/rl_python/src/apps/dqn/cart_pole_movie/', force=True)
     # The environmen
-    env = gym.make(ENV_NAME).unwrapped
+    #env = gym.make(ENV_NAME).unwrapped
+
 
     env.reset()
     #plt.figure()
@@ -153,7 +158,7 @@ if __name__ == '__main__':
     agent = CartPoleDQN(env=env, target_network=target_net, policy_net=policy_net,
                  n_max_iterations=NUM_EPISODES, tolerance=1.0e-8, update_frequency=TARGET_UPDATE,
                  batch_size=BATCH_SIZE, gamma=GAMMA, optimizer=optimizer, tau=0.4,
-                 steps_per_iteration=100, state_size=10, n_actions=env.action_space.n,
+                 steps_per_iteration=1000, state_size=10, n_actions=env.action_space.n,
                  eps_start=EPS_START, eps_end=EPS_END, eps_decay=EPS_DECAY, device=device,
                  buffer_size=BUFFER_SIZE, seed=SEED)
 
@@ -162,3 +167,5 @@ if __name__ == '__main__':
     agent.train()
 
     print("Finished training DQN on {}".format(ENV_NAME))
+    env.close()
+    env_to_wrap.close()
