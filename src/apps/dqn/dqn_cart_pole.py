@@ -5,8 +5,6 @@ https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
 """
 
 import numpy as np
-#import matplotlib.pyplot as plt
-from matplotlib import animation
 import gym
 import gym.wrappers as wrappers
 from PIL import Image
@@ -130,19 +128,8 @@ if __name__ == '__main__':
     device = 'gpu' if torch.cuda.is_available() else 'cpu'
 
     print("Start training DQN on {}".format(ENV_NAME))
-
-    env_to_wrap = gym.make('CartPole-v0')
-    env = wrappers.Monitor(env_to_wrap, '/home/alex/qi3/rl_python/src/apps/dqn/cart_pole_movie/', force=True)
-    # The environmen
-    #env = gym.make(ENV_NAME).unwrapped
-
-
+    env = wrappers.Monitor(gym.make(ENV_NAME).unwrapped, './cart_pole_movie/', force=True)
     env.reset()
-    #plt.figure()
-    #plt.imshow(get_screen(env=env).cpu().squeeze(0).permute(1, 2, 0).numpy(),
-    #           interpolation='none')
-    #plt.title('Example extracted screen')
-    #plt.show()
 
     action_size = env.action_space.n
 
@@ -162,10 +149,8 @@ if __name__ == '__main__':
                  eps_start=EPS_START, eps_end=EPS_END, eps_decay=EPS_DECAY, device=device,
                  buffer_size=BUFFER_SIZE, seed=SEED)
 
-
     # Train the agent
     agent.train()
 
     print("Finished training DQN on {}".format(ENV_NAME))
     env.close()
-    env_to_wrap.close()
