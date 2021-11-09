@@ -5,6 +5,12 @@ from various resources such as:
 
 - <a href="https://github.com/udacity/deep-reinforcement-learning">Udacity DRL repository</a>
 
+## Dependencies
+
+- OpenAI Gym
+- PyTorch
+- NumPy
+
 
 ## Examples
 
@@ -28,6 +34,7 @@ from various resources such as:
 
 ### DQN
 
+- <a href="apps/dqn_lunar_lander.py">Vanilla DQN on CartPole-v2</a>
 - <a href="apps/dqn_lunar_lander.py">Vanilla DQN on LunarLander-v2</a>
 
 
