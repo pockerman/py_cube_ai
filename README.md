@@ -38,6 +38,11 @@ from various resources such as:
 - <a href="src/apps/dqn/dqn_lunar_lander.py">Vanilla DQN on LunarLander-v2</a>
 
 
+### Policy gradient methods
+
+- <a href="src/apps/pg/reinforce_cart_pole.py">REINFORCE on CartPole-v0</a>
+
+
 ## Images
 
  <figure>
