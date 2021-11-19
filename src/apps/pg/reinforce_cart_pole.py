@@ -15,6 +15,7 @@ from src.algorithms.pg.reinforce import Reinforce
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+
 class Policy(PolicyTorchBase):
     def __init__(self, env: Any, s_size=4, h_size=16, a_size=2) -> None:
         super(Policy, self).__init__(env=env)
