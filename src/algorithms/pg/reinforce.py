@@ -47,6 +47,9 @@ class Reinforce(AlgorithmBase):
         self.scores = []
         self._reset_internal_structs()
 
+    def actions_after_training_iterations(self, **options) -> None:
+        pass
+
     def _reset_internal_structs(self) -> None:
 
         self.saved_log_probs = []
@@ -65,6 +68,7 @@ class Reinforce(AlgorithmBase):
 
             self.saved_log_probs.append(log_prob)
             state, reward, done, _ = self.train_env.step(action)
+            self.train_env.render(mode='rgb_array')
             self.rewards.append(reward)
             if done:
                 break
