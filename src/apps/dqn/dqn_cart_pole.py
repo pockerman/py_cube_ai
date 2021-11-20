@@ -69,7 +69,7 @@ resize = T.Compose([T.ToPILImage(),
                     T.ToTensor()])
 
 
-def get_cart_location(screen_width):
+def get_cart_location(screen_width, env):
     """
     Returns the cart location given the screen width
     :param screen_width:
@@ -93,7 +93,7 @@ def get_screen(env):
     _, screen_height, screen_width = screen.shape
     screen = screen[:, int(screen_height * 0.4):int(screen_height * 0.8)]
     view_width = int(screen_width * 0.6)
-    cart_location = get_cart_location(screen_width)
+    cart_location = get_cart_location(screen_width, env)
     if cart_location < view_width // 2:
         slice_range = slice(view_width)
     elif cart_location > (screen_width - view_width // 2):
@@ -106,6 +106,8 @@ def get_screen(env):
     # Convert to float, rescale, convert to torch tensor
     # (this doesn't require a copy)
     screen = np.ascontiguousarray(screen, dtype=np.float32) / 255
+
+    print(list(screen.shape))
     screen = torch.from_numpy(screen)
     # Resize, and add a batch dimension (BCHW)
     return resize(screen).unsqueeze(0)
