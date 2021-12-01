@@ -24,3 +24,4 @@ src/simulator/gui/__pycache__
 src/simulator/robots/__pycache__/
 src/simulator/worlds/__pycache__/
 src/algorithms/pg/__pycache__/
+src/simulator/models/__pycache__/

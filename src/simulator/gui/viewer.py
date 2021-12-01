@@ -24,7 +24,7 @@ LS_DIALOG_RESPONSE_CANCEL = 1
 LS_DIALOG_RESPONSE_ACCEPT = 2
 
 
-class Viewer:
+class Viewer(object):
     def __init__(self, simulator):
         # bind the simulator
         self.simulator = simulator
