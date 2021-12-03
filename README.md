@@ -5,6 +5,11 @@ from various resources such as:
 
 - <a href="https://github.com/udacity/deep-reinforcement-learning">Udacity DRL repository</a>
 
+
+### Acknowledgements
+
+The inital version of the simulator is taken from https://github.com/nmccrea/sobot-rimulator (thanks a lot). 
+
 ## Dependencies
 
 - OpenAI Gym

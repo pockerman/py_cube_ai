@@ -81,6 +81,7 @@ class CartPoleDQN(DQN):
 
             # Observe new state
             self._last_screen = self._current_screen
+            print(self._last_screen.shape)
             self._current_screen = self.get_screen()
 
             if not done:
