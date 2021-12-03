@@ -25,3 +25,5 @@ src/simulator/robots/__pycache__/
 src/simulator/worlds/__pycache__/
 src/algorithms/pg/__pycache__/
 src/simulator/models/__pycache__/
+src/simulator/control/__pycache__/
+src/simulator/control/controllers/__pycache__/
