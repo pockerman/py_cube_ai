@@ -8,7 +8,7 @@ from various resources such as:
 
 ### Acknowledgements
 
-The simulator is taken from https://github.com/nmccrea/sobot-rimulator (thanks a lot). 
+The inital version of the simulator is taken from https://github.com/nmccrea/sobot-rimulator (thanks a lot). 
 
 ## Dependencies
 
