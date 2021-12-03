@@ -1,3 +1,6 @@
+from src.simulator.viewers.obstacle_view import ObstacleView
+from src.simulator.viewers.robot_view import RobotView
+
 class WorldView(object):
 
     # meters
@@ -101,7 +104,9 @@ class WorldView(object):
         )
 
     def add_robot_view(self, robot):
-        pass
+        robot_view = RobotView(self.viewer, robot)
+        self.robot_views.append(robot_view)
 
     def add_obstacle_view(self, view):
-        pass
+        obstacle_view = ObstacleView(self.viewer, obstacle)
+        self.obstacle_views.append(obstacle_view)

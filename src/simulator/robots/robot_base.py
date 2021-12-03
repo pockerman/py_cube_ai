@@ -21,3 +21,7 @@ class RobotBase(metaclass=abc.ABCMeta):
         :param options:
         :return:
         """
+
+    @property
+    def pose(self):
+        return self.state.pose

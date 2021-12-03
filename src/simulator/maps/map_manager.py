@@ -1,7 +1,7 @@
 from math import pi, sin, cos
 from random import random, randrange
 import pickle
-from src.simulator.models.pose import Pose
+from src.simulator.dynamics.pose import Pose
 from src.simulator.models.polygon import Polygon
 from src.simulator.models.rectangle_obstacle import RectangleObstacle
 import src.simulator.simulator_utils.geometrics_util as geometrics

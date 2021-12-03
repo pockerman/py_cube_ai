@@ -5,6 +5,8 @@ from gi.repository import GLib
 
 from src.utils import INFO
 from src.simulator.simulator_base import SimulatorBase, World, WorldView, Viewer, MapManager
+from src.simulator.simulator_exceptions.collision_exception import CollisionException
+from src.simulator.simulator_exceptions.goal_reached_exception import GoalReachedException
 
 
 class DefaultSimulator(SimulatorBase):
@@ -33,7 +35,7 @@ class DefaultSimulator(SimulatorBase):
         """
         self.viewer.control_panel_state_init()
         self.draw_world()
-        self.map_manager.apply_to_world(self.world)
+        self.map_manager.random_map(self.world)
 
     def draw_world(self):
 
@@ -45,3 +47,23 @@ class DefaultSimulator(SimulatorBase):
 
         # render the frame
         self.viewer.draw_frame()
+
+    def pause_sim(self):
+        GLib.source_remove(self.sim_event_source)
+        self.viewer.control_panel_state_paused()
+
+    def step_sim_once(self):
+        self.pause_sim()
+        self._step_sim()
+
+    def _step_sim(self):
+        # increment the simulation
+        try:
+            self.world.step()
+        except CollisionException:
+            self.end_sim("Collision!")
+        except GoalReachedException:
+            self.end_sim("Goal Reached!")
+
+        # draw the resulting world
+        self.draw_world()

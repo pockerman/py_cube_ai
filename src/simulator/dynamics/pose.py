@@ -1,5 +1,5 @@
 from src.simulator.simulator_utils import linalg2_util as linalg
-from src.simulator.simulator_utils  import math_util
+from src.simulator.simulator_utils import math_util
 
 
 class Pose(object):
