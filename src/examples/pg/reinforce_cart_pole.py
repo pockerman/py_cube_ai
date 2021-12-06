@@ -44,7 +44,7 @@ if __name__ == '__main__':
     policy = Policy(env=env)
     optimizer = optim.Adam(policy.parameters(), lr=1e-2)
 
-    reinforce = Reinforce(env=env, n_max_iterations=1000, gamma=0.1,
+    reinforce = Reinforce(env=env, n_episodes=1000, gamma=0.1,
                           optimizer=optimizer, tolerance=1.0e-2, max_itrs_per_episode=100,
                           print_frequency=100, policy=policy)
 

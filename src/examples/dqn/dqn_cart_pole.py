@@ -145,11 +145,11 @@ if __name__ == '__main__':
     optimizer = optim.RMSprop(policy_net.parameters())
 
     agent = CartPoleDQN(env=env, target_network=target_net, policy_net=policy_net,
-                 n_max_iterations=NUM_EPISODES, tolerance=1.0e-8, update_frequency=TARGET_UPDATE,
-                 batch_size=BATCH_SIZE, gamma=GAMMA, optimizer=optimizer, tau=0.4,
-                 steps_per_iteration=1000, state_size=10, n_actions=env.action_space.n,
-                 eps_start=EPS_START, eps_end=EPS_END, eps_decay=EPS_DECAY, device=device,
-                 buffer_size=BUFFER_SIZE, seed=SEED)
+                        n_episodes=NUM_EPISODES, tolerance=1.0e-8, update_frequency=TARGET_UPDATE,
+                        batch_size=BATCH_SIZE, gamma=GAMMA, optimizer=optimizer, tau=0.4,
+                        steps_per_iteration=1000, state_size=10, n_actions=env.action_space.n,
+                        eps_start=EPS_START, eps_end=EPS_END, eps_decay=EPS_DECAY, device=device,
+                        buffer_size=BUFFER_SIZE, seed=SEED)
 
     # Train the agent
     agent.train()

@@ -24,12 +24,12 @@ class PolicyIteration(AlgorithmBase):
     Policy iteration class
     """
 
-    def __init__(self, n_max_iterations: int, tolerance: float, env: Any,
+    def __init__(self, n_episodes: int, tolerance: float, env: Any,
                  gamma: float, n_policy_eval_steps: int, policy_init: PolicyBase,
                  policy_adaptor: PolicyAdaptorBase):
-        super(PolicyIteration, self).__init__(n_max_iterations=n_max_iterations, tolerance=tolerance, env=env)
+        super(PolicyIteration, self).__init__(n_episodes=n_episodes, tolerance=tolerance, env=env)
 
-        self._p_eval = IterativePolicyEvaluator(env=env, n_max_iterations=n_policy_eval_steps,
+        self._p_eval = IterativePolicyEvaluator(env=env, n_episodes=n_policy_eval_steps,
                                                 tolerance=tolerance, gamma=gamma, policy_init=policy_init)
 
         self._p_imprv = PolicyImprovement(env=env, v=self._p_eval.v, gamma=gamma,
@@ -43,18 +43,18 @@ class PolicyIteration(AlgorithmBase):
     def policy(self):
         return self._p_eval.policy
 
-    def actions_before_training_iterations(self, **options) -> None:
+    def actions_before_training_begins(self, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the iterations
         """
 
         # call the base class version
-        super(PolicyIteration, self).actions_before_training_iterations(**options)
-        self._p_eval.actions_before_training_iterations(**options)
-        self._p_imprv.actions_before_training_iterations(**options)
+        super(PolicyIteration, self).actions_before_training_begins(**options)
+        self._p_eval.actions_before_training_begins(**options)
+        self._p_imprv.actions_before_training_begins(**options)
 
-    def actions_after_training_iterations(self, **options) -> None:
+    def actions_after_training_ends(self, **options) -> None:
         pass
 
     def step(self) -> None:

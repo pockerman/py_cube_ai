@@ -14,9 +14,9 @@ from src.policies.policy_base import PolicyBase
 
 class IterativePolicyEvaluator(DPAlgoBase):
 
-    def __init__(self, n_max_iterations: int, tolerance: float,
+    def __init__(self, n_episodes: int, tolerance: float,
                  env: Any, gamma: float, policy_init: PolicyBase) -> None:
-        super(IterativePolicyEvaluator, self).__init__(n_max_iterations=n_max_iterations,
+        super(IterativePolicyEvaluator, self).__init__(n_episodes=n_episodes,
                                                        tolerance=tolerance, env=env, gamma=gamma, policy=policy_init)
 
 

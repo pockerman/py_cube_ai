@@ -23,11 +23,11 @@ class Reinforce(AlgorithmBase):
     function approximator using policy gradient.
     """
 
-    def __init__(self, n_max_iterations: int, tolerance: float, env: Any,
+    def __init__(self, n_episodes: int, tolerance: float, env: Any,
                  max_itrs_per_episode: int, gamma: float, print_frequency: int,
                  policy: PolicyTorchBase,
                  optimizer: Any) -> None:
-        super(Reinforce, self).__init__(n_max_iterations=n_max_iterations, tolerance=tolerance, env=env)
+        super(Reinforce, self).__init__(n_episodes=n_episodes, tolerance=tolerance, env=env)
         self._max_itrs_per_episode = max_itrs_per_episode
         self.scores = []
         self.scores_deque = deque(maxlen=100)
@@ -38,16 +38,16 @@ class Reinforce(AlgorithmBase):
         self.policy = policy
         self.optimizer = optimizer
 
-    def actions_before_training_iterations(self, **options) -> None:
+    def actions_before_training_begins(self, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the iterations
         """
-        super(Reinforce, self).actions_before_training_iterations(**options)
+        super(Reinforce, self).actions_before_training_begins(**options)
         self.scores = []
         self._reset_internal_structs()
 
-    def actions_after_training_iterations(self, **options) -> None:
+    def actions_after_training_ends(self, **options) -> None:
         pass
 
     def _reset_internal_structs(self) -> None:
@@ -88,7 +88,7 @@ class Reinforce(AlgorithmBase):
         policy_loss.backward()
         self.optimizer.step()
 
-        current_episode_idx = self.current_itr_index
+        current_episode_idx = self.current_episode_index
         if current_episode_idx  % self.print_frequency == 0:
             print('Episode {}\tAverage Score: {:.2f}'.format(current_episode_idx, np.mean(self.scores_deque)))
         if np.mean(self.scores_deque) >= 195.0:

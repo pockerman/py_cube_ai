@@ -38,7 +38,7 @@ class MCPrediction(AlgorithmBase):
         Execute any actions the algorithm needs before
         starting the iterations
         """
-        super(MCPrediction, self).actions_before_training_iterations(**options)
+        super(MCPrediction, self).actions_before_training_begins(**options)
 
         self._returns_sum = defaultdict(lambda: np.zeros(self.train_env.action_space.n))
         self._N = defaultdict(lambda: np.zeros(self.train_env.action_space.n))

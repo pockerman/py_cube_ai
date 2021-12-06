@@ -20,7 +20,7 @@ class PolicyImprovement(DPAlgoBase):
 
     def __init__(self, env: Any, v: np.array, gamma: float, policy_init: PolicyBase,
                  policy_adaptor: PolicyAdaptorBase) -> None:
-        super().__init__(env=env, tolerance=1.0e-4, n_max_iterations=1,
+        super().__init__(env=env, tolerance=1.0e-4, n_episodes=1,
                          gamma=gamma, policy=policy_init)
         self.v = v
         self._policy_adaptor = policy_adaptor

@@ -29,14 +29,14 @@ class CartPoleDQN(DQN):
                         T.ToTensor()])
 
     def __init__(self, env, target_network: NNBase, policy_net: NNBase,
-                 n_max_iterations: int, tolerance: float, update_frequency: int,
+                 n_episodes: int, tolerance: float, update_frequency: int,
                  batch_size: int, gamma: float, optimizer: Any, tau: float,
                  steps_per_iteration: int, state_size: int, n_actions: int,
                  eps_start: float = 1.0, eps_end: float = 0.01, eps_decay: float = 0.995, device: str = 'cpu',
                  buffer_size: int = 100, seed: int = 0
                  ):
         super(CartPoleDQN, self).__init__(env=env, target_network=target_network, policy_net=policy_net,
-                                          n_max_iterations=n_max_iterations, tolerance=tolerance, update_frequency=update_frequency,
+                                          n_episodes=n_episodes, tolerance=tolerance, update_frequency=update_frequency,
                                           batch_size=batch_size, gamma=gamma, optimizer=optimizer, tau=tau,
                                           steps_per_iteration=steps_per_iteration, state_size=state_size, n_actions=n_actions,
                                           eps_start=eps_start, eps_end=eps_end, eps_decay=eps_decay, device=device, buffer_size=buffer_size, seed=seed)
@@ -45,12 +45,12 @@ class CartPoleDQN(DQN):
         self._current_screen = None
         self._steps_done = 0
 
-    def actions_before_training_iterations(self, **options) -> None:
+    def actions_before_training_begins(self, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the iterations
         """
-        super(CartPoleDQN, self).actions_before_training_iterations(**options)
+        super(CartPoleDQN, self).actions_before_training_begins(**options)
         self._last_screen = self.get_screen()
         self._current_screen = self.get_screen()
         self._steps_done = 0
