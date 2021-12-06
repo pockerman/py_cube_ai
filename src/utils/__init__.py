@@ -1,1 +1,3 @@
-INFO="INFO: "
+INFO = "INFO: "
+WARNING = "WARNING: "
+ERROR = "ERROR: "

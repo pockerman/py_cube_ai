@@ -1,13 +1,4 @@
-from typing import Any
-import gi
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
-from gi.repository import GLib
-#import gui.frame
-#import gui.viewer
-
-
-from src.simulator.default_simulator import DefaultSimulator
+from src.simulator.simulators.default_simulator import DefaultSimulator
 from src.simulator.gui.viewer import Viewer
 from src.simulator.viewers.world_view import WorldView
 from src.simulator.maps.map_manager import MapManager

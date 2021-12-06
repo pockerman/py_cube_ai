@@ -1,6 +1,8 @@
 from math import pi, sin, cos
 from random import random, randrange
 import pickle
+
+from src.utils import WARNING, ERROR
 from src.simulator.dynamics.pose import Pose
 from src.simulator.models.polygon import Polygon
 from src.simulator.models.rectangle_obstacle import RectangleObstacle
@@ -106,9 +108,13 @@ class MapManager(object):
             pickle.dump(self.current_goal, file)
 
     def load_map(self, filename):
-        with open(filename, "rb") as file:
-            self.current_obstacles = pickle.load(file)
-            self.current_goal = pickle.load(file)
+        try:
+            with open(filename, "rb") as file:
+                self.current_obstacles = pickle.load(file)
+                self.current_goal = pickle.load(file)
+        except Exception as e:
+            print("{0} An exception occurred while trying to load map from file {1}".format(ERROR, filename))
+            print("\tException message: {}".format(str(e)))
 
     def apply_to_world(self, world):
         # add the current obstacles
@@ -116,5 +122,9 @@ class MapManager(object):
             world.add_obstacle(obstacle)
 
         # program the robot supervisors
-        for robot in world.robots:
-            robot.supervisor.goal = self.current_goal[:]
+
+        if self.current_goal is not None:
+            for robot in world.robots:
+                robot.supervisor.goal = self.current_goal[:]
+        else:
+            print("{0} current goal list is empty!!!".format(WARNING))

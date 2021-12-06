@@ -4,18 +4,19 @@ from gi.repository import Gtk
 from gi.repository import GLib
 
 from src.utils import INFO
-from src.simulator.simulator_base import SimulatorBase, World, WorldView, Viewer, MapManager
-from src.simulator.simulator_exceptions.collision_exception import CollisionException
-from src.simulator.simulator_exceptions.goal_reached_exception import GoalReachedException
+from src.simulator.simulators.simulator_base import SimulatorBase, World, WorldView, Viewer, MapManager
+
 
 
 class DefaultSimulator(SimulatorBase):
+    """
+    The DefaultSimulator class. Default simulator implementation
+    """
 
     def __init__(self,  refresh_rate: int, viewer: Viewer, world: World,
                  world_view: WorldView, map_manager: MapManager) -> None:
         super(DefaultSimulator, self).__init__(refresh_rate=refresh_rate, viewer=viewer,
                                                world=world, world_view=world_view, map_manager=map_manager)
-
 
     def simulate(self) -> None:
         """
@@ -27,15 +28,21 @@ class DefaultSimulator(SimulatorBase):
         self.viewer.draw_frame()
         print("{} End simulation".format(INFO))
 
-    def initialize_sim(self):
+    def initialize_sim(self, **options) -> None:
         """
         Initialize the data for the simulation
-        :param random:
-        :return:
+        :param options: Options to use in order to initialize
+        the simulation
+        :return: None
         """
         self.viewer.control_panel_state_init()
         self.draw_world()
-        self.map_manager.random_map(self.world)
+
+        # generate a random environment
+        if "random" in options and options["random"]:
+            self.map_manager.random_map(self.world)
+        else:
+            self.map_manager.apply_to_world(self.world)
 
     def draw_world(self):
 
@@ -48,22 +55,4 @@ class DefaultSimulator(SimulatorBase):
         # render the frame
         self.viewer.draw_frame()
 
-    def pause_sim(self):
-        GLib.source_remove(self.sim_event_source)
-        self.viewer.control_panel_state_paused()
 
-    def step_sim_once(self):
-        self.pause_sim()
-        self._step_sim()
-
-    def _step_sim(self):
-        # increment the simulation
-        try:
-            self.world.step()
-        except CollisionException:
-            self.end_sim("Collision!")
-        except GoalReachedException:
-            self.end_sim("Goal Reached!")
-
-        # draw the resulting world
-        self.draw_world()
