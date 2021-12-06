@@ -14,9 +14,9 @@ class DPAlgoBase(AlgorithmBase):
     Base class for DP-based algorithms
     """
 
-    def __init__(self, n_max_iterations: int, tolerance: float,
+    def __init__(self, n_episodes: int, tolerance: float,
                  env: Any, gamma: float, policy: PolicyBase) -> None:
-        super(DPAlgoBase, self).__init__(n_max_iterations=n_max_iterations,
+        super(DPAlgoBase, self).__init__(n_episodes=n_episodes,
                                          tolerance=tolerance, env=env)
         self._gamma = gamma
         self._policy = policy
@@ -44,19 +44,19 @@ class DPAlgoBase(AlgorithmBase):
     def policy(self, value: PolicyBase) -> None:
         self._policy = value
 
-    def actions_before_training_iterations(self, **options) -> None:
+    def actions_before_training_begins(self, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the iterations
         """
 
         # call the base class version
-        super(DPAlgoBase, self).actions_before_training_iterations(**options)
+        super(DPAlgoBase, self).actions_before_training_begins(**options)
 
         # zero the value function
         self._v = np.zeros(self.train_env.observation_space.n)
 
-    def actions_after_training_iterations(self, **options) -> None:
+    def actions_after_training_ends(self, **options) -> None:
         """
         Execute any actions the algorithm needs after
         the iterations are finished

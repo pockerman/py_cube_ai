@@ -30,13 +30,13 @@ class ValueIteration(DPAlgoBase):
     former implementation.
     """
 
-    def __init__(self, n_max_iterations: int, tolerance: float,
+    def __init__(self, n_episodes: int, tolerance: float,
                  env: Any, gamma: float, policy_init: PolicyBase,
                  policy_adaptor: PolicyAdaptorBase) -> None:
         """
         Constructor
         """
-        super(ValueIteration, self).__init__(n_max_iterations=n_max_iterations, gamma=gamma,
+        super(ValueIteration, self).__init__(n_episodes=n_episodes, gamma=gamma,
                                              tolerance=tolerance, env=env, policy=policy_init)
 
         self._p_imprv = PolicyImprovement(env=env, v=self.v, gamma=gamma,

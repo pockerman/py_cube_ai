@@ -23,13 +23,13 @@ class DQN(AlgorithmBase):
     """
 
     def __init__(self, env: Any, target_network: NNBase, policy_net: NNBase,
-                 n_max_iterations: int, tolerance: float, update_frequency: int,
+                 n_episodes: int, tolerance: float, update_frequency: int,
                  batch_size: int, gamma: float, optimizer: Any, tau: float,
                  steps_per_iteration: int, state_size: int, n_actions: int,
                  eps_start: float = 1.0, eps_end: float = 0.01, eps_decay: float = 0.995, device: str = 'cpu',
                  buffer_size: int = 100, seed: int = 0) -> None:
 
-        super(DQN, self).__init__(n_max_iterations=n_max_iterations, tolerance=tolerance, env=env)
+        super(DQN, self).__init__(n_episodes=n_episodes, tolerance=tolerance, env=env)
         self.target_net = target_network
         self.policy_net = policy_net
         self.memory = ReplayBuffer(batch_size=batch_size, action_size=n_actions, device=device,
@@ -55,18 +55,18 @@ class DQN(AlgorithmBase):
     def scores(self):
         return self._scores
 
-    def actions_before_training_iterations(self, **options) -> None:
+    def actions_before_training_begins(self, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the iterations
         """
-        super(DQN, self).actions_before_training_iterations(**options)
+        super(DQN, self).actions_before_training_begins(**options)
         self._scores = []
 
         # last 100 scores
         self._scores_window = deque(maxlen=100)
         self.eps = self.eps_start
 
-    def actions_after_training_iterations(self, **options) -> None:
+    def actions_after_training_ends(self, **options) -> None:
         pass
 

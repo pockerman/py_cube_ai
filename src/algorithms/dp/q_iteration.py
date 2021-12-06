@@ -60,7 +60,7 @@ class QIteration(AlgorithmBase):
 
         # call base class typically this should
         # reset the environment
-        super(QIteration, self).actions_before_training_iterations(**options)
+        super(QIteration, self).actions_before_training_begins(**options)
 
         if self._update_values_on_start_itrs:
             self._q = collections.defaultdict(float)
