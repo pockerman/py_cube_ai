@@ -84,8 +84,8 @@ if __name__ == '__main__':
 
     x = [i for i in range(near_exit.shape[1])]
 
-    lr_values = []
-    #lr_values = [0.1, 0.01, 0.001]
+    #lr_values = []
+    lr_values = [0.1, 0.01, 0.001]
     for k, lr in enumerate(lr_values):
         dt = 1.0
         model = Model(eta=lr, state_space=state_space)
@@ -120,7 +120,6 @@ if __name__ == '__main__':
 
                     output_directory = "/home/alex/qi3/rl_python/src/examples/mc/mountain_car_imgs/"
                     fname = os.path.join(output_directory, "mountain_car_" + str(i) + "_" + str(counter) + ".png")
-                    print(fname)
                     plt.imsave(fname=fname, arr=screen, format='png')
                 counter += 1
 
@@ -146,7 +145,7 @@ if __name__ == '__main__':
                     states_visited.append(state)
 
 
-    """
+
     plt.subplot(221)
     plt.plot(x, near_exit[0], 'r--')
     plt.plot(x, near_exit[1], 'g--')
@@ -160,7 +159,7 @@ if __name__ == '__main__':
     plt.title("left side, moving right")
     plt.legend(("eta = 0.1", "eta = 0.01",  "eta = 0.001"))
     plt.show()
-    """
+
 
     images_path = Path("/home/alex/qi3/rl_python/src/examples/mc/mountain_car_imgs/")
     filenames = os.listdir(images_path)
@@ -170,11 +169,8 @@ if __name__ == '__main__':
         splits = filename.split('_')
         if splits[-2] == '0' or splits[-2] == '1':
             images.append(str(images_path) + "/" + filename)
-        else:
-            print(splits)
 
     make_gif_from_images(filenames=images,
                          gif_filename=Path("/home/alex/qi3/rl_python/src/examples/mc/gifs/mountain_car.gif"))
 
-    #make_gif(images_path=Path("/home/alex/qi3/rl_python/src/examples/mc/mountain_car_imgs/"),
-    #         gif_filename=Path("/home/alex/qi3/rl_python/src/examples/mc/mountain_car.gif"))
+
