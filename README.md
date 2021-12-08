@@ -21,32 +21,32 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 ### Dynamic programming
 
-- <a href="src/apps/dp/iterative_policy_evaluation_frozen_lake.py">Iterative policy evaluation on FrozenLake-v0</a>
-- <a href="src/apps/dp/policy_improvement_frozen_lake.py">Policy improvement on FrozenLake-v0</a>
-- <a href="src/apps/dp/policy_iteration_frozen_lake.py">Policy iteration on FrozenLake-v0</a>
-- <a href="src/apps/dp/value_iteration_frozen_lake.py">Value iteration on FrozenLake-v0</a>
+- <a href="src/examples/dp/iterative_policy_evaluation_frozen_lake.py">Iterative policy evaluation on FrozenLake-v0</a>
+- <a href="src/examples/dp/policy_improvement_frozen_lake.py">Policy improvement on FrozenLake-v0</a>
+- <a href="src/examples/dp/policy_iteration_frozen_lake.py">Policy iteration on FrozenLake-v0</a>
+- <a href="src/examples/dp/value_iteration_frozen_lake.py">Value iteration on FrozenLake-v0</a>
 
 ### Monte Carlo
 
-- <a href="src/apps/mc_prediction_black_jack.py">Monte Carlo prediction on ```Blackjack-v0```</a>
-- <a href="src/apps/mc_prediction_black_jack.py">Approximate Monte Carlo on ```MountainCar-v0```</a>
+- <a href="src/examples/mc/mc_prediction_black_jack.py">Monte Carlo prediction on ```Blackjack-v0```</a>
+- <a href="src/examples/mc/mountain_car_approximate_monte_carlo.py">Approximate Monte Carlo on ```MountainCar-v0```</a>
 
 ### Temporal differencing
 
-- <a href="src/apps/td/cliff_walking_q_learning.py">SARSA on ```Cliffwalking-v0```</a> 
-- <a href="src/apps/td/cliff_walking_q_learning.py">Q-learning on ```Cliffwalking-v0``` </a> 
+- <a href="src/examples/td/cliff_walking_q_learning.py">SARSA on ```Cliffwalking-v0```</a> 
+- <a href="src/examples/td/cliff_walking_q_learning.py">Q-learning on ```Cliffwalking-v0``` </a> 
 - <a href="#">Expected SARSA  </a> 
 
 
 ### DQN
 
-- <a href="src/apps/dqn/dqn_lunar_lander.py">Vanilla DQN on CartPole-v0</a>
-- <a href="src/apps/dqn/dqn_lunar_lander.py">Vanilla DQN on LunarLander-v2</a>
+- <a href="src/examples/dqn/dqn_lunar_lander.py">Vanilla DQN on CartPole-v0</a>
+- <a href="src/examples/dqn/dqn_lunar_lander.py">Vanilla DQN on LunarLander-v2</a>
 
 
 ### Policy gradient methods
 
-- <a href="src/apps/pg/reinforce_cart_pole.py">REINFORCE on CartPole-v0</a>
+- <a href="src/examples/pg/reinforce_cart_pole.py">REINFORCE on CartPole-v0</a>
 
 
 ## Images
