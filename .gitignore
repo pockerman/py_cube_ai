@@ -27,3 +27,5 @@ src/algorithms/pg/__pycache__/
 src/simulator/models/__pycache__/
 src/simulator/control/__pycache__/
 src/simulator/control/controllers/__pycache__/
+tests/__pycache__/
+src/simulator/viewers/controllers/__pycache__/

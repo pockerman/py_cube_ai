@@ -1,22 +1,22 @@
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
-from algorithms import QLearning
-from policies import EpsilonDecreaseOption, EpsilonGreedyPolicy
+from src.algorithms.td import QLearning
+from src.policies.epsilon_greedy_policy import EpsilonDecreaseOption, EpsilonGreedyPolicy
 
 
 def plot_values(V):
-	# reshape the state-value function
-	V = np.reshape(V, (4,12))
-	# plot the state-value function
-	fig = plt.figure(figsize=(15,5))
-	ax = fig.add_subplot(111)
-	im = ax.imshow(V, cmap='cool')
-	for (j,i),label in np.ndenumerate(V):
-	    ax.text(i, j, np.round(label,3), ha='center', va='center', fontsize=14)
-	plt.tick_params(bottom='off', left='off', labelbottom='off', labelleft='off')
-	plt.title('State-Value Function')
-	plt.show()
+    # reshape the state-value function
+    V = np.reshape(V, (4, 12))
+    # plot the state-value function
+    fig = plt.figure(figsize=(15, 5))
+    ax = fig.add_subplot(111)
+    im = ax.imshow(V, cmap='cool')
+    for (j, i), label in np.ndenumerate(V):
+        ax.text(i, j, np.round(label, 3), ha='center', va='center', fontsize=14)
+    plt.tick_params(bottom='off', left='off', labelbottom='off', labelleft='off')
+    plt.title('State-Value Function')
+    plt.show()
 
 
 if __name__ == '__main__':
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     plot_every = 100
     policy = EpsilonGreedyPolicy(eps=1.0, env=env,
                                  decay_op=EpsilonDecreaseOption.INVERSE_STEP,
-                                 min_eps= 0.0001)
+                                 min_eps=0.0001)
     q_learner = QLearning(env=env, n_max_iterations=num_episodes, gamma=1.0, alpha=0.01,
                           plot_freq=plot_every, policy=policy, max_num_iterations_per_episode=1000,
                           tolerance=1.0e-4)
