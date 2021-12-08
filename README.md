@@ -28,12 +28,13 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 ### Monte Carlo
 
-- <a href="src/apps/mc_prediction_black_jack.py">Monte Carlo prediction on Blackjack-v0</a>
+- <a href="src/apps/mc_prediction_black_jack.py">Monte Carlo prediction on ```Blackjack-v0```</a>
+- <a href="src/apps/mc_prediction_black_jack.py">Approximate Monte Carlo on ```MountainCar-v0```</a>
 
 ### Temporal differencing
 
-- <a href="src/apps/td/cliff_walking_q_learning.py">SARSA on Cliffwalking </a> 
-- <a href="src/apps/td/cliff_walking_q_learning.py">Q-learning on Cliffwalking  </a> 
+- <a href="src/apps/td/cliff_walking_q_learning.py">SARSA on ```Cliffwalking-v0```</a> 
+- <a href="src/apps/td/cliff_walking_q_learning.py">Q-learning on ```Cliffwalking-v0``` </a> 
 - <a href="#">Expected SARSA  </a> 
 
 
@@ -50,14 +51,17 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 ## Images
 
- <figure>
-  <img src="images/state_value_function_frozen_lake.png" alt="Trulli" style="width:100%">
-  <figcaption>Iterative policy evaluation on FrozenLake.</figcaption>
-</figure> 
+![Mountain car](images/mountain_car.gif)
+**Approximate Monte Carlo on Mountain Car**
 
- <figure>
-  <img src="images/q_learning_state_value.png" alt="Trulli" style="width:100%">
-  <figcaption>Q-learning on Cliffwalking .</figcaption>
-</figure> 
+![State value function](images/state_value_function_frozen_lake.png)
+**Iterative policy evaluation on FrozenLake**
+
+![State value function](images/q_learning_state_value.png)
+**Q-learning on Cliffwalking**
+
+
+
+ 
 
 
