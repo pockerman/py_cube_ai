@@ -4,6 +4,7 @@ Implementation of reinforcement learning algorithms. Algorithms have been refact
 from various resources such as:
 
 - <a href="https://github.com/udacity/deep-reinforcement-learning">Udacity DRL repository</a>
+- <a href="https://livevideo.manning.com/module/56_8_7/reinforcement-learning-in-motion/">Reinforcement learning in motion</a>
 
 
 ### Acknowledgements
@@ -36,6 +37,7 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 - <a href="src/examples/td/cliff_walking_q_learning.py">SARSA on ```Cliffwalking-v0```</a> 
 - <a href="src/examples/td/cliff_walking_q_learning.py">Q-learning on ```Cliffwalking-v0``` </a> 
 - <a href="#">Expected SARSA  </a> 
+- <a href="src/examples/td/td_zero_semi_gradient_mountain_car.py">TD(0) semi-gradient on ```MountainCar-v0```</a>
 
 
 ### DQN
