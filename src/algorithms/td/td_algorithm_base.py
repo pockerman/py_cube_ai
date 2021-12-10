@@ -12,7 +12,7 @@ class TDAlgoBase(AlgorithmBase):
 
     def __init__(self, n_episodes: int, tolerance: float,
                  env: Any, gamma: float, alpha: float,
-                 n_itrs_per_episode: int, float, plot_freq=10):
+                 n_itrs_per_episode: int, plot_freq=10):
         super(TDAlgoBase, self).__init__(n_episodes=n_episodes,
                                          tolerance=tolerance, env=env)
 
