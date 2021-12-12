@@ -14,6 +14,7 @@ class RobotBase(metaclass=abc.ABCMeta):
         self.name = name
         self.geometry = geometry
         self.state = init_state
+        self.print_msgs = True
 
     @abc.abstractmethod
     def move(self, **options) -> None:
@@ -22,6 +23,16 @@ class RobotBase(metaclass=abc.ABCMeta):
         :return:
         """
 
+    @abc.abstractmethod
+    def update_sensors(self, **options) -> None:
+        """
+        Update the robot sensors
+        :param options:
+        :return: None
+        """
+
     @property
     def pose(self):
         return self.state.pose
+
+

@@ -2,7 +2,9 @@ from math import pi, sin, cos
 from random import random, randrange
 import pickle
 
-from src.utils import WARNING, ERROR
+
+import src.simulator.models
+from src.utils import WARNING, ERROR, INFO
 from src.simulator.dynamics.pose import Pose
 from src.simulator.models.polygon import Polygon
 from src.simulator.models.rectangle_obstacle import RectangleObstacle
@@ -110,6 +112,7 @@ class MapManager(object):
     def load_map(self, filename):
         try:
             with open(filename, "rb") as file:
+                print("{0} Loading world {1}".format(INFO, filename))
                 self.current_obstacles = pickle.load(file)
                 self.current_goal = pickle.load(file)
         except Exception as e:
