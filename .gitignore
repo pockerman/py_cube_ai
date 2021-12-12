@@ -29,3 +29,5 @@ src/simulator/control/__pycache__/
 src/simulator/control/controllers/__pycache__/
 tests/__pycache__/
 src/simulator/viewers/controllers/__pycache__/
+src/simulator/viewers/__pycache__/
+src/simulator/simulators/__pycache__/

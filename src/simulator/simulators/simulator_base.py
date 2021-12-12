@@ -20,6 +20,9 @@ Viewer = TypeVar("Viewer")
 
 
 class SimulatorBase(Generic[Viewer, World, WorldView, MapManager], metaclass=abc.ABCMeta):
+    """
+    Base class for deriving simulators
+    """
 
     def __init__(self, refresh_rate: int, viewer: Viewer, world: World,
                  world_view: WorldView, map_manager: MapManager) -> None:

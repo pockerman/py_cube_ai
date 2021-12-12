@@ -1,10 +1,12 @@
+from src.utils import INFO
 from src.simulator.simulators.default_simulator import DefaultSimulator
 from src.simulator.gui.viewer import Viewer
 from src.simulator.viewers.world_view import WorldView
 from src.simulator.maps.map_manager import MapManager
 from src.simulator.worlds.default_world import DefaultWorld
 from src.simulator.robots.kherera_iii import KheperaIII
-from src.utils import INFO
+from src.utils import INFO, ERROR
+import pickle
 
 # hertz
 REFRESH_RATE = 20.0

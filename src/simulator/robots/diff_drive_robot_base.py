@@ -10,6 +10,9 @@ from src.simulator.control.robot_supervisor_interface import RobotSupervisorInte
 
 
 class DiffDriveRobotBase(RobotBase):
+    """
+    Base class for deriving differentially driven robots
+    """
 
     def __init__(self, name: str, geometry: Geometry, options: dict, init_state: State) -> None:
         super(DiffDriveRobotBase, self).__init__(name=name, geometry=geometry, init_state=init_state)
