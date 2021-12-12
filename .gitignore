@@ -10,7 +10,7 @@ algorithms/td/__pycache__/
 src/policies/__pycache__/
 src/utils/__pycache__/
 src/networks/__pycache__/
-src/algorithms/td/
+src/algorithms/td_org/
 src/networks/
 src/agents/__pycache__
 src/algorithms/dp/__pycache__/
@@ -31,3 +31,7 @@ tests/__pycache__/
 src/simulator/viewers/controllers/__pycache__/
 src/simulator/viewers/__pycache__/
 src/simulator/simulators/__pycache__/
+src/simulator/simulator_utils/__pycache__/
+src/simulator/simulator_exceptions/__pycache__/
+src/simulator/physics/__pycache__/
+
