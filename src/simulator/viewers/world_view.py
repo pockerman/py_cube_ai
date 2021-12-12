@@ -1,5 +1,9 @@
+from typing import TypeVar
+
 from src.simulator.viewers.obstacle_view import ObstacleView
 from src.simulator.viewers.robot_view import RobotView
+
+WorldView = TypeVar("WorldView")
 
 class WorldView(object):
 
@@ -22,6 +26,13 @@ class WorldView(object):
         self.obstacle_views = []
         for obstacle in self.world.obstacles:
             self.add_obstacle_view(obstacle)
+
+    def rebuild(self, world, viewer) -> WorldView:
+        world_view = WorldView(world=world, viewer=viewer)
+
+        return world_view
+
+
 
     def set_viewer(self, viewer):
         self.viewer = viewer
@@ -107,6 +118,6 @@ class WorldView(object):
         robot_view = RobotView(self.viewer, robot)
         self.robot_views.append(robot_view)
 
-    def add_obstacle_view(self, view):
+    def add_obstacle_view(self, obstacle):
         obstacle_view = ObstacleView(self.viewer, obstacle)
         self.obstacle_views.append(obstacle_view)

@@ -7,7 +7,6 @@ from src.utils import INFO
 from src.simulator.simulators.simulator_base import SimulatorBase, World, WorldView, Viewer, MapManager
 
 
-
 class DefaultSimulator(SimulatorBase):
     """
     The DefaultSimulator class. Default simulator implementation
@@ -17,6 +16,10 @@ class DefaultSimulator(SimulatorBase):
                  world_view: WorldView, map_manager: MapManager) -> None:
         super(DefaultSimulator, self).__init__(refresh_rate=refresh_rate, viewer=viewer,
                                                world=world, world_view=world_view, map_manager=map_manager)
+
+        self.print_msgs = True
+
+
 
     def simulate(self) -> None:
         """
@@ -36,13 +39,17 @@ class DefaultSimulator(SimulatorBase):
         :return: None
         """
         self.viewer.control_panel_state_init()
-        self.draw_world()
+
+        self.world = self.world.rebuild()
 
         # generate a random environment
         if "random" in options and options["random"]:
             self.map_manager.random_map(self.world)
         else:
             self.map_manager.apply_to_world(self.world)
+
+        self.world_view = self.world_view.rebuild(world=self.world, viewer=self.viewer)
+        self.draw_world()
 
     def draw_world(self):
 

@@ -1,6 +1,8 @@
 import abc
-
+from typing import TypeVar
 from src.simulator.physics.world_physics import Physics
+
+WorldBase = TypeVar('WorldBase')
 
 
 class WorldBase(metaclass=abc.ABCMeta):
@@ -24,6 +26,13 @@ class WorldBase(metaclass=abc.ABCMeta):
 
         # seconds
         self.world_time = 0.0
+
+    @abc.abstractmethod
+    def rebuild(self) -> WorldBase:
+        """
+        Rebuild the world
+        :return:
+        """
 
     def add_robot(self, robot) -> None:
         """

@@ -7,6 +7,7 @@ from src.simulator.robots.diff_drive_robot_base import DiffDriveRobotBase
 from src.simulator.dynamics.state import State
 from src.simulator.dynamics.pose import Pose
 from src.simulator.models.polygon import Polygon
+from src.utils import INFO
 
 # Khepera III Properties
 K3_WHEEL_RADIUS = 0.021  # meters
@@ -45,7 +46,7 @@ K3_SENSOR_POSES = [
 ]
 
 
-class KheperaIII(DiffDriveRobotBase):  # Khepera III robot
+class KheperaIII(DiffDriveRobotBase):
     """
     KheperaIII class. Models the Khepera III robot
     """
@@ -77,10 +78,22 @@ class KheperaIII(DiffDriveRobotBase):  # Khepera III robot
         # apply the robot dynamics to moving parts
         self.dynamics.apply_dynamics(v_l, v_r, dt, self.state.pose, self.wheel_encoders)
 
+        if self.print_msgs:
+            print("{0} {1} state: {2}".format(INFO, self.name, self.state))
+
         # update global geometry
         self.global_geometry = self.geometry.get_transformation_to_pose(self.state.pose)
 
         # update all of the sensors
+        self.update_sensors(**options)
+
+    def update_sensors(self, **options) -> None:
+        """
+        Update the robot sensors
+        :param options:
+        :return: None
+        """
+
         for ir_sensor in self.ir_sensors:
             ir_sensor.update_position()
 
