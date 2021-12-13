@@ -1,7 +1,7 @@
 import numpy as np
 
-from policies.policy_base import PolicyBase
-from policies.policy_adaptor_base import PolicyAdaptorBase
+from src.policies.policy_base import PolicyBase
+from src.policies.policy_adaptor_base import PolicyAdaptorBase
 
 
 class StochasticAdaptorPolicy(PolicyAdaptorBase):
