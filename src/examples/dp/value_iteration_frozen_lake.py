@@ -3,9 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from typing import Any
 
-from algorithms.dp.value_iteration import ValueIteration
-from policies.uniform_policy import UniformPolicy
-from policies.stochastic_policy_adaptor import StochasticAdaptorPolicy
+from src.algorithms.dp.value_iteration import ValueIteration
+from src.policies.uniform_policy import UniformPolicy
+from src.policies.stochastic_policy_adaptor import StochasticAdaptorPolicy
 
 
 class Agent(ValueIteration):
