@@ -3,6 +3,8 @@ import numpy as np
 from src.policies.policy_base import PolicyBase
 from src.policies.policy_adaptor_base import PolicyAdaptorBase
 
+# TODO: The implementation below does not seem
+# so stochastic. Maybe rename the class
 
 class StochasticAdaptorPolicy(PolicyAdaptorBase):
     """

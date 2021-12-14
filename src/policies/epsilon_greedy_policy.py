@@ -13,12 +13,13 @@ class EpsilonDecreaseOption(Enum):
     INVERSE_STEP = 2
     CONSTANT_RATE = 3
 
+
 class EpsilonGreedyPolicy(PolicyBase):
 
     def __init__(self, env: Any, eps: float,
                  decay_op: EpsilonDecreaseOption,
                  max_eps: float=1.0, min_eps: float = 0.001,
-                 epsilon_decay_factor: float=0.01):
+                 epsilon_decay_factor: float=0.01) -> None:
         super(EpsilonGreedyPolicy, self).__init__(env=env)
         self._eps = eps
         self._n_actions = env.action_space.n
@@ -39,8 +40,14 @@ class EpsilonGreedyPolicy(PolicyBase):
         raise Exception("Should not call")
 
     def actions_after_episode(self, episode_idx, **options) -> None:
+        """
 
-        if  self._decay_op == EpsilonDecreaseOption.NONE:
+        :param episode_idx:
+        :param options:
+        :return:
+        """
+
+        if self._decay_op == EpsilonDecreaseOption.NONE:
             return
 
         if self._decay_op == EpsilonDecreaseOption.INVERSE_STEP:

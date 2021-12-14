@@ -122,8 +122,6 @@ if __name__ == '__main__':
 
     env = EnvWrapper(name="roundabout-v0")
 
-    print(env.P[0])
-
     policy_init = UniformPolicy(env=env, init_val=None)
     policy_adaptor = StochasticAdaptorPolicy()
     value_itr = ValueIteration(n_episodes=10000, tolerance=1e-10,

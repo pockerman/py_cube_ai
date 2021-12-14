@@ -1,3 +1,5 @@
+from abc import ABC
+
 import numpy as np
 from collections import defaultdict, deque
 from typing import Any
@@ -5,7 +7,7 @@ from typing import Any
 from src.algorithms.algorithm_base import AlgorithmBase
 
 
-class TDAlgoBase(AlgorithmBase):
+class TDAlgoBase(AlgorithmBase, ABC):
     """
     Base class for temporal differences algorithms
     """
@@ -16,8 +18,8 @@ class TDAlgoBase(AlgorithmBase):
         super(TDAlgoBase, self).__init__(n_episodes=n_episodes,
                                          tolerance=tolerance, env=env)
 
-        self._gamma = gamma
-        self._alpha = alpha
+        self.gamma = gamma
+        self.alpha = alpha
         self.n_itrs_per_episode = n_itrs_per_episode
         self._plot_freq = plot_freq
 
@@ -29,14 +31,6 @@ class TDAlgoBase(AlgorithmBase):
         # monitor performance
         self._tmp_scores = None
         self._avg_scores = None
-
-    @property
-    def gamma(self) -> float:
-        return self._gamma
-
-    @property
-    def alpha(self) -> float:
-        return self._alpha
 
     @property
     def Q(self) -> dict:
@@ -79,6 +73,7 @@ class TDAlgoBase(AlgorithmBase):
         # initialize empty dictionary of arrays
         self._q = defaultdict(lambda: np.zeros(self.train_env.action_space.n))
 
+        # TODO: These should be transferred to the respective example
         self._tmp_scores = deque(maxlen=self._plot_freq)  # deque for keeping track of scores
         self._avg_scores = deque(maxlen=self.n_episodes)  # average scores over every plot_every episodes
 
