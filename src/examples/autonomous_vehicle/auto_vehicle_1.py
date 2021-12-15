@@ -14,7 +14,7 @@ plt.rcParams.update({'font.size': 20})
 
 from src.algorithms.dp.value_iteration import ValueIteration
 from src.policies.uniform_policy import UniformPolicy
-from src.policies.stochastic_policy_adaptor import StochasticAdaptorPolicy
+from src.policies.max_action_equal_probability_stochastic_policy_adaptor import MaxActionEqualProbabilityAdaptorPolicy
 
 
 GAMMA = 0.99
@@ -123,7 +123,7 @@ if __name__ == '__main__':
     env = EnvWrapper(name="roundabout-v0")
 
     policy_init = UniformPolicy(env=env, init_val=None)
-    policy_adaptor = StochasticAdaptorPolicy()
+    policy_adaptor = MaxActionEqualProbabilityAdaptorPolicy()
     value_itr = ValueIteration(n_episodes=10000, tolerance=1e-10,
                                env=env, gamma=GAMMA, policy_init=policy_init,
                                policy_adaptor=policy_adaptor)

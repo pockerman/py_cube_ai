@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+from typing import TypeVar
 
-from src.policies.policy_base import PolicyBase
+
+PolicyBase = TypeVar('PolicyBase')
 
 
 class PolicyAdaptorBase(ABC):
@@ -13,5 +15,11 @@ class PolicyAdaptorBase(ABC):
         pass
 
     @abstractmethod
-    def __call__(self, *args, **kwargs) -> PolicyBase:
-        raise Exception("Must be overridden")
+    def __call__(self, policy: PolicyBase, *args, **kwargs) -> PolicyBase:
+        """
+        Adapts the given policy
+        :param policy: The policy to adapt
+        :param args: Any arguments to use in order to adapt the policy
+        :param kwargs:
+        :return: PolicyBase
+        """
