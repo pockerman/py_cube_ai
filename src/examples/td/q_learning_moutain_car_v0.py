@@ -22,7 +22,6 @@ from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecre
 # We have to limit the states to small finite number.
 N_STATES = 36
 GAMMA = 1.0
-OUT_DIR = "auto_vehicle_2_output"
 INIT_LR = 1.0
 MIN_LR = 0.003
 EPS = 0.02
@@ -92,6 +91,7 @@ class MyQLearning(QLearning):
         super(MyQLearning, self).actions_before_episode_begins(**options)
 
         self.alpha = max(MIN_LR, INIT_LR * (0.85 ** (self.current_episode_index // 100)))
+
 
 if __name__ == '__main__':
 
