@@ -7,6 +7,7 @@ import abc
 from abc import abstractmethod, ABC
 from typing import Any, TypeVar
 
+from src.utils.exceptions import InvalidParameterValue
 from src.utils.wrappers import time_fn
 from src.utils.iteration_controller import ItrControlResult, IterationController
 
@@ -124,6 +125,9 @@ class AlgorithmBase(ABC):
         starting the training
         """
         self.reset()
+
+        if self.n_episodes == 0:
+            raise InvalidParameterValue(param_name="n_episodes", param_val=self.n_episodes)
 
     @abstractmethod
     def actions_after_training_ends(self, **options) -> None:
