@@ -10,6 +10,7 @@ from src.algorithms.td.td_algorithm_base import TDAlgoBase
 Env = TypeVar('Env')
 Policy = TypeVar('Policy')
 
+
 class QLearning(TDAlgoBase):
     """
     epsilon-greedy Q-learning algorithm
