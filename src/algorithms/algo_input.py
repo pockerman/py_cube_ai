@@ -21,3 +21,4 @@ class AlgoInput(object):
         self.tolerance: float = 0.0
         self.train_env: Env = None
         self.output_freq: int = None
+        self.render_env: bool = False
