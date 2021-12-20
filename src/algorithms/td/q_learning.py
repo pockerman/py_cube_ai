@@ -38,7 +38,7 @@ class QLearning(TDAlgoBase):
             #print(">>> Train iteration in episode {0}".format(itr))
 
             # epsilon-greedy action selection
-            action = self._policy(self.Q, state)
+            action = self._policy(self.q_function, state)
             next_state, reward, done, info = self.train_env.step(action)  # take action A, observe R, S'
             score += reward  # add reward to agent's score
             self._update_Q_table(state, action, reward, next_state)
@@ -58,10 +58,10 @@ class QLearning(TDAlgoBase):
         """Update the Q-value for the state"""
 
         # estimate in Q-table (for current state, action pair)
-        current = self.Q[state][action]
-        Qsa_next = np.max(self.Q[next_state]) if next_state is not None else 0  # value of next state
+        current = self.q_function[state][action]
+        Qsa_next = np.max(self.q_function[next_state]) if next_state is not None else 0  # value of next state
         target = reward + (self.gamma * Qsa_next)  # construct TD target
         new_value = current + (self.alpha * (target - current))  # get updated value
-        self.Q[state][action] = new_value
+        self.q_function[state][action] = new_value
 
 

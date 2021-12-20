@@ -1,8 +1,10 @@
 import numpy as np
 from collections import defaultdict, deque
-from typing import Any
+from typing import Any, TypeVar
 
 from src.algorithms.algorithm_base import AlgorithmBase
+
+QTable = TypeVar('QTable')
 
 
 class TDAlgoBase(AlgorithmBase):
@@ -24,11 +26,13 @@ class TDAlgoBase(AlgorithmBase):
         # A dictionay of 1D arrays. _q[s][a]
         # is the estimated action value that
         # corresponds to state s and action a
-        self._q = None
+        self._q: QTable = None
 
         # monitor performance
         self._tmp_scores = None
         self._avg_scores = None
+
+        self._current_episode_itr_index = 0
 
     @property
     def gamma(self) -> float:
@@ -39,8 +43,12 @@ class TDAlgoBase(AlgorithmBase):
         return self._alpha
 
     @property
-    def Q(self) -> dict:
+    def q_function(self) -> QTable:
         return self._q
+
+    @property
+    def current_episode_itr_index(self):
+        return self._current_episode_itr_index
 
     @property
     def tmp_scores(self):
