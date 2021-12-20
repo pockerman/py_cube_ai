@@ -2,7 +2,7 @@
 
 # You may need to import some classes of the controller module. Ex:
 #  from controller import Robot, Motor, DistanceSensor
-from controller import Robot, Motor
+from controller import Robot, Motor, Camera
 from src.algorithms.td.q_learning import QLearning
 
 MAX_SPEED = 6.28
@@ -12,6 +12,10 @@ TIME_STEP = 64
 
 # create the Robot instance.
 robot = Robot()
+
+camera = robot.getDevice("camera")
+#camera = Camera(name="camera")
+camera.enable(samplingPeriod=5)
 
 leftMotor = robot.getDevice('left wheel motor')
 rightMotor = robot.getDevice('right wheel motor')
