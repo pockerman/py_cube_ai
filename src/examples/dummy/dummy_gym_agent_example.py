@@ -1,6 +1,6 @@
 import gym
 import matplotlib.pyplot as plt
-from src.algorithms.dummy_gym_agent import DummyGymAgent
+from src.algorithms.dummy.dummy_gym_agent import DummyGymAgent
 
 
 if __name__ == '__main__':

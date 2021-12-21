@@ -3,10 +3,12 @@ Tabular Q-learning algorithm
 """
 
 import numpy as np
-from typing import Any
+from typing import Any, TypeVar
 from src.policies.policy_base import PolicyBase
 from src.algorithms.td.td_algorithm_base import TDAlgoBase
 
+Env = TypeVar('Env')
+Policy = TypeVar('Policy')
 
 class QLearning(TDAlgoBase):
     """
@@ -14,14 +16,14 @@ class QLearning(TDAlgoBase):
     """
 
     def __init__(self, n_episodes: int, tolerance: float,
-                 env: Any, gamma: float, alpha: float,
-                 max_num_iterations_per_episode: int, policy: PolicyBase,
+                 env: Env, gamma: float, alpha: float,
+                 n_itrs_per_episode: int, policy: Policy,
                  plot_freq: int = 10) -> None:
 
         super(QLearning, self).__init__(n_episodes=n_episodes, tolerance=tolerance,
-                                        env=env, gamma=gamma, alpha=alpha, plot_freq=plot_freq)
+                                        env=env, gamma=gamma, alpha=alpha, plot_freq=plot_freq,
+                                        n_itrs_per_episode=n_itrs_per_episode)
 
-        self._max_num_iterations_per_episode = max_num_iterations_per_episode
         self._policy = policy
 
     def step(self, **options) -> None:
@@ -33,9 +35,10 @@ class QLearning(TDAlgoBase):
         score = 0  # initialize score
         state = self.train_env.reset()  # start episode
 
-        for itr in range(self._max_num_iterations_per_episode):
+        for itr in range(self.n_itrs_per_episode):
 
-            #print(">>> Train iteration in episode {0}".format(itr))
+            if self.render_env:
+                self.train_env.render()
 
             # epsilon-greedy action selection
             action = self._policy(self.q_function, state)
@@ -47,14 +50,14 @@ class QLearning(TDAlgoBase):
                 self.update_tmp_scores(score)  # append score
                 break
 
-        if (self.current_episode_index % self.plot_frequency == 0):
+        if self.current_episode_index % self.plot_frequency == 0:
             avg = np.mean(self.tmp_scores)
             print(">>> Train average score {0}".format(avg))
             self.update_avg_scores(avg)
 
         self._policy.actions_after_episode(self.current_episode_index)
 
-    def _update_Q_table(self, state: int, action: int, reward: float, next_state: int=None)-> None:
+    def _update_Q_table(self, state: int, action: int, reward: float, next_state: int = None) -> None:
         """Update the Q-value for the state"""
 
         # estimate in Q-table (for current state, action pair)

@@ -13,9 +13,6 @@ from src.utils.iteration_controller import ItrControlResult, IterationController
 
 Env = TypeVar("Env")
 
-class TrainMode(Enum):
-    DEFAULT = 0
-    STOCHASTIC = 1
 
 
 class AlgorithmBase(ABC):
@@ -23,11 +20,12 @@ class AlgorithmBase(ABC):
     Base class for deriving algorithms
     """
 
-    def __init__(self, n_episodes: int, tolerance: float, env: Env) -> None:
+    def __init__(self, n_episodes: int, tolerance: float, env: Env, render_env: bool=False) -> None:
         super(AlgorithmBase, self).__init__()
         self._itr_ctrl = IterationController(tol=tolerance, n_max_itrs=n_episodes)
         self._train_env = env
         self._state = None
+        self.render_env = render_env
 
     def __call__(self, **options) -> ItrControlResult:
         """

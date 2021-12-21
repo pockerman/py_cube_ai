@@ -39,6 +39,8 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 - <a href="#">Expected SARSA  </a> 
 - <a href="src/examples/td/td_zero_semi_gradient_mountain_car.py">TD(0) semi-gradient on ```MountainCar-v0```</a>
 - <a href="src/examples/td/sarsa_semi_gradient_mountain_car_v0.py">SARSA semi-gradient on ```MountainCar-v0```</a>
+- <a href="src/examples/td/q_learning_moutain_car_v0.py">Q-learning on ```MountainCar-v0```</a>
+
 
 
 ### DQN

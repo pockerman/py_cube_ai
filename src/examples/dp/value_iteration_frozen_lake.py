@@ -3,15 +3,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from typing import Any
 
-from algorithms.dp.value_iteration import ValueIteration
-from policies.uniform_policy import UniformPolicy
-from policies.stochastic_policy_adaptor import StochasticAdaptorPolicy
+from src.algorithms.dp.value_iteration import ValueIteration
+from src.policies.uniform_policy import UniformPolicy
+from src.policies.max_action_equal_probability_stochastic_policy_adaptor import MaxActionEqualProbabilityAdaptorPolicy
 
 
 class Agent(ValueIteration):
 
     def __init__(self, env: Any, gamma: float, policy_init: UniformPolicy,
-                 policy_adaptor: StochasticAdaptorPolicy, n_max_iterations: int=1000, tolerance: float=1.0e-10) -> None:
+                 policy_adaptor: MaxActionEqualProbabilityAdaptorPolicy, n_max_iterations: int=1000, tolerance: float=1.0e-10) -> None:
         super(Agent, self).__init__(env=env, gamma=gamma, policy_init=policy_init,
                                     policy_adaptor=policy_adaptor,
                                     n_max_iterations=n_max_iterations, tolerance=tolerance)
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     env = gym.make(ENV_NAME)
     policy_init = UniformPolicy(env=env, init_val=None)
-    policy_adaptor = StochasticAdaptorPolicy()
+    policy_adaptor = MaxActionEqualProbabilityAdaptorPolicy()
     agent = Agent(gamma=GAMMA, env=env,
                   policy_init=policy_init, policy_adaptor=policy_adaptor)
 
