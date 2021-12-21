@@ -49,6 +49,6 @@ while robot.step(timestep) != -1:
 
     # Enter here functions to send actuator commands, like:
     #  motor.setPosition(10.0)
-    print("Running controller EPuckGoForward")
+    pass
 
 # Enter here exit cleanup code.
