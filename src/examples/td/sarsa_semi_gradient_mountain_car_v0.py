@@ -72,12 +72,10 @@ class TiledMountainCarEnv(gym.Env):
         return self._env._max_episode_steps
 
     def reset(self):
-        return self.get_state(self._env.reset())
+        return self._env.reset()
 
     def step(self, action):
-
-        obs, reward, done, info = self._env.step(action=action)
-        return self.get_state(obs, action=action), reward, done, info
+        return self._env.step(action=action)
 
     def close(self):
         self._env.close()
@@ -92,21 +90,24 @@ class Policy(object):
     def __init__(self, epsilon: float, env: TiledMountainCarEnv):
         self.eps = epsilon
         self.env = env
+        self.pos_bins, self.vel_bins = get_bins()
 
-    def __call__(self, observation, **kwargs):
+    def __call__(self, values, observation, **kwargs):
 
         # select greedy action with probability epsilon
         if random.random() < 1.0 - self.eps:
+            best = np.argmax(values)
+            return best
+        else:
+            # otherwise, select an action randomly
+            return random.choice([0, 1, 2])
 
-            vals = []
+    def actions_after_episode(self, episode_idx: int, **options) -> None:
 
-            for a in self.env.n_actions:
-
-
-
-            return np.argmax(q_func[state])
-        else:  # otherwise, select an action randomly
-            return random.choice(np.arange(self._n_actions))
+        if self.eps -2 / episode_idx > 0:
+            self.eps -= 2 / episode_idx
+        else:
+            self.eps = 0.0
 
 if __name__ == '__main__':
 
@@ -117,12 +118,28 @@ if __name__ == '__main__':
 
     x = [i for i in range(episode_lengths.shape[1])]
 
-    for lr in lrs:
+    for k, lr in enumerate(lrs):
 
         # for each learning rate we do a certain number
         # of runs
-        for run in range(NUM_RUNS):
-            policy = EpsilonGreedyPolicy(eps=1.0, env=env)
+        for j in range(NUM_RUNS):
+            policy = Policy(epsilon=1.0, env=env)
             agent = SarsaSemiGrad(env=env, tolerance=1.0e-4, gamma=GAMMA, alpha=lr,
-                              n_episodes=NUM_EPISODES, n_itrs_per_episode=2000)
+                              n_episodes=NUM_EPISODES, n_itrs_per_episode=2000, policy=policy)
             agent.train()
+
+            counters = agent.counters
+
+            for item in counters:
+                episode_lengths[k][item-1][j] = counters[item]
+
+    averaged1 = np.mean(episode_lengths[0], axis=1)
+    averaged2 = np.mean(episode_lengths[1], axis=1)
+    averaged3 = np.mean(episode_lengths[2], axis=1)
+
+    plt.plot(averaged1, 'r--')
+    plt.plot(averaged1, 'b--')
+    plt.plot(averaged1, 'g--')
+
+    plt.legend(('alpha = 0.01', 'alpha = 0.1', 'alpha = 0.2'))
+    plt.show()
