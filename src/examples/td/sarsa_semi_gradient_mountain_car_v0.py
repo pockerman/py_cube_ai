@@ -11,7 +11,7 @@ import random
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
-from src.algorithms.td.sarsa_semi_gradient import EpisodicSarsaSemiGrad
+from src.algorithms.td.episodic_sarsa_semi_gradient import EpisodicSarsaSemiGrad
 
 GAMMA = 1
 NUM_EPISODES = 500
