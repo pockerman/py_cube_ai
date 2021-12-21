@@ -11,8 +11,7 @@ import random
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
-from src.algorithms.td.sarsa_semi_gradient import SarsaSemiGrad
-from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy
+from src.algorithms.td.sarsa_semi_gradient import EpisodicSarsaSemiGrad
 
 GAMMA = 1
 NUM_EPISODES = 500
@@ -109,6 +108,7 @@ class Policy(object):
         else:
             self.eps = 0.0
 
+
 if __name__ == '__main__':
 
     env = TiledMountainCarEnv()
@@ -124,8 +124,8 @@ if __name__ == '__main__':
         # of runs
         for j in range(NUM_RUNS):
             policy = Policy(epsilon=1.0, env=env)
-            agent = SarsaSemiGrad(env=env, tolerance=1.0e-4, gamma=GAMMA, alpha=lr,
-                              n_episodes=NUM_EPISODES, n_itrs_per_episode=2000, policy=policy)
+            agent = EpisodicSarsaSemiGrad(env=env, tolerance=1.0e-4, gamma=GAMMA, alpha=lr,
+                                          n_episodes=NUM_EPISODES, n_itrs_per_episode=2000, policy=policy)
             agent.train()
 
             counters = agent.counters

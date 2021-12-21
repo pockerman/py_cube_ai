@@ -13,14 +13,14 @@ Action = TypeVar('Action')
 Policy = TypeVar('Policy')
 
 
-class SarsaSemiGrad(TDAlgoBase):
+class EpisodicSarsaSemiGrad(TDAlgoBase):
 
     def __init__(self,  n_episodes: int, tolerance: float,
                  env: Env, gamma: float, alpha: float,
                  n_itrs_per_episode: int, policy: Policy, plot_freq=10) -> None:
-        super(SarsaSemiGrad, self).__init__(n_episodes=n_episodes, tolerance=tolerance, env=env,
-                                            gamma=gamma, alpha=alpha, n_itrs_per_episode=n_itrs_per_episode,
-                                            plot_freq=plot_freq)
+        super(EpisodicSarsaSemiGrad, self).__init__(n_episodes=n_episodes, tolerance=tolerance, env=env,
+                                                    gamma=gamma, alpha=alpha, n_itrs_per_episode=n_itrs_per_episode,
+                                                    plot_freq=plot_freq)
 
         self.weights = np.zeros((self.train_env.n_states*self.train_env.n_actions))
         self.dt = 1.0
@@ -43,7 +43,7 @@ class SarsaSemiGrad(TDAlgoBase):
         :return: None
         """
 
-        super(SarsaSemiGrad, self).actions_before_episode_begins(**options)
+        super(EpisodicSarsaSemiGrad, self).actions_before_episode_begins(**options)
 
         if self.current_episode_index % 100 == 0:
             self.dt += 1.0
@@ -52,7 +52,7 @@ class SarsaSemiGrad(TDAlgoBase):
 
     def actions_after_episode_ends(self, **options):
 
-        super(SarsaSemiGrad, self).actions_after_episode_ends()
+        super(EpisodicSarsaSemiGrad, self).actions_after_episode_ends()
         self.policy.actions_after_episode(self.current_episode_index, **options)
 
     def select_action(self, raw_state) -> int:
