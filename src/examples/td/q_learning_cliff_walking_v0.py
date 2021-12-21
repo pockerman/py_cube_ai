@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
     q_learner.train()
 
-    q_func = q_learner.Q
+    q_func = q_learner.q_function
 
     # print the estimated optimal policy
     policy_q_learning = np.array(

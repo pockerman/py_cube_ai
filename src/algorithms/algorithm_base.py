@@ -100,12 +100,12 @@ class AlgorithmBase(ABC):
 
         return itr_ctrl_rsult
 
-    def actions_before_episode_begins(self, **options):
+    def actions_before_episode_begins(self, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the episode
         :param options:
-        :return:
+        :return: None
         """
         self._state = self.train_env.reset()
 
