@@ -36,7 +36,8 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 - <a href="src/examples/td/cliff_walking_q_learning.py">SARSA on ```Cliffwalking-v0```</a> 
 - <a href="src/examples/td/cliff_walking_q_learning.py">Q-learning on ```Cliffwalking-v0``` </a> 
-- <a href="#">Expected SARSA  </a> 
+- <a href="#">Expected SARSA  </a> (TODO)
+- <a href="#">SARSA lambda  </a> (TODO)
 - <a href="src/examples/td/td_zero_semi_gradient_mountain_car.py">TD(0) semi-gradient on ```MountainCar-v0```</a>
 - <a href="src/examples/td/sarsa_semi_gradient_mountain_car_v0.py">SARSA semi-gradient on ```MountainCar-v0```</a>
 - <a href="src/examples/td/q_learning_moutain_car_v0.py">Q-learning on ```MountainCar-v0```</a>
@@ -51,7 +52,7 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 ### Policy gradient methods
 
-- <a href="src/examples/pg/reinforce_cart_pole.py">REINFORCE on ```CartPole-v0````</a>
+- <a href="src/examples/pg/reinforce_cart_pole.py">REINFORCE on ```CartPole-v0```</a>
 
 
 ## Images
