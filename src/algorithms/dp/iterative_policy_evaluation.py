@@ -3,22 +3,18 @@ Iterative policy evaluation
 Implementation refactored from
 https://github.com/udacity/deep-reinforcement-learning
 """
-from typing import Any
+
 import numpy as np
 
-from src.algorithms.dp.dp_algorithm_base import DPAlgoBase
+from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoInput
 from src.algorithms.dp.utils import state_actions_from_v as q_s_a
 from src.algorithms.dp.utils import q_from_v
-from src.policies.policy_base import PolicyBase
 
 
 class IterativePolicyEvaluator(DPAlgoBase):
 
-    def __init__(self, n_episodes: int, tolerance: float,
-                 env: Any, gamma: float, policy_init: PolicyBase) -> None:
-        super(IterativePolicyEvaluator, self).__init__(n_episodes=n_episodes,
-                                                       tolerance=tolerance, env=env, gamma=gamma, policy=policy_init)
-
+    def __init__(self, algo_in: DPAlgoInput) -> None:
+        super(IterativePolicyEvaluator, self).__init__(algo_in=algo_in)
 
     @property
     def q(self) -> dict:

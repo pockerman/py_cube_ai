@@ -12,28 +12,29 @@ import numpy as np
 from typing import Any
 import copy
 
-from src.algorithms.algorithm_base import AlgorithmBase
+#from src.algorithms.algorithm_base import AlgorithmBase
+#from src.algorithms.algo_input import AlgoInput
+
+from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoInput
 from src.algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator
 from src.algorithms.dp.policy_improvement import PolicyImprovement
 from src.policies.policy_base import PolicyBase
 from src.policies.policy_adaptor_base import PolicyAdaptorBase
 
 
-class PolicyIteration(AlgorithmBase):
+
+
+
+class PolicyIteration(DPAlgoBase):
     """
     Policy iteration class
     """
 
-    def __init__(self, n_episodes: int, tolerance: float, env: Any,
-                 gamma: float, n_policy_eval_steps: int, policy_init: PolicyBase,
-                 policy_adaptor: PolicyAdaptorBase):
-        super(PolicyIteration, self).__init__(n_episodes=n_episodes, tolerance=tolerance, env=env)
+    def __init__(self, algo_in: DPAlgoInput,  policy_adaptor: PolicyAdaptorBase):
+        super(PolicyIteration, self).__init__(algo_in=algo_in)
 
-        self._p_eval = IterativePolicyEvaluator(env=env, n_episodes=n_policy_eval_steps,
-                                                tolerance=tolerance, gamma=gamma, policy_init=policy_init)
-
-        self._p_imprv = PolicyImprovement(env=env, v=self._p_eval.v, gamma=gamma,
-                                          policy_init=policy_init, policy_adaptor=policy_adaptor)
+        self._p_eval = IterativePolicyEvaluator(algo_in=algo_in)
+        self._p_imprv = PolicyImprovement(algo_in=algo_in, v=self._p_eval.v, policy_adaptor=policy_adaptor)
 
     @property
     def v(self) -> np.array:
