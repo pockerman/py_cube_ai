@@ -13,6 +13,11 @@ class TiledEnvWrapper(metaclass=abc.ABCMeta):
     algorithms
     """
 
+    EPISODIC_CONSTRAINT = True
+
+    # consraints list
+    CONSTRAINTS = [EPISODIC_CONSTRAINT, ]
+
     def __init__(self, env: Env, n_actions: int, n_states: int) -> None:
         self.raw_env = env
         self.n_actions = n_actions

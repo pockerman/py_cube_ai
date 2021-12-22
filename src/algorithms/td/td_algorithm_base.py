@@ -5,8 +5,19 @@ from collections import defaultdict, deque
 from typing import Any, TypeVar
 
 from src.algorithms.algorithm_base import AlgorithmBase
+from src.algorithms.algo_input import AlgoInput
 
 QTable = TypeVar('QTable')
+Policy = TypeVar("Policy")
+
+
+class TDAlgoInput(AlgoInput):
+    def __init__(self) -> None:
+        super(TDAlgoInput, self).__init__()
+        self.gamma: float = 1.0
+        self.alpha = 0.1
+        self.n_itrs_per_episode = 100
+        self.policy: Policy = None
 
 
 class TDAlgoBase(AlgorithmBase, ABC):
@@ -14,16 +25,12 @@ class TDAlgoBase(AlgorithmBase, ABC):
     Base class for temporal differences algorithms
     """
 
-    def __init__(self, n_episodes: int, tolerance: float,
-                 env: Any, gamma: float, alpha: float,
-                 n_itrs_per_episode: int, plot_freq=10):
-        super(TDAlgoBase, self).__init__(n_episodes=n_episodes,
-                                         tolerance=tolerance, env=env)
+    def __init__(self, algo_in: TDAlgoInput):
+        super(TDAlgoBase, self).__init__(algo_in=algo_in)
 
-        self.gamma: float = gamma
-        self.alpha: float = alpha
-        self.n_itrs_per_episode: int = n_itrs_per_episode
-        self._plot_freq = plot_freq
+        self.gamma: float = algo_in.gamma
+        self.alpha: float = algo_in.alpha
+        self.n_itrs_per_episode: int = algo_in.n_itrs_per_episode
 
         # A dictionay of 1D arrays. _q[s][a]
         # is the estimated action value that
@@ -52,15 +59,7 @@ class TDAlgoBase(AlgorithmBase, ABC):
     def avg_scores(self):
         return self._avg_scores
 
-    @property
-    def plot_frequency(self) -> int:
-        return self._plot_freq
-
-    @plot_frequency.setter
-    def plot_frequency(self, value: int) ->None:
-        self._plot_freq = value
-
-    def update_tmp_scores(self, value: float)->None:
+    def update_tmp_scores(self, value: float) -> None:
         self._tmp_scores.append(value)
 
     def update_avg_scores(self, value: float) -> None:

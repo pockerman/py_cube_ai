@@ -1,6 +1,6 @@
 from typing import Any
 
-from src.algorithms.td.td_algorithm_base import TDAlgoBase
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
 from src.policies.policy_base import PolicyBase
 
 
@@ -10,14 +10,10 @@ class Sarsa(TDAlgoBase):
     Finds the optimal epsilon-greedy policy.
     """
 
-    def __init__(self, n_episodes: int, tolerance: float,
-                 env: Any, gamma: float, alpha: float,
-                 max_num_iterations_per_episode: int, policy: PolicyBase) -> None:
+    def __init__(self, algo_in: TDAlgoInput) -> None:
 
-        super().__init__(n_episodes=n_episodes, tolerance=tolerance,
-                         env=env, gamma=gamma, alpha=alpha)
-        self._max_num_iterations_per_episode = max_num_iterations_per_episode
-        self._policy = policy
+        super().__init__(algo_in=algo_in)
+        self._policy = algo_in.policy
 
     def step(self,  **options):
         """
@@ -29,7 +25,7 @@ class Sarsa(TDAlgoBase):
         # select an action
         action = self._policy(self._q, self.train_env.action_space.n)
 
-        for itr in range(self._max_num_iterations_per_episode):
+        for itr in range(self.n_itrs_per_episode):
             # Take a step
             next_state, reward, done, _ = self.train_env.step(self._action)
             score += reward
@@ -46,9 +42,9 @@ class Sarsa(TDAlgoBase):
                 break
 
             # TD Update
-            td_target = reward + self._discount_factor * self._Q[next_state][next_action]
-            td_delta = td_target - self._Q[self._state][self._action]
-            self._Q[self._state][self._action] += self._alpha * td_delta
+            td_target = reward + self.gamma * self.q_function[next_state][next_action]
+            td_delta = td_target - self.q_function[self._state][self._action]
+            self.q_function[self._state][self._action] += self.alpha * td_delta
 
             if done:
                 break

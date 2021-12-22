@@ -5,7 +5,7 @@ Semi-gradient SARSA for episodic environments
 from typing import TypeVar
 import numpy as np
 
-from src.algorithms.td. td_algorithm_base import TDAlgoBase
+from src.algorithms.td. td_algorithm_base import TDAlgoBase, TDAlgoInput
 
 Env = TypeVar('Env')
 Action = TypeVar('Action')
@@ -13,17 +13,19 @@ Policy = TypeVar('Policy')
 
 
 class EpisodicSarsaSemiGrad(TDAlgoBase):
+    """
+    Episodic semi-gradient SARSA
+    """
 
-    def __init__(self,  n_episodes: int, tolerance: float,
-                 env: Env, gamma: float, alpha: float,
-                 n_itrs_per_episode: int, policy: Policy, plot_freq=10) -> None:
-        super(EpisodicSarsaSemiGrad, self).__init__(n_episodes=n_episodes, tolerance=tolerance, env=env,
-                                                    gamma=gamma, alpha=alpha, n_itrs_per_episode=n_itrs_per_episode,
-                                                    plot_freq=plot_freq)
+    def __init__(self,  algo_in: TDAlgoInput) -> None:
+        super(EpisodicSarsaSemiGrad, self).__init__(algo_in=algo_in)
+
+        # make sure we are working on a tiled environment
+        assert self.train_env.EPISODIC_CONSTRAINT, "Environment is not episodic"
 
         self.weights = np.zeros((self.train_env.n_states*self.train_env.n_actions))
         self.dt = 1.0
-        self.policy = policy
+        self.policy = algo_in.policy
         self.counters = {}
 
     def q_value(self, state_action: Action) -> float:
@@ -85,13 +87,13 @@ class EpisodicSarsaSemiGrad(TDAlgoBase):
             # step in the environment
             obs, reward, done, _ = self.train_env.step(action)
 
-            if done and itr < self.train_env.get_property(prop_str="_max_episode_steps"): #max_episode_steps:
+            if done and itr < self.train_env.get_property(prop_str="_max_episode_steps"):
 
                 val = self.q_value(state_action=state_action)
                 self.weights += self.alpha / self.dt * (reward - val) * state_action
                 break
 
-            new_action = self.select_action(raw_state=obs) #self.state)
+            new_action = self.select_action(raw_state=obs)
             sa = self.train_env.get_tiled_state(action=new_action, obs=obs)
             self.update_weights(total_reward=reward, state_action=state_action, state_action_=sa, t=self.dt)
 

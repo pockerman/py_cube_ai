@@ -9,34 +9,46 @@ import collections
 from collections import deque
 import torch
 import numpy as np
-from typing import Any
+from typing import Any, TypeVar
 from src.algorithms.algorithm_base import AlgorithmBase
+from src.algorithms.algo_input import AlgoInput
 from src.policies.policy_base import PolicyTorchBase
 
+
+Optimizer = TypeVar("Optimizer")
+Policy = TypeVar("Policy")
 
 Transition = collections.namedtuple("Transition", ["state", "action", "reward", "next_state", "done"])
 
 
+class ReinforceInput(AlgoInput):
+    def __init__(self) -> None:
+        super(ReinforceInput, self).__init__()
+        self.gamma = 1.0
+        self.optimizer: Optimizer = None
+        self.policy: Policy = None
+        self.n_itrs_per_episode = 100
+        self.queue_length = 100
+
+
+# TODO: Remove magic constants from the implementation
 class Reinforce(AlgorithmBase):
     """
     REINFORCE (Monte Carlo Policy Gradient) Algorithm. Optimizes the policy
     function approximator using policy gradient.
     """
 
-    def __init__(self, n_episodes: int, tolerance: float, env: Any,
-                 max_itrs_per_episode: int, gamma: float, print_frequency: int,
-                 policy: PolicyTorchBase,
-                 optimizer: Any) -> None:
-        super(Reinforce, self).__init__(n_episodes=n_episodes, tolerance=tolerance, env=env)
-        self._max_itrs_per_episode = max_itrs_per_episode
+    def __init__(self, algo_in: ReinforceInput) -> None:
+        super(Reinforce, self).__init__(algo_in=algo_in)
+        self.n_itrs_per_episode = algo_in.n_itrs_per_episode
         self.scores = []
-        self.scores_deque = deque(maxlen=100)
+        self.scores_deque = deque(maxlen=algo_in.queue_length)
         self.saved_log_probs = []
         self.rewards = []
-        self.gamma = gamma
-        self.print_frequency = print_frequency
-        self.policy = policy
-        self.optimizer = optimizer
+        self.gamma = algo_in.gamma
+        #self.print_frequency = print_frequency
+        self.policy = algo_in.policy
+        self.optimizer = algo_in.optimizer
 
     def actions_before_training_begins(self, **options) -> None:
         """
@@ -62,7 +74,7 @@ class Reinforce(AlgorithmBase):
         self.state = self.train_env.reset()
         self._reset_internal_structs()
 
-        for itr in range(self._max_itrs_per_episode):
+        for itr in range(self.n_itrs_per_episode):
 
             action, log_prob = self.policy.act(state=self.state)
 
@@ -89,8 +101,9 @@ class Reinforce(AlgorithmBase):
         self.optimizer.step()
 
         current_episode_idx = self.current_episode_index
-        if current_episode_idx  % self.print_frequency == 0:
+        if current_episode_idx % self.output_msg_frequency == 0:
             print('Episode {}\tAverage Score: {:.2f}'.format(current_episode_idx, np.mean(self.scores_deque)))
+
         if np.mean(self.scores_deque) >= 195.0:
             print('Environment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(current_episode_idx - 100,
                                                                                        np.mean(self.scores_deque)))
