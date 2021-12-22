@@ -9,6 +9,7 @@ from typing import Any, TypeVar
 
 from src.utils.wrappers import time_fn
 from src.utils.iteration_controller import ItrControlResult, IterationController
+from src.utils import INFO
 
 
 Env = TypeVar("Env")
@@ -20,12 +21,13 @@ class AlgorithmBase(ABC):
     Base class for deriving algorithms
     """
 
-    def __init__(self, n_episodes: int, tolerance: float, env: Env, render_env: bool=False) -> None:
+    def __init__(self, n_episodes: int, tolerance: float, env: Env, render_env: bool = False) -> None:
         super(AlgorithmBase, self).__init__()
         self._itr_ctrl = IterationController(tol=tolerance, n_max_itrs=n_episodes)
         self._train_env = env
         self._state = None
         self.render_env = render_env
+        self.output_msg_frequency: int = 100
 
     def __call__(self, **options) -> ItrControlResult:
         """
@@ -86,8 +88,11 @@ class AlgorithmBase(ABC):
         self.actions_before_training_begins(**options)
 
         while self._itr_ctrl.continue_itrs():
-            print(">Episode {0} of {1}, ({2}% done)".format(self._itr_ctrl.current_itr_counter,
-                                                            self.itr_control.n_max_itrs, (self._itr_ctrl.current_itr_counter / self.itr_control.n_max_itrs)*100.0))
+
+            if self._itr_ctrl.current_itr_counter % self.output_msg_frequency   == 0:
+                print("{0}: Episode {1} of {2}, ({3}% done)".format(INFO, self._itr_ctrl.current_itr_counter,
+                                                                    self.itr_control.n_max_itrs,
+                                                                    (self._itr_ctrl.current_itr_counter / self.itr_control.n_max_itrs)*100.0))
             self.actions_before_episode_begins(**options)
             self.step(**options)
             self.actions_after_episode_ends(**options)

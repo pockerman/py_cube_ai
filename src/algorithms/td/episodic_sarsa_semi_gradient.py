@@ -7,7 +7,6 @@ import numpy as np
 
 from src.algorithms.td. td_algorithm_base import TDAlgoBase
 
-
 Env = TypeVar('Env')
 Action = TypeVar('Action')
 Policy = TypeVar('Policy')
@@ -60,7 +59,7 @@ class EpisodicSarsaSemiGrad(TDAlgoBase):
         # TODO: For epsilon greedy we may not have to calculate constantly
         vals = []
         for a in range(self.train_env.n_actions):
-            sa = self.train_env.get_state(action=a, obs=raw_state)
+            sa = self.train_env.get_tiled_state(action=a, obs=raw_state)
             vals.append(self.q_value(state_action=sa))
 
         vals = np.array(vals)
@@ -81,19 +80,19 @@ class EpisodicSarsaSemiGrad(TDAlgoBase):
 
             self._current_episode_itr_index += 1
 
-            state_action = self.train_env.get_state(action=action, obs=self.state)
+            state_action = self.train_env.get_tiled_state(action=action, obs=self.state)
 
             # step in the environment
             obs, reward, done, _ = self.train_env.step(action)
 
-            if done and itr < self.train_env.max_episode_steps:
+            if done and itr < self.train_env.get_property(prop_str="_max_episode_steps"): #max_episode_steps:
 
                 val = self.q_value(state_action=state_action)
                 self.weights += self.alpha / self.dt * (reward - val) * state_action
                 break
 
             new_action = self.select_action(raw_state=obs) #self.state)
-            sa = self.train_env.get_state(action=new_action, obs=obs)
+            sa = self.train_env.get_tiled_state(action=new_action, obs=obs)
             self.update_weights(total_reward=reward, state_action=state_action, state_action_=sa, t=self.dt)
 
             # update current state and action

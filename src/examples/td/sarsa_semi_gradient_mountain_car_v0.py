@@ -11,77 +11,72 @@ import random
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
+from typing import TypeVar
+
 from src.algorithms.td.episodic_sarsa_semi_gradient import EpisodicSarsaSemiGrad
+from src.utils import INFO
+from src.worlds.tiled_world_wrapper import TiledEnvWrapper
 
 GAMMA = 1
 NUM_EPISODES = 500
 NUM_RUNS = 50
+N_BINS = 8
+N_LAYERS = 8
+N_TILES = 8
+
+State = TypeVar('State')
+Action = TypeVar('Action')
+TiledState = TypeVar('TiledState')
 
 
-def get_bins(n_bins: int=8, n_layers: int=8):
-
-    pos_tile_width = (0.5 + 1.2) / n_bins * 0.5
-    vel_tile_width = (0.07 + 0.07) / n_bins * 0.5
-    pos_bins = np.zeros((n_layers, n_bins))
-    vel_bins = np.zeros((n_layers, n_bins))
-
-    for i in range(n_layers):
-        pos_bins[i] = np.linspace(-1.2 + i * pos_tile_width, 0.5 + i * pos_tile_width/2, n_bins)
-        vel_bins[i] = np.linspace(-0.07 + 3* i * vel_tile_width, 0.07 + 3 * i * vel_tile_width / 2, n_bins)
-
-    return pos_bins, vel_bins
-
-
-def tile_state(pos_bins, vel_bins, action, obs, n_tiles: int = 8, n_layers: int = 8, n_actions=3):
-    position, velocity = obs
-
-    tiled_state = np.zeros(n_tiles * n_tiles * n_tiles * n_actions)
-    for row in range(n_layers):
-        if pos_bins[row][0] < position < pos_bins[row][n_tiles - 1]:
-            if vel_bins[row][0] < velocity < vel_bins[row][n_tiles - 1]:
-                x = np.digitize(position, pos_bins[row])
-                y = np.digitize(velocity, vel_bins[row])
-                idx = (x + 1) * (y + 1) + row * n_tiles**2 - 1 + action * n_layers * n_tiles**2
-                tiled_state[idx] = 1.0
-            else:
-                break
-        else:
-            break
-    return tiled_state
-
-
-class TiledMountainCarEnv(gym.Env):
+class TiledMountainCarEnv(TiledEnvWrapper):
 
     def __init__(self):
-        super(TiledMountainCarEnv, self).__init__()
-        self._env = gym.make('MountainCar-v0')
-        self._env._max_episode_steps = 1000
-        self.pos_bins, self.vel_bins = get_bins()
+        super(TiledMountainCarEnv, self).__init__(env=gym.make('MountainCar-v0'), n_actions=3, n_states=8 * 8 * 8)
+        self.bins = self.create_bins()
+        self.raw_env._max_episode_steps = 1000
 
-    @property
-    def n_states(self):
-        return 8 * 8 * 8
+    def create_bins(self) -> list:
+        """
+        Create the bins that the state variables of
+        the underlying environment will be distributed
+        :return: A list of bins for every state variable
+        """
 
-    @property
-    def n_actions(self):
-        return 3
+        pos_tile_width = (0.5 + 1.2) / N_BINS * 0.5
+        vel_tile_width = (0.07 + 0.07) / N_BINS * 0.5
+        pos_bins = np.zeros((N_LAYERS, N_BINS))
+        vel_bins = np.zeros((N_LAYERS, N_BINS))
 
-    @property
-    def max_episode_steps(self):
-        return self._env._max_episode_steps
+        for i in range(N_LAYERS):
+            pos_bins[i] = np.linspace(-1.2 + i * pos_tile_width, 0.5 + i * pos_tile_width / 2, N_BINS)
+            vel_bins[i] = np.linspace(-0.07 + 3 * i * vel_tile_width, 0.07 + 3 * i * vel_tile_width / 2, N_BINS)
 
-    def reset(self):
-        return self._env.reset()
+        return [pos_bins, vel_bins]
 
-    def step(self, action):
-        return self._env.step(action=action)
+    def get_tiled_state(self, obs: State, action: Action) -> TiledState:
+        """
+        Returns the tiled states for the given observation
+        :param obs: The observation to be tiled
+        :param action: The action corresponding to the states
+        :return: TiledState
+        """
 
-    def close(self):
-        self._env.close()
+        position, velocity = obs
 
-    def get_state(self, obs, action):
-        return tile_state(pos_bins=self.pos_bins, vel_bins=self.vel_bins,
-                          obs=obs, action=action)
+        tiled_state = np.zeros(N_TILES * N_TILES * N_TILES * self.n_actions)
+        for row in range(N_LAYERS):
+            if self.bins[0][row][0] < position < self.bins[0][row][N_TILES - 1]:
+                if self.bins[1][row][0] < velocity < self.bins[1][row][N_TILES - 1]:
+                    x = np.digitize(position, self.bins[0][row])
+                    y = np.digitize(velocity, self.bins[1][row])
+                    idx = (x + 1) * (y + 1) + row * N_TILES ** 2 - 1 + action * N_LAYERS * N_TILES ** 2
+                    tiled_state[idx] = 1.0
+                else:
+                    break
+            else:
+                break
+        return tiled_state
 
 
 class Policy(object):
@@ -89,7 +84,6 @@ class Policy(object):
     def __init__(self, epsilon: float, env: TiledMountainCarEnv):
         self.eps = epsilon
         self.env = env
-        self.pos_bins, self.vel_bins = get_bins()
 
     def __call__(self, values, observation, **kwargs):
 
@@ -120,9 +114,13 @@ if __name__ == '__main__':
 
     for k, lr in enumerate(lrs):
 
+        print("==================================")
+        print("{0} Working with learning rate {1}".format(INFO, lr))
+        print("==================================")
         # for each learning rate we do a certain number
         # of runs
         for j in range(NUM_RUNS):
+            print("{0}: run {1}".format(INFO, j))
             policy = Policy(epsilon=1.0, env=env)
             agent = EpisodicSarsaSemiGrad(env=env, tolerance=1.0e-4, gamma=GAMMA, alpha=lr,
                                           n_episodes=NUM_EPISODES, n_itrs_per_episode=2000, policy=policy)
@@ -132,14 +130,20 @@ if __name__ == '__main__':
 
             for item in counters:
                 episode_lengths[k][item-1][j] = counters[item]
+        print("==================================")
+        print("==================================")
 
     averaged1 = np.mean(episode_lengths[0], axis=1)
     averaged2 = np.mean(episode_lengths[1], axis=1)
     averaged3 = np.mean(episode_lengths[2], axis=1)
 
     plt.plot(averaged1, 'r--')
-    plt.plot(averaged1, 'b--')
-    plt.plot(averaged1, 'g--')
+    plt.plot(averaged2, 'b--')
+    plt.plot(averaged3, 'g--')
 
     plt.legend(('alpha = 0.01', 'alpha = 0.1', 'alpha = 0.2'))
+    plt.title("Episode semi-gradient SARSA (MountainCar-v0)")
+    plt.xlabel("Episode")
+    plt.xlabel("Number of iterations")
     plt.show()
+    env.close()
