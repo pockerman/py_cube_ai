@@ -67,10 +67,10 @@ class TiledEnvWrapper(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def create_bins(self) -> None:
+    def create_bins(self) -> list:
         """
         Create the bins that the state variables of
         the underlying environment will be distributed
-        :return:
+        :return: A list of bins for every state variable
         """
 
