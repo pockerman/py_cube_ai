@@ -68,9 +68,8 @@ class MCTreeSearch(AlgorithmBase):
     The MCTreeSearch class. Basic implementation of Monte Carlo tree search
     """
     
-    def __init__(self, input: MCTreeSearchInput):
-        super(MCTreeSearch, self).__init__(n_episodes=input.n_episodes, tolerance=input.tolerance,
-                                           env=input.train_env, render_env=input.render_env)
+    def __init__(self, algo_in: MCTreeSearchInput):
+        super(MCTreeSearch, self).__init__(algo_in=algo_in)
 
         self.n_itrs_per_episode = input.n_itrs_per_episode
         self._c = input.c

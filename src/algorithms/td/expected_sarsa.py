@@ -1,10 +1,12 @@
 from collections import defaultdict
 import numpy as np
 import random
-from algorithms.algorithm_base import AlgorithmBase
 
 
-class ExpectedSARSA(AlgorithmBase):
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
+
+
+class ExpectedSARSA(TDAlgoBase):
 
     def __init__(self, n_max_iterations: int, tolerance: float,
                  learning_rate: float, epsilon: float=1.0,

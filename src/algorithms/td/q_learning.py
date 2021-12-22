@@ -4,27 +4,22 @@ Tabular Q-learning algorithm
 
 import numpy as np
 from typing import Any, TypeVar
-from src.policies.policy_base import PolicyBase
-from src.algorithms.td.td_algorithm_base import TDAlgoBase
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
 
 Env = TypeVar('Env')
 Policy = TypeVar('Policy')
+
 
 class QLearning(TDAlgoBase):
     """
     epsilon-greedy Q-learning algorithm
     """
 
-    def __init__(self, n_episodes: int, tolerance: float,
-                 env: Env, gamma: float, alpha: float,
-                 n_itrs_per_episode: int, policy: Policy,
-                 plot_freq: int = 10) -> None:
+    def __init__(self, algo_in: TDAlgoInput) -> None:
 
-        super(QLearning, self).__init__(n_episodes=n_episodes, tolerance=tolerance,
-                                        env=env, gamma=gamma, alpha=alpha, plot_freq=plot_freq,
-                                        n_itrs_per_episode=n_itrs_per_episode)
+        super(QLearning, self).__init__(algo_in=algo_in)
 
-        self._policy = policy
+        self._policy = algo_in.policy
 
     def step(self, **options) -> None:
         """
