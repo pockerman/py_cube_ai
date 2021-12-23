@@ -3,6 +3,7 @@ Basic implementation of Monte Carlo tree search
 """
 import math
 from typing import TypeVar, List
+import abc
 
 from src.utils.exceptions import Error, InvalidParameterValue
 from src.algorithms.algorithm_base import AlgorithmBase
@@ -71,8 +72,9 @@ class MCTreeSearch(AlgorithmBase):
     def __init__(self, algo_in: MCTreeSearchInput):
         super(MCTreeSearch, self).__init__(algo_in=algo_in)
 
-        self.n_itrs_per_episode = input.n_itrs_per_episode
-        self._c = input.c
+        self.n_itrs_per_episode = algo_in.n_itrs_per_episode
+        self._c = algo_in.c
+        self.max_tree_depth = algo_in.max_tree_depth
 
         # the root of the tree
         self.root = MCTreeNode(parent=None, action=None)
@@ -82,7 +84,7 @@ class MCTreeSearch(AlgorithmBase):
         Reset the underlying data
         """
         super(MCTreeSearch, self).reset()
-        self.root.state = self.state
+        self.root = MCTreeNode(parent=None, action=None)
 
     def simulate_random_game(self):
         pass
@@ -110,7 +112,8 @@ class MCTreeSearch(AlgorithmBase):
         """
         pass
 
-    def backprop(self):
+    @abc.abstractmethod
+    def backprop(self, node: MCTreeNode, **options):
         """
         Update your node values up to the root node from the traversed path.
         The number of reward-wins is incremented
@@ -143,6 +146,7 @@ class MCTreeSearch(AlgorithmBase):
         Do one step of the algorithm
         """
 
+        # the current state
         current_node = self.root
 
         for itr in self.n_itrs_per_episode:
