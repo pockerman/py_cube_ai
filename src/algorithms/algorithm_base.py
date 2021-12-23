@@ -13,7 +13,6 @@ from src.utils.iteration_controller import ItrControlResult, IterationController
 from src.utils import INFO
 
 
-
 Env = TypeVar("Env")
 AlgoInput = TypeVar("AlgoInput")
 
@@ -23,7 +22,7 @@ class AlgorithmBase(ABC):
     Base class for deriving algorithms
     """
 
-    def __init__(self, algo_in: AlgoInput) -> None: #n_episodes: int, tolerance: float, env: Env, render_env: bool = False) -> None:
+    def __init__(self, algo_in: AlgoInput) -> None:
         super(AlgorithmBase, self).__init__()
         self._itr_ctrl = IterationController(tol=algo_in.tolerance, n_max_itrs=algo_in.n_episodes)
         self._train_env = algo_in.train_env
