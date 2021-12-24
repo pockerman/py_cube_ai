@@ -2,7 +2,7 @@
 Basic implementation of Monte Carlo tree search
 """
 import math
-from typing import TypeVar, List
+from typing import TypeVar, List, Any
 import abc
 
 from src.utils.exceptions import Error, InvalidParameterValue
@@ -57,7 +57,7 @@ class MCTreeNode(object):
         :return:
         """
         total_rollouts = sum(child.total_visits for child in self.children)
-        return self.win_pct + c*math.sqrt(math.log(total_rollouts) / self.total_visits)
+        return self.win_pct + c*math.sqrt(math.log(self.parent.total_visits) / self.total_visits)
 
     @property
     def win_pct(self) -> float:
@@ -113,7 +113,7 @@ class MCTreeSearch(AlgorithmBase):
         pass
 
     @abc.abstractmethod
-    def backprop(self, node: MCTreeNode, **options):
+    def backprop(self, node: MCTreeNode, **options: Any):
         """
         Update your node values up to the root node from the traversed path.
         The number of reward-wins is incremented
@@ -121,7 +121,6 @@ class MCTreeSearch(AlgorithmBase):
         in the simulation count stored in the nodes, and if the new node is the desired goal.
         :return:
         """
-        pass
 
     def actions_before_training_begins(self, **options) -> None:
         """
@@ -133,21 +132,9 @@ class MCTreeSearch(AlgorithmBase):
         if self.n_itrs_per_episode == 0:
             raise InvalidParameterValue(param_name="n_itrs_per_episode", param_val=self.n_itrs_per_episode)
 
-
     def actions_after_training_ends(self, **options) -> None:
         """
         Execute any actions the algorithm needs after
         the iterations are finished
         """
         pass
-
-    def step(self, **options) -> None:
-        """
-        Do one step of the algorithm
-        """
-
-        # the current state
-        current_node = self.root
-
-        for itr in self.n_itrs_per_episode:
-            pass

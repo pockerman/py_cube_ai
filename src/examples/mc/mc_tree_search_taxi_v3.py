@@ -7,20 +7,20 @@ import gym
 import copy
 import random
 import itertools
-import sys
 from time import time
 
 from src.algorithms.planning.monte_carlo_tree_search import MCTreeSearch
 from src.algorithms.planning.monte_carlo_tree_search import MCTreeSearchInput
 from src.algorithms.planning.monte_carlo_tree_search import MCTreeNode
+from src.utils import INFO
 
 
 def moving_averages(v, n):
     n = min(len(v), n)
-    ret = [.0]*(len(v)-n+1)
-    ret[0] = float(sum(v[:n]))/n
-    for i in range(len(v)-n):
-        ret[i+1] = ret[i] + float(v[n+i] - v[i])/n
+    ret = [.0] * (len(v) - n + 1)
+    ret[0] = float(sum(v[:n])) / n
+    for i in range(len(v) - n):
+        ret[i + 1] = ret[i] + float(v[n + i] - v[i]) / n
     return ret
 
 
@@ -34,29 +34,26 @@ class TaxiMCTreeSearch(MCTreeSearch):
 
     def reset(self) -> None:
         super(TaxiMCTreeSearch, self).reset()
-        self.root = MCTreeNode(None, None)
         self.best_actions = []
 
     def upper_conf_bound(self, node: MCTreeNode) -> float:
         return node.ucb(c=self._c)
 
     def print_stats(self, num_exec, score, avg_time):
-        sys.stdout.write(
-            'execution number: \r%3d   total reward:%10.3f   average time:%4.1f s' % (num_exec, score, avg_time))
-        sys.stdout.flush()
-        if (num_exec % 10) == 0:
-            print("execution number: \r%4d   total reward: %4.3f   average time: %4.2f s" % (num_exec, score, avg_time))
+        if (num_exec % self.output_msg_frequency) == 0:
+            print("{0}: Total reward: {1}   average time: {2} s".format(INFO, score, avg_time))
 
     def actions_before_training_begins(self, **options) -> None:
         super(TaxiMCTreeSearch, self).actions_before_training_begins(**options)
         self.start_time = time()
+        self.best_rewards = []
 
     def actions_after_episode_ends(self, **options):
         super(TaxiMCTreeSearch, self).actions_after_episode_ends()
 
         score = max(moving_averages(self.best_rewards, 100))
         avg_time = (time() - self.start_time) / (self.current_episode_index + 1)
-        self.print_stats(self.current_episode_index + 1, score, avg_time)
+        self.print_stats(self.current_episode_index, score, avg_time)
 
     # This function determine complete exhaustive list of all the nodes.
     def node_expansion(self, space):
@@ -70,8 +67,8 @@ class TaxiMCTreeSearch(MCTreeSearch):
     def backprop(self, node: MCTreeNode, **options):
 
         while node:
-            node.visits += 1
-            node.value += options['sum_reward']
+            node.total_visits += 1
+            node.total_score += options['sum_reward']
             node = node.parent
 
     def step(self, **options) -> None:
@@ -118,15 +115,15 @@ class TaxiMCTreeSearch(MCTreeSearch):
 
             # retaining the best reward value and actions
             if best_reward < sum_reward:
-                    best_reward = sum_reward
-                    best_actions = actions
+                best_reward = sum_reward
+                self.best_actions = actions
 
             # backpropagating in MCTS for assigning reward value to a node.
             self.backprop(node=node, **{'sum_reward': sum_reward})
 
         sum_reward = 0
         for action in self.best_actions:
-            _, reward, terminal, _ = env.step(action)
+            _, reward, terminal, _ = self.train_env.step(action)
             sum_reward += reward
             if terminal:
                 break
@@ -135,19 +132,16 @@ class TaxiMCTreeSearch(MCTreeSearch):
 
 
 if __name__ == '__main__':
-
     env = gym.make("Taxi-v3")
 
     algo_input = MCTreeSearchInput()
     algo_input.train_env = env
     algo_input.render_env = True
     algo_input.n_episodes = 5000
-    algo_input.n_itrs_per_episode = 100
-    algo_input.c = 1.5
-    algo_input.max_tree_depth = 1000
+    algo_input.n_itrs_per_episode = 1000
+    algo_input.c = 1.0
+    algo_input.max_tree_depth = 512
+    algo_input.output_freq = 10
 
-    agent = MCTreeSearch(algo_in=algo_input)
+    agent = TaxiMCTreeSearch(algo_in=algo_input)
     agent.train()
-
-
-
