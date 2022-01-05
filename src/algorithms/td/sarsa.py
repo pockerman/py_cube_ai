@@ -15,7 +15,7 @@ class Sarsa(TDAlgoBase):
         super().__init__(algo_in=algo_in)
         self._policy = algo_in.policy
 
-    def step(self,  **options):
+    def on_episode(self, **options):
         """
         Perform one step of the algorithm
         """
@@ -27,7 +27,7 @@ class Sarsa(TDAlgoBase):
 
         for itr in range(self.n_itrs_per_episode):
             # Take a step
-            next_state, reward, done, _ = self.train_env.step(self._action)
+            next_state, reward, done, _ = self.train_env.on_episode(self._action)
             score += reward
 
             if not done:

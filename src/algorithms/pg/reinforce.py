@@ -68,7 +68,7 @@ class Reinforce(AlgorithmBase):
         self.rewards = []
         self.scores_deque = deque(maxlen=100)
 
-    def step(self, **options) -> None:
+    def on_episode(self, **options) -> None:
 
         # for every episode reset the environment
         self.state = self.train_env.reset()
@@ -79,7 +79,7 @@ class Reinforce(AlgorithmBase):
             action, log_prob = self.policy.act(state=self.state)
 
             self.saved_log_probs.append(log_prob)
-            state, reward, done, _ = self.train_env.step(action)
+            state, reward, done, _ = self.train_env.on_episode(action)
             self.train_env.render(mode='rgb_array')
             self.rewards.append(reward)
             if done:

@@ -70,7 +70,7 @@ class EpisodicSarsaSemiGrad(TDAlgoBase):
         action = self.policy(vals, raw_state)
         return action
 
-    def step(self, **options) -> None:
+    def on_episode(self, **options) -> None:
         """
 
         :param options:
@@ -85,7 +85,7 @@ class EpisodicSarsaSemiGrad(TDAlgoBase):
             state_action = self.train_env.get_tiled_state(action=action, obs=self.state)
 
             # step in the environment
-            obs, reward, done, _ = self.train_env.step(action)
+            obs, reward, done, _ = self.train_env.on_episode(action)
 
             if done and itr < self.train_env.get_property(prop_str="_max_episode_steps"):
 

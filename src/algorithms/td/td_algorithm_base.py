@@ -4,6 +4,7 @@ import numpy as np
 from collections import defaultdict, deque
 from typing import Any, TypeVar
 
+from src.utils.exceptions import InvalidParameterValue
 from src.algorithms.algorithm_base import AlgorithmBase
 from src.algorithms.algo_input import AlgoInput
 
@@ -38,32 +39,28 @@ class TDAlgoBase(AlgorithmBase, ABC):
         self._q: QTable = None
 
         # monitor performance
-        self._tmp_scores = None
-        self._avg_scores = None
+        #self._tmp_scores = None
+        self.avg_rewards = None
 
-        self._current_episode_itr_index: int = 0
+        self.current_episode_itr_index: int = 0
 
     @property
     def q_function(self) -> QTable:
         return self._q
 
-    @property
-    def current_episode_itr_index(self):
-        return self._current_episode_itr_index
+    #@property
+    #def tmp_scores(self):
+     #   return self._tmp_scores
 
-    @property
-    def tmp_scores(self):
-        return self._tmp_scores
+    #@property
+    #def avg_scores(self):
+     #   return self.avg_rewards
 
-    @property
-    def avg_scores(self):
-        return self._avg_scores
+    #def update_tmp_scores(self, value: float) -> None:
+    #    self._tmp_scores.append(value)
 
-    def update_tmp_scores(self, value: float) -> None:
-        self._tmp_scores.append(value)
-
-    def update_avg_scores(self, value: float) -> None:
-        self._avg_scores.append(value)
+    #def update_avg_scores(self, value: float) -> None:
+     #   self.avg_rewards.append(value)
 
     def __getitem__(self, item: tuple) -> float:
         return self.train_env[item[0]][item[1]]
@@ -77,12 +74,17 @@ class TDAlgoBase(AlgorithmBase, ABC):
         # call the base class version
         super(TDAlgoBase, self).actions_before_training_begins(**options)
 
+        if self.n_itrs_per_episode == 0:
+            raise InvalidParameterValue(param_name="n_itrs_per_episode", param_val=self.n_itrs_per_episode)
+
         # initialize empty dictionary of arrays
         self._q = defaultdict(lambda: np.zeros(self.train_env.action_space.n))
 
         # TODO: These should be transferred to the respective example
-        self._tmp_scores = deque(maxlen=self._plot_freq)  # deque for keeping track of scores
-        self._avg_scores = deque(maxlen=self.n_episodes)  # average scores over every plot_every episodes
+        #self._tmp_scores = deque(maxlen=self._plot_freq)  # deque for keeping track of scores
+
+        # why a deque and not an array?
+        self.avg_rewards = np.zeros(self.n_episodes + 1)
 
     def actions_after_training_ends(self, **options) -> None:
         """

@@ -19,14 +19,14 @@ class ExpectedSARSA(TDAlgoBase):
         self._max_num_iterations_per_episode = max_num_iterations_per_episode
         self._Q = None
 
-    def step(self, env, **options):
+    def on_episode(self, env, **options):
         """
         Perform one step of the algorithm
         """
 
         for itr in range(self._max_num_iterations_per_episode):
             # Take a step
-            next_state, reward, done, _ = env.step(self._action)
+            next_state, reward, done, _ = env.on_episode(self._action)
 
             # Pick the next action
             next_action = self._epsilon_greedy(state=next_state, env=env, eps=self._epsilon)

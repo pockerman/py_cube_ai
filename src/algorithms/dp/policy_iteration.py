@@ -58,7 +58,7 @@ class PolicyIteration(DPAlgoBase):
     def actions_after_training_ends(self, **options) -> None:
         pass
 
-    def step(self) -> None:
+    def on_episode(self) -> None:
 
         # make a copy of the policy already obtained
         old_policy = copy.deepcopy(self._p_eval.policy)

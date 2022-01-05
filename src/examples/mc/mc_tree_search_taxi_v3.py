@@ -71,7 +71,7 @@ class TaxiMCTreeSearch(MCTreeSearch):
             node.total_score += options['sum_reward']
             node = node.parent
 
-    def step(self, **options) -> None:
+    def on_episode(self, **options) -> None:
 
         best_reward = float("-inf")
 
@@ -93,7 +93,7 @@ class TaxiMCTreeSearch(MCTreeSearch):
                 else:
                     node = max(node.children, key=self.upper_conf_bound)
 
-                _, reward, terminal, _ = state.step(node.action)
+                _, reward, terminal, _ = state.on_episode(node.action)
                 sum_reward += reward
                 actions.append(node.action)
 
@@ -105,7 +105,7 @@ class TaxiMCTreeSearch(MCTreeSearch):
             # creating exhaustive list of actions
             while not terminal:
                 action = state.action_space.sample()
-                _, reward, terminal, _ = state.step(action)
+                _, reward, terminal, _ = state.on_episode(action)
                 sum_reward += reward
                 actions.append(action)
 
@@ -123,7 +123,7 @@ class TaxiMCTreeSearch(MCTreeSearch):
 
         sum_reward = 0
         for action in self.best_actions:
-            _, reward, terminal, _ = self.train_env.step(action)
+            _, reward, terminal, _ = self.train_env.on_episode(action)
             sum_reward += reward
             if terminal:
                 break

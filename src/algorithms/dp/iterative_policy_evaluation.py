@@ -31,7 +31,7 @@ class IterativePolicyEvaluator(DPAlgoBase):
         """
         return q_s_a(env=self.train_env, v=self._v, gamma=self.gamma, state=state)
 
-    def step(self, **options) -> None:
+    def on_episode(self, **options) -> None:
         """
         Do one step of the algorithm
         """

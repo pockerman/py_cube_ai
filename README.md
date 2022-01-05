@@ -36,6 +36,7 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 ### Temporal differencing
 
+- <a href="src/examples/td/cliff_walking_q_learning.py">TD(0) on ```CartPole-v0```</a> 
 - <a href="src/examples/td/cliff_walking_q_learning.py">SARSA on ```Cliffwalking-v0```</a> 
 - <a href="src/examples/td/cliff_walking_q_learning.py">Q-learning on ```Cliffwalking-v0``` </a> 
 - <a href="#">Expected SARSA  </a> (TODO)

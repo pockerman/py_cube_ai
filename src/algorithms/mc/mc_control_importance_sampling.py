@@ -66,7 +66,7 @@ class MCControlImportanceSampling(AlgorithmBase):
         for t in range(self._itrs_per_episode):
             probabilities = self._behavior_policy(self._state)
             action = np.random.choice(np.arange(len(probabilities)), p=probabilities)
-            next_state, reward, done, _ = env.step(action)
+            next_state, reward, done, _ = env.on_episode(action)
             self._episode.append((self._state, action, reward))
             if done:
                 break

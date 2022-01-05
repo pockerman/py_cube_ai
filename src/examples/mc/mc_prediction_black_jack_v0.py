@@ -50,7 +50,7 @@ class EpisodeGenerator(object):
         while True:
             probs = [0.8, 0.2] if state[0] > 18 else [0.2, 0.8]
             action = np.random.choice(np.arange(2), p=probs)
-            next_state, reward, done, info = self._env.step(action)
+            next_state, reward, done, info = self._env.on_episode(action)
             episode.append((state, action, reward))
             state = next_state
             if done:

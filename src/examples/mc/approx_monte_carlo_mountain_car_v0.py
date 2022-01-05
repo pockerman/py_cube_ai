@@ -111,7 +111,7 @@ if __name__ == '__main__':
                 state = aggregate_state(pos_bins=pos_bins, vel_bins=vel_bins, obs=observation)
                 action = policy(*[state[1]])
 
-                next_obs, reward, done, _ = env.step(action)
+                next_obs, reward, done, _ = env.on_episode(action)
                 memory.append((state, action, reward))
                 observation = next_obs
 

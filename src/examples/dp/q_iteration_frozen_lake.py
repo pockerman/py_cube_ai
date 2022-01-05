@@ -20,7 +20,7 @@ class Agent(QIteration):
         state = test_env.reset()
         while True:
             action = self.select_action(state)
-            new_state, reward, is_done, _ = test_env.step(action)
+            new_state, reward, is_done, _ = test_env.on_episode(action)
             self._rewards[(state, action, new_state)] = reward
             self._transits[(state, action)][new_state] += 1
             total_reward += reward

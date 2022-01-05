@@ -62,6 +62,14 @@ class TiledEnvWrapper(metaclass=abc.ABCMeta):
         """
         return self.raw_env.render(mode=mode)
 
+    def get_state_from_obs(self, obs: State) -> TiledState:
+        """
+        Returns the state idx given the raw observation
+        :param obs: Raw observation
+        :return: tiled state
+        """
+        return self.get_tiled_state(obs=obs, action=None)
+
     @abc.abstractmethod
     def get_tiled_state(self, obs: State, action: Action) -> TiledState:
         """
@@ -72,7 +80,7 @@ class TiledEnvWrapper(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def create_bins(self) -> list:
+    def create_bins(self) -> Any:
         """
         Create the bins that the state variables of
         the underlying environment will be distributed
