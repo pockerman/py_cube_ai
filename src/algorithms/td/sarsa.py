@@ -1,10 +1,14 @@
-from typing import Any
+from typing import Any, TypeVar
+import numpy as np
+from collections import defaultdict
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput, WithQTableMixin, WithMaxActionMixin
+#from src.policies.policy_base import PolicyBase
 
-from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
-from src.policies.policy_base import PolicyBase
+
+QTable = TypeVar('QTable')
 
 
-class Sarsa(TDAlgoBase):
+class Sarsa(TDAlgoBase, WithQTableMixin):
     """
     SARSA algorithm: On-policy TD control.
     Finds the optimal epsilon-greedy policy.
@@ -13,7 +17,19 @@ class Sarsa(TDAlgoBase):
     def __init__(self, algo_in: TDAlgoInput) -> None:
 
         super().__init__(algo_in=algo_in)
+        self.q_table = {}
         self._policy = algo_in.policy
+
+    @property
+    def q_function(self) -> QTable:
+        return self.q_table
+
+    def actions_before_training_begins(self, **options) -> None:
+        super(Sarsa, self).actions_before_training_begins(**options)
+
+        for state in self.train_env.discrete_observation_space:
+            for action in self.train_env.action_space.n:
+                self.q_table[state, action] = 0.0
 
     def on_episode(self, **options):
         """
@@ -31,14 +47,13 @@ class Sarsa(TDAlgoBase):
             score += reward
 
             if not done:
-                next_action = self._policy(self._q, self.train_env.action_space.n)
+                next_action = self._policy(self.q_function, self.train_env.action_space.n)
                 self.update_q_table(next_action=next_action)
                 state = next_state
                 action = next_action
 
             if done:
                 self.update_q_table(next_action=0)
-                self._tmp_scores.append(score)  # append score
                 break
 
             # TD Update

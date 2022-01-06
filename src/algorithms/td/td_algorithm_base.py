@@ -1,7 +1,5 @@
 from abc import ABC
-
 import numpy as np
-from collections import defaultdict, deque
 from typing import Any, TypeVar
 
 from src.utils.exceptions import InvalidParameterValue
@@ -21,6 +19,36 @@ class TDAlgoInput(AlgoInput):
         self.policy: Policy = None
 
 
+class WithQTableMixin(object):
+    """
+    Helper class to associate a q_table with an algorithm
+     if this is needed.
+    """
+    def __init__(self):
+        # the table representing the q function
+        # client code should choose the type of
+        # the table
+        self.q_table: QTable = None
+
+
+class WithMaxActionMixin(WithQTableMixin):
+
+    def __init__(self):
+        super(WithMaxActionMixin, self).__init__()
+
+    def max_action(self, state: int, n_actions: int) -> int:
+        """
+        Return the action index that presents the maximum
+        value at the given state
+        :param state: state index
+        :param n_actions: Total number of actions allowed
+        :return: The action that corresponds to the maximum value
+        """
+        values = np.array(self.q_table[state, a] for a in range(n_actions))
+        action = np.argmax(values)
+        return int(action)
+
+
 class TDAlgoBase(AlgorithmBase, ABC):
     """
     Base class for temporal differences algorithms
@@ -33,34 +61,10 @@ class TDAlgoBase(AlgorithmBase, ABC):
         self.alpha: float = algo_in.alpha
         self.n_itrs_per_episode: int = algo_in.n_itrs_per_episode
 
-        # A dictionay of 1D arrays. _q[s][a]
-        # is the estimated action value that
-        # corresponds to state s and action a
-        self._q: QTable = None
-
         # monitor performance
-        #self._tmp_scores = None
         self.avg_rewards = None
 
         self.current_episode_itr_index: int = 0
-
-    @property
-    def q_function(self) -> QTable:
-        return self._q
-
-    #@property
-    #def tmp_scores(self):
-     #   return self._tmp_scores
-
-    #@property
-    #def avg_scores(self):
-     #   return self.avg_rewards
-
-    #def update_tmp_scores(self, value: float) -> None:
-    #    self._tmp_scores.append(value)
-
-    #def update_avg_scores(self, value: float) -> None:
-     #   self.avg_rewards.append(value)
 
     def __getitem__(self, item: tuple) -> float:
         return self.train_env[item[0]][item[1]]
@@ -76,12 +80,6 @@ class TDAlgoBase(AlgorithmBase, ABC):
 
         if self.n_itrs_per_episode == 0:
             raise InvalidParameterValue(param_name="n_itrs_per_episode", param_val=self.n_itrs_per_episode)
-
-        # initialize empty dictionary of arrays
-        self._q = defaultdict(lambda: np.zeros(self.train_env.action_space.n))
-
-        # TODO: These should be transferred to the respective example
-        #self._tmp_scores = deque(maxlen=self._plot_freq)  # deque for keeping track of scores
 
         # why a deque and not an array?
         self.avg_rewards = np.zeros(self.n_episodes + 1)

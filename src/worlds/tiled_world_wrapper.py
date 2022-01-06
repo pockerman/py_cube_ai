@@ -22,7 +22,11 @@ class TiledEnvWrapper(metaclass=abc.ABCMeta):
         self.raw_env = env
         self.n_actions = n_actions
         self.n_states = n_states
-        self.bins = []
+        self.discrete_observation_space = []
+
+    @property
+    def action_space(self) -> Any:
+        return self.raw_env.action_space
 
     def reset(self) -> State:
         """
@@ -80,10 +84,17 @@ class TiledEnvWrapper(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def create_bins(self) -> Any:
+    def create_bins(self) -> None:
         """
         Create the bins that the state variables of
         the underlying environment will be distributed
         :return: A list of bins for every state variable
+        """
+
+    @abc.abstractmethod
+    def create_state_space(self) -> None:
+        """
+        Creates the discrete state space.
+        :return:
         """
 

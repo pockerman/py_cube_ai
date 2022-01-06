@@ -22,24 +22,25 @@ class TDZero(TDAlgoBase):
         self.v_function = np.zeros(self.train_env.n_states + 1)
 
     def on_episode(self, **options) -> None:
+        """
+        Execute the algorithm on a training episode
+        :param options: Any options passed
+        :return:
+        """
 
         episode_reward = 0.0
         counter = 0
         for itr in range(self.n_itrs_per_episode):
 
-            # get the discrete state
-            digitized_state = self.train_env.get_state_from_obs(self.state)
-
             # get the action to execute
-            action = self.policy(digitized_state)
+            action = self.policy(self.state)
 
-            # step in the environment
+            # step in the environment. obs should be
+            # digitized
             obs_, reward, done, info = self.train_env.step(action)
 
-            digitized_state_ = self.train_env.get_state_from_obs(obs_)
-
-            self._update_value_function(state=digitized_state,
-                                        next_state=digitized_state_, reward=reward)
+            self._update_value_function(state=self.state,
+                                        next_state=obs_, reward=reward)
             # update the state
             self.state = obs_
             episode_reward += reward
