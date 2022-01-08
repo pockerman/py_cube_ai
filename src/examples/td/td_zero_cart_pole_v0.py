@@ -1,11 +1,18 @@
+"""
+TD(0) algorithm on CartPole-v0 algorithm. The example
+is taken from Reinforcement in motion by Manning publications
+"""
+
 from src.algorithms.td.td_zero import TDZero
 from src.algorithms.td.td_algorithm_base import TDAlgoInput
 from src.worlds.titled_cart_pole import TiledCartPole
+
 
 def policy(state) -> int:
 
     action = 0 if state < 5 else 1
     return action
+
 
 if __name__ == '__main__':
     GAMMA = 1.0

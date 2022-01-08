@@ -51,7 +51,7 @@ class TDZero(TDAlgoBase):
 
         # update the average reward the agent received in this
         # episode
-        self.avg_rewards[self.current_episode_index] = episode_reward / counter
+        self.total_rewards[self.current_episode_index] = episode_reward
 
     def _update_value_function(self, state: int,
                                next_state: int, reward: float) -> None:
