@@ -5,7 +5,8 @@ CartPole environment with state aggregation.
 
 import numpy as np
 import gym
-from typing import TypeVar, Any
+from typing import TypeVar
+from collections import namedtuple
 from src.worlds.tiled_world_wrapper import TiledEnvWrapper
 from src.utils.exceptions import InvalidParameterValue
 
@@ -14,10 +15,15 @@ State = TypeVar('State')
 Action = TypeVar('Action')
 TiledState = TypeVar('TiledState')
 
+# boundaries for the variables in CartPole environment
+TiledCartPoleBounds = namedtuple('TiledCartPoleBounds', ['pole_theta_space', 'pole_theta_velocity_space',
+                                                         'cart_position_space', 'cart_velocity_space'])
 
 class TiledCartPole(TiledEnvWrapper):
     
-    def __init__(self, n_states: int, state_var_idx: int = 2, n_actions: int = 2, version: str = "v0") -> None:
+    def __init__(self, n_states: int, state_var_idx: int = 2,
+                 n_actions: int = 2, version: str = "v0",
+                 boundaries: TiledCartPoleBounds = TiledCartPoleBounds((-0.20943951, 0.20943951), (-4, 4), (-2.4, 2.4), (-4, 4))) -> None:
         super(TiledCartPole, self).__init__(env=gym.make("CartPole-" + version),
                                             n_actions=n_actions, n_states=n_states)
 
@@ -36,7 +42,9 @@ class TiledCartPole(TiledEnvWrapper):
         # bins for the cart velocity space
         self.cart_vel_space = []
         self.state_var_idx = state_var_idx
+        self.boundaries: TiledCartPoleBounds = boundaries
         self.create_bins()
+        self.create_state_space()
 
     def reset(self) -> State:
         """
@@ -118,14 +126,22 @@ class TiledCartPole(TiledEnvWrapper):
                 self.discrete_observation_space.append(i)
 
     def _build_pole_theta_space(self) -> None:
-        self.pole_theta_space = np.linspace(-0.20943951, 0.20943951, self.n_states)
+        low = self.boundaries.pole_theta_space[0]
+        high = self.boundaries.pole_theta_space[1]
+        self.pole_theta_space = np.linspace(low, high, self.n_states)
 
     def _build_theta_velocity_space(self) -> None:
-        self.pole_theta_velocity_space = np.linspace(-4, 4, self.n_states)
+        low = self.boundaries.pole_theta_velocity_space[0]
+        high = self.boundaries.pole_theta_velocity_space[1]
+        self.pole_theta_velocity_space = np.linspace(low, high, self.n_states)
 
     def _build_cart_position_space(self) -> None:
-        self.cart_pos_space = np.linspace(-2.4, 2.4, self.n_states)
+        low = self.boundaries.cart_position_space[0]
+        high = self.boundaries.cart_position_space[1]
+        self.cart_pos_space = np.linspace(low, high, self.n_states)
 
     def _build_cart_velocity_space(self) -> None:
-        self.cart_vel_space = np.linspace(-4, 4, self.n_states)
+        low = self.boundaries.cart_velocity_space[0]
+        high = self.boundaries.cart_velocity_space[1]
+        self.cart_vel_space = np.linspace(low, high, self.n_states)
 

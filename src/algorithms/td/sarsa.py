@@ -1,9 +1,9 @@
 from typing import Any, TypeVar
 import numpy as np
 from collections import defaultdict
-from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput, WithQTableMixin, WithMaxActionMixin
-#from src.policies.policy_base import PolicyBase
-
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
+from src.utils.mixins import WithQTableMixin
+from src.utils import INFO
 
 QTable = TypeVar('QTable')
 
@@ -28,47 +28,60 @@ class Sarsa(TDAlgoBase, WithQTableMixin):
         super(Sarsa, self).actions_before_training_begins(**options)
 
         for state in self.train_env.discrete_observation_space:
-            for action in self.train_env.action_space.n:
+            for action in range(self.train_env.action_space.n):
                 self.q_table[state, action] = 0.0
+
+    def actions_after_episode_ends(self, **options):
+        """
+        Execute any actions the algorithm needs before
+        starting the episode
+        :param options:
+        :return:
+        """
+        super(Sarsa, self).actions_after_episode_ends()
+        self._policy.actions_after_episode(self.current_episode_index)
 
     def on_episode(self, **options):
         """
         Perform one step of the algorithm
         """
         score = 0.0
-        state = self.train_env.reset()
 
         # select an action
-        action = self._policy(self._q, self.train_env.action_space.n)
+        action = self._policy(q_func=self.q_function, state=self.state)
 
+        # dummy counter for how many iterations
+        # we actually run. It is used to calculate the
+        # average reward per episode
+        counter = 0
         for itr in range(self.n_itrs_per_episode):
+
             # Take a step
-            next_state, reward, done, _ = self.train_env.on_episode(self._action)
+            next_state, reward, done, _ = self.train_env.step(action)
             score += reward
 
-            if not done:
-                next_action = self._policy(self.q_function, self.train_env.action_space.n)
-                self.update_q_table(next_action=next_action)
-                state = next_state
-                action = next_action
-
-            if done:
-                self.update_q_table(next_action=0)
-                break
-
-            # TD Update
-            td_target = reward + self.gamma * self.q_function[next_state][next_action]
-            td_delta = td_target - self.q_function[self._state][self._action]
-            self.q_function[self._state][self._action] += self.alpha * td_delta
+            next_action = self._policy(q_func=self.q_function, state=next_state)
+            self.update_q_table(reward=reward, current_action=action, next_state=next_state, next_action=next_action)
 
             if done:
                 break
 
-            self._action = next_action
-            self._state = next_state
+            action = next_action
+            self.state = next_state
+            counter += 1
 
-    def update_q_table(self, next_action: int) -> None:
-        pass
+        if self.current_episode_index % self.output_msg_frequency == 0:
+            print("{0}: On episode {1} training finished with  "
+                  "{2} iterations. Total reward={3}".format(INFO, self.current_episode_index, counter, score))
+
+        self.iterations_per_episode.append(counter)
+        self.total_rewards[self.current_episode_index] = score
+
+    def update_q_table(self, reward: float, current_action: int, next_state: int, next_action: int) -> None:
+        # TD Update
+        td_target = reward + self.gamma * self.q_function[next_state, next_action]
+        td_delta = td_target - self.q_function[self.state, current_action]
+        self.q_function[self.state, current_action] += self.alpha * td_delta
 
 
 

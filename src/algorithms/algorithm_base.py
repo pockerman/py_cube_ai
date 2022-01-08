@@ -92,12 +92,13 @@ class AlgorithmBase(ABC):
         counter = 0
         while self._itr_ctrl.continue_itrs():
 
-            remains = counter % self.output_msg_frequency
-            if remains == 0:
+            if self.output_msg_frequency != -1:
+                remains = counter % self.output_msg_frequency
+                if remains == 0:
 
-                print("{0}: Episode {1} of {2}, ({3}% done)".format(INFO, self.current_episode_index,
-                                                                    self.itr_control.n_max_itrs,
-                                                                    (self._itr_ctrl.current_itr_counter / self.itr_control.n_max_itrs)*100.0))
+                    print("{0}: Episode {1} of {2}, ({3}% done)".format(INFO, self.current_episode_index,
+                                                                        self.itr_control.n_max_itrs,
+                                                                        (self._itr_ctrl.current_itr_counter / self.itr_control.n_max_itrs)*100.0))
             self.actions_before_episode_begins(**options)
             self.on_episode(**options)
             self.actions_after_episode_ends(**options)

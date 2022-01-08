@@ -4,6 +4,7 @@ from enum import Enum
 from typing import Any
 
 from src.policies.policy_base import PolicyBase
+from src.utils.mixins import WithMaxActionMixin
 
 
 class EpsilonDecreaseOption(Enum):
@@ -14,7 +15,7 @@ class EpsilonDecreaseOption(Enum):
     CONSTANT_RATE = 3
 
 
-class EpsilonGreedyPolicy(PolicyBase):
+class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin):
 
     def __init__(self, env: Any, eps: float,
                  decay_op: EpsilonDecreaseOption,
@@ -28,10 +29,11 @@ class EpsilonGreedyPolicy(PolicyBase):
         self._min_eps = min_eps
         self._epsilon_decay_factor = epsilon_decay_factor
 
-    def __call__(self, q_func, state) -> int:
+    def __call__(self, q_func: Any, state: Any) -> int:
         # select greedy action with probability epsilon
         if random.random() > self._eps:
-            return np.argmax(q_func[state])
+            self.q_table = q_func
+            return self.max_action(state=state, n_actions=self._n_actions)
         else:  # otherwise, select an action randomly
             return random.choice(np.arange(self._n_actions))
 
