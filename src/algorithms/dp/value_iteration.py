@@ -42,7 +42,7 @@ class ValueIteration(DPAlgoBase):
         self._rewards = collections.defaultdict(float)
         self._transits = collections.defaultdict(collections.Counter)
 
-    def step(self, **options) -> None:
+    def on_episode(self, **options) -> None:
         """
         Do one step .
         """
@@ -55,7 +55,7 @@ class ValueIteration(DPAlgoBase):
         self.itr_control.residual = delta
 
         self._p_imprv.v = self.v
-        self._p_imprv.step()
+        self._p_imprv.on_episode()
         self.policy = self._p_imprv.policy
 
 

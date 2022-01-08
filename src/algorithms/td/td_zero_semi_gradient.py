@@ -22,7 +22,7 @@ class TDZeroSemiGrad(TDAlgoBase):
         super(TDZeroSemiGrad, self).actions_before_training_begins(**options)
         self._init_weights()
 
-    def step(self,  **options):
+    def on_episode(self, **options):
         """
         Perform one step of the algorithm
         """
@@ -37,7 +37,7 @@ class TDZeroSemiGrad(TDAlgoBase):
             action = self.policy(obs)
 
             # Take a step
-            next_obs, reward, done, _ = self.train_env.step(action)
+            next_obs, reward, done, _ = self.train_env.on_episode(action)
 
             if done:
                 break

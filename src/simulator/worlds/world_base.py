@@ -85,7 +85,7 @@ class WorldBase(metaclass=abc.ABCMeta):
         # NOTE: the supervisors must run last to ensure they are observing the "current"
         # world step all of the supervisors
         for supervisor in self.supervisors:
-            supervisor.step(dt)
+            supervisor.on_episode(dt)
 
         # increment world time
         self.world_time += dt

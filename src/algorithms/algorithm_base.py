@@ -66,7 +66,7 @@ class AlgorithmBase(ABC):
 
     @property
     def current_episode_index(self) -> int:
-        return self._itr_ctrl.current_itr_counter
+        return self._itr_ctrl.current_itr_counter - 1
 
     def reset(self) -> None:
         """
@@ -89,15 +89,20 @@ class AlgorithmBase(ABC):
 
         self.actions_before_training_begins(**options)
 
+        counter = 0
         while self._itr_ctrl.continue_itrs():
 
-            if self._itr_ctrl.current_itr_counter % self.output_msg_frequency == 0:
-                print("{0}: Episode {1} of {2}, ({3}% done)".format(INFO, self._itr_ctrl.current_itr_counter,
-                                                                    self.itr_control.n_max_itrs,
-                                                                    (self._itr_ctrl.current_itr_counter / self.itr_control.n_max_itrs)*100.0))
+            if self.output_msg_frequency != -1:
+                remains = counter % self.output_msg_frequency
+                if remains == 0:
+
+                    print("{0}: Episode {1} of {2}, ({3}% done)".format(INFO, self.current_episode_index,
+                                                                        self.itr_control.n_max_itrs,
+                                                                        (self._itr_ctrl.current_itr_counter / self.itr_control.n_max_itrs)*100.0))
             self.actions_before_episode_begins(**options)
-            self.step(**options)
+            self.on_episode(**options)
             self.actions_after_episode_ends(**options)
+            counter += 1
 
         self.actions_after_training_ends(**options)
 
@@ -148,7 +153,7 @@ class AlgorithmBase(ABC):
         raise NotImplementedError("The function must be overridden")
 
     @abstractmethod
-    def step(self, **options) -> None:
+    def on_episode(self, **options) -> None:
         """
         Do one step of the algorithm
         """
