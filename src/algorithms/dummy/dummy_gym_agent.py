@@ -14,7 +14,7 @@ class DummyGymAgent(AlgorithmBase):
         self.n_itrs_per_episode = n_itrs_per_episode
         self.rewards = np.zeros(self.n_episodes)
 
-    def step(self, **options) -> None:
+    def on_episode(self, **options) -> None:
         """
         Do one step of the algorithm
         """
@@ -23,7 +23,7 @@ class DummyGymAgent(AlgorithmBase):
 
         for episode_itr in range(self.n_itrs_per_episode):
             action = self.train_env.action_space.sample()
-            observation, reward, done, info = self.train_env.step(action=action)
+            observation, reward, done, info = self.train_env.on_episode(action=action)
             episode_rewards += reward
 
             if self.render_env and episode_itr % self.render_env_freq == 0:

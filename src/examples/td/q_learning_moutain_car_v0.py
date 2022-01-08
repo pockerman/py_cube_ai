@@ -55,7 +55,7 @@ class MyMountainCarEnv(object):
         return get_pos_vel_bins(env=env, obs=result, n_states=N_STATES)
 
     def step(self, action):
-        next_state, reward, done, info = self.env.step(action=action)
+        next_state, reward, done, info = self.env.on_episode(action=action)
         return get_pos_vel_bins(env=env, obs=next_state, n_states=N_STATES), reward, done, info
 
     @property

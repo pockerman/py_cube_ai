@@ -22,7 +22,7 @@ class Agent(QLearning):
         state = test_env.reset()
         while True:
             _, action = self.best_value_and_action(state)
-            new_state, reward, is_done, _ = test_env.step(action)
+            new_state, reward, is_done, _ = test_env.on_episode(action)
             total_reward += reward
             if is_done:
                 break

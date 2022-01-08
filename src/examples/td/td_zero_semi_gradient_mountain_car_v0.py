@@ -67,7 +67,7 @@ class TiledMountainCarEnv(gym.Env):
         return self._env.reset()
 
     def step(self, action):
-        return self._env.step(action=action)
+        return self._env.on_episode(action=action)
 
     def close(self):
         self._env.close()

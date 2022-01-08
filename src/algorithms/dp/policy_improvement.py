@@ -21,7 +21,7 @@ class PolicyImprovement(DPAlgoBase):
         self.v = v
         self._policy_adaptor = policy_adaptor
 
-    def step(self):
+    def on_episode(self):
         """
         Perform one step of the algorithm
         """

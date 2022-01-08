@@ -21,7 +21,7 @@ class QLearning(TDAlgoBase):
 
         self._policy = algo_in.policy
 
-    def step(self, **options) -> None:
+    def on_episode(self, **options) -> None:
         """
         Perform one step of the algorithm
         """
@@ -37,7 +37,7 @@ class QLearning(TDAlgoBase):
 
             # epsilon-greedy action selection
             action = self._policy(self.q_function, state)
-            next_state, reward, done, info = self.train_env.step(action)  # take action A, observe R, S'
+            next_state, reward, done, info = self.train_env.on_episode(action)  # take action A, observe R, S'
             score += reward  # add reward to agent's score
             self._update_Q_table(state, action, reward, next_state)
             state = next_state  # S <- S'

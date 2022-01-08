@@ -55,7 +55,7 @@ class CartPoleDQN(DQN):
         self._current_screen = self.get_screen()
         self._steps_done = 0
 
-    def step(self, **options) -> None:
+    def on_episode(self, **options) -> None:
         """
         One iteration step
         """
@@ -72,7 +72,7 @@ class CartPoleDQN(DQN):
             action = self.select_action(self.state)
 
             # do one step in the environemnt
-            _, reward, done, _ = self.train_env.step(action.item())
+            _, reward, done, _ = self.train_env.on_episode(action.item())
 
             self._training_reward += reward
             score += reward
@@ -192,7 +192,7 @@ class CartPoleDQN(DQN):
         loss.backward()
         for param in self.policy_net.parameters():
             param.grad.data.clamp_(-1, 1)
-        self.optimizer.step()
+        self.optimizer.on_episode()
 
     def get_screen(self):
         """
