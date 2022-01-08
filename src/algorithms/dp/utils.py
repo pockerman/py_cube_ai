@@ -28,5 +28,5 @@ def q_from_v(env: Any, v: np.ndarray, gamma: float,) -> dict:
     q_map = {}
 
     for s in range(env.observation_space.n):
-        q_map[s] = state_actions_from_v(env=env, v=v, gamma=gamma,state=s)
+        q_map[s] = state_actions_from_v(env=env, v=v, gamma=gamma, state=s)
     return q_map

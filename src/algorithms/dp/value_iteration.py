@@ -8,10 +8,9 @@ https://github.com/udacity/deep-reinforcement-learning
 import collections
 from typing import Any, TypeVar
 
-from src.algorithms.dp.dp_algorithm_base import DPAlgoBase
+from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoInput
 from src.algorithms.dp.policy_improvement import PolicyImprovement
 from src.algorithms.dp.utils import state_actions_from_v as q_s_a
-from src.policies.policy_base import PolicyBase
 from src.policies.policy_adaptor_base import PolicyAdaptorBase
 
 Env = TypeVar("Env")
@@ -32,17 +31,13 @@ class ValueIteration(DPAlgoBase):
     former implementation.
     """
 
-    def __init__(self, n_episodes: int, tolerance: float,
-                 env: Env, gamma: float, policy_init: PolicyBase,
+    def __init__(self, algo_in: DPAlgoInput,
                  policy_adaptor: PolicyAdaptorBase) -> None:
         """
         Constructor
         """
-        super(ValueIteration, self).__init__(n_episodes=n_episodes, gamma=gamma,
-                                             tolerance=tolerance, env=env, policy=policy_init)
-
-        self._p_imprv = PolicyImprovement(env=env, v=self.v, gamma=gamma,
-                                          policy_init=policy_init, policy_adaptor=policy_adaptor)
+        super(ValueIteration, self).__init__(algo_in=algo_in)
+        self._p_imprv = PolicyImprovement(algo_in=algo_in, v=self.v,  policy_adaptor=policy_adaptor)
 
         self._rewards = collections.defaultdict(float)
         self._transits = collections.defaultdict(collections.Counter)

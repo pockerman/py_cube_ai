@@ -31,25 +31,28 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 - <a href="src/examples/mc/mc_prediction_black_jack.py">Monte Carlo prediction on ```Blackjack-v0```</a>
 - <a href="src/examples/mc/mountain_car_approximate_monte_carlo.py">Approximate Monte Carlo on ```MountainCar-v0```</a>
+- <a href="src/examples/mc/mc_tree_search_taxi_v3.py.py">Monte Carlo tree search ```Taxi-v3```</a>
+
 
 ### Temporal differencing
 
 - <a href="src/examples/td/cliff_walking_q_learning.py">SARSA on ```Cliffwalking-v0```</a> 
 - <a href="src/examples/td/cliff_walking_q_learning.py">Q-learning on ```Cliffwalking-v0``` </a> 
-- <a href="#">Expected SARSA  </a> 
+- <a href="#">Expected SARSA  </a> (TODO)
+- <a href="#">SARSA lambda  </a> (TODO)
 - <a href="src/examples/td/td_zero_semi_gradient_mountain_car.py">TD(0) semi-gradient on ```MountainCar-v0```</a>
+- <a href="src/examples/td/sarsa_semi_gradient_mountain_car_v0.py">SARSA semi-gradient on ```MountainCar-v0```</a>
 - <a href="src/examples/td/q_learning_moutain_car_v0.py">Q-learning on ```MountainCar-v0```</a>
-
 
 ### DQN
 
-- <a href="src/examples/dqn/dqn_lunar_lander.py">Vanilla DQN on CartPole-v0</a>
+- <a href="src/examples/dqn/dqn_lunar_lander.py">Vanilla DQN on ```CartPole-v0```</a>
 - <a href="src/examples/dqn/dqn_lunar_lander.py">Vanilla DQN on LunarLander-v2</a>
 
 
 ### Policy gradient methods
 
-- <a href="src/examples/pg/reinforce_cart_pole.py">REINFORCE on CartPole-v0</a>
+- <a href="src/examples/pg/reinforce_cart_pole.py">REINFORCE on ```CartPole-v0```</a>
 
 
 ## Images

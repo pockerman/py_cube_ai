@@ -2,11 +2,22 @@
 Base class for dynamic programming
 algorithms
 """
-from typing import Any
+from typing import Any, TypeVar
 import numpy as np
 
 from src.algorithms.algorithm_base import AlgorithmBase
-from src.policies.policy_base import PolicyBase
+from src.algorithms.algo_input import AlgoInput
+
+
+Policy = TypeVar("Policy")
+
+
+class DPAlgoInput(AlgoInput):
+    
+    def __init__(self):
+        super(DPAlgoInput, self).__init__()
+        self.gamma: float = 0.1
+        self.policy: Policy = None
 
 
 class DPAlgoBase(AlgorithmBase):
@@ -14,12 +25,10 @@ class DPAlgoBase(AlgorithmBase):
     Base class for DP-based algorithms
     """
 
-    def __init__(self, n_episodes: int, tolerance: float,
-                 env: Any, gamma: float, policy: PolicyBase) -> None:
-        super(DPAlgoBase, self).__init__(n_episodes=n_episodes,
-                                         tolerance=tolerance, env=env)
-        self._gamma = gamma
-        self._policy = policy
+    def __init__(self, algo_in: DPAlgoInput) -> None:
+        super(DPAlgoBase, self).__init__(algo_in=algo_in)
+        self.gamma: float = algo_in.gamma
+        self.policy: Policy = algo_in.policy
 
         # 1D numpy array for the value function
         self._v = None
@@ -33,15 +42,11 @@ class DPAlgoBase(AlgorithmBase):
         self._v = value
 
     @property
-    def gamma(self) -> float:
-        return self._gamma
-
-    @property
-    def policy(self) -> PolicyBase:
+    def policy(self) -> Policy:
         return self._policy
 
     @policy.setter
-    def policy(self, value: PolicyBase) -> None:
+    def policy(self, value: Policy) -> None:
         self._policy = value
 
     def actions_before_training_begins(self, **options) -> None:

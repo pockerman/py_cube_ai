@@ -4,8 +4,7 @@ Tabular Q-learning algorithm
 
 import numpy as np
 from typing import Any, TypeVar
-from src.policies.policy_base import PolicyBase
-from src.algorithms.td.td_algorithm_base import TDAlgoBase
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
 
 Env = TypeVar('Env')
 Policy = TypeVar('Policy')
@@ -16,16 +15,11 @@ class QLearning(TDAlgoBase):
     epsilon-greedy Q-learning algorithm
     """
 
-    def __init__(self, n_episodes: int, tolerance: float,
-                 env: Env, gamma: float, alpha: float,
-                 n_itrs_per_episode: int, policy: Policy,
-                 plot_freq: int = 10) -> None:
+    def __init__(self, algo_in: TDAlgoInput) -> None:
 
-        super(QLearning, self).__init__(n_episodes=n_episodes, tolerance=tolerance,
-                                        env=env, gamma=gamma, alpha=alpha, plot_freq=plot_freq,
-                                        n_itrs_per_episode=n_itrs_per_episode)
+        super(QLearning, self).__init__(algo_in=algo_in)
 
-        self._policy = policy
+        self._policy = algo_in.policy
 
     def step(self, **options) -> None:
         """
@@ -42,7 +36,7 @@ class QLearning(TDAlgoBase):
                 self.train_env.render()
 
             # epsilon-greedy action selection
-            action = self._policy(self.Q, state)
+            action = self._policy(self.q_function, state)
             next_state, reward, done, info = self.train_env.step(action)  # take action A, observe R, S'
             score += reward  # add reward to agent's score
             self._update_Q_table(state, action, reward, next_state)
@@ -62,10 +56,10 @@ class QLearning(TDAlgoBase):
         """Update the Q-value for the state"""
 
         # estimate in Q-table (for current state, action pair)
-        current = self.Q[state][action]
-        Qsa_next = np.max(self.Q[next_state]) if next_state is not None else 0  # value of next state
+        current = self.q_function[state][action]
+        Qsa_next = np.max(self.q_function[next_state]) if next_state is not None else 0  # value of next state
         target = reward + (self.gamma * Qsa_next)  # construct TD target
         new_value = current + (self.alpha * (target - current))  # get updated value
-        self.Q[state][action] = new_value
+        self.q_function[state][action] = new_value
 
 

@@ -1,6 +1,6 @@
 import numpy as np
 from typing import TypeVar
-from src.algorithms.td.td_algorithm_base import TDAlgoBase
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
 
 Env = TypeVar("Env")
 Policy = TypeVar("Policy")
@@ -9,16 +9,14 @@ State = TypeVar("State")
 
 class TDZeroSemiGrad(TDAlgoBase):
 
-    def __init__(self, n_episodes: int, tolerance: float, n_itrs_per_episode: int,
-                 env: Env, gamma: float, alpha: float,
-                 policy: Policy, plot_freq=10, update_frequency: int=1000) -> None:
-        super(TDZeroSemiGrad, self).__init__(n_episodes=n_episodes, tolerance=tolerance,
-                                             n_itrs_per_episode=n_itrs_per_episode,
-                                             env=env, gamma=gamma, alpha=alpha, plot_freq=plot_freq)
+    def __init__(self, algo_in: TDAlgoInput) -> None:
+        super(TDZeroSemiGrad, self).__init__(algo_in=algo_in)
 
-        self.weights = np.zeros(env.n_states())
-        self.policy = policy
-        self.update_frequency = update_frequency
+        # make sure we are working on a tiled environment
+        assert self.train_env.EPISODIC_CONSTRAINT, "Environment is not episodic"
+
+        self.weights = np.zeros(self.train_env.n_states)
+        self.policy = algo_in.policy
 
     def actions_before_training_begins(self, **options) -> None:
         super(TDZeroSemiGrad, self).actions_before_training_begins(**options)
@@ -35,8 +33,8 @@ class TDZeroSemiGrad(TDAlgoBase):
 
             state = self.train_env.get_state(obs)
 
-            # select an action
-            action = self.policy(obs[1])
+            # select an action.
+            action = self.policy(obs)
 
             # Take a step
             next_obs, reward, done, _ = self.train_env.step(action)
@@ -44,7 +42,7 @@ class TDZeroSemiGrad(TDAlgoBase):
             if done:
                 break
 
-            next_state  = self.train_env.get_state(next_obs)
+            next_state = self.train_env.get_state(next_obs)
             self._update_weights(reward=reward, state=state, next_state=next_state, t=options["t"])
 
             obs = next_obs

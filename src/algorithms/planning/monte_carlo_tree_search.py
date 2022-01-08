@@ -114,6 +114,7 @@ class MCTreeSearch(AlgorithmBase):
 
     @abc.abstractmethod
     def backprop(self, node: MCTreeNode, **options: Any) -> None:
+
         """
         Update your node values up to the root node from the traversed path.
         The number of reward-wins is incremented

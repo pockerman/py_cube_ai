@@ -7,12 +7,14 @@ import abc
 from abc import abstractmethod, ABC
 from typing import Any, TypeVar
 
+from src.utils.exceptions import InvalidParameterValue
 from src.utils.wrappers import time_fn
 from src.utils.iteration_controller import ItrControlResult, IterationController
+from src.utils import INFO
 
 
 Env = TypeVar("Env")
-
+AlgoInput = TypeVar("AlgoInput")
 
 
 class AlgorithmBase(ABC):
@@ -20,12 +22,14 @@ class AlgorithmBase(ABC):
     Base class for deriving algorithms
     """
 
-    def __init__(self, n_episodes: int, tolerance: float, env: Env, render_env: bool=False) -> None:
+    def __init__(self, algo_in: AlgoInput) -> None:
         super(AlgorithmBase, self).__init__()
-        self._itr_ctrl = IterationController(tol=tolerance, n_max_itrs=n_episodes)
-        self._train_env = env
+        self._itr_ctrl = IterationController(tol=algo_in.tolerance, n_max_itrs=algo_in.n_episodes)
+        self._train_env = algo_in.train_env
         self._state = None
-        self.render_env = render_env
+        self.render_env = algo_in.render_env
+        self.render_env_freq = algo_in.render_env_freq
+        self.output_msg_frequency: int = algo_in.output_freq
 
     def __call__(self, **options) -> ItrControlResult:
         """
@@ -86,8 +90,11 @@ class AlgorithmBase(ABC):
         self.actions_before_training_begins(**options)
 
         while self._itr_ctrl.continue_itrs():
-            print(">Episode {0} of {1}, ({2}% done)".format(self._itr_ctrl.current_itr_counter,
-                                                            self.itr_control.n_max_itrs, (self._itr_ctrl.current_itr_counter / self.itr_control.n_max_itrs)*100.0))
+
+            if self._itr_ctrl.current_itr_counter % self.output_msg_frequency == 0:
+                print("{0}: Episode {1} of {2}, ({3}% done)".format(INFO, self._itr_ctrl.current_itr_counter,
+                                                                    self.itr_control.n_max_itrs,
+                                                                    (self._itr_ctrl.current_itr_counter / self.itr_control.n_max_itrs)*100.0))
             self.actions_before_episode_begins(**options)
             self.step(**options)
             self.actions_after_episode_ends(**options)
@@ -100,12 +107,12 @@ class AlgorithmBase(ABC):
 
         return itr_ctrl_rsult
 
-    def actions_before_episode_begins(self, **options):
+    def actions_before_episode_begins(self, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the episode
         :param options:
-        :return:
+        :return: None
         """
         self._state = self.train_env.reset()
 
@@ -123,7 +130,14 @@ class AlgorithmBase(ABC):
         Execute any actions the algorithm needs before
         starting the training
         """
+
+        if self.train_env is None:
+            raise ValueError("Environment is None")
+
         self.reset()
+
+        if self.n_episodes == 0:
+            raise InvalidParameterValue(param_name="n_episodes", param_val=self.n_episodes)
 
     @abstractmethod
     def actions_after_training_ends(self, **options) -> None:
