@@ -1,11 +1,12 @@
 import random
 import numpy as np
 from enum import Enum
-from typing import Any
+from typing import Any, TypeVar
 
 from src.policies.policy_base import PolicyBase
 from src.utils.mixins import WithMaxActionMixin
 
+UserDefinedDecreaseMethod = TypeVar('UserDefinedDecreaseMethod')
 
 class EpsilonDecreaseOption(Enum):
 
@@ -13,6 +14,7 @@ class EpsilonDecreaseOption(Enum):
     EXPONENTIAL = 1
     INVERSE_STEP = 2
     CONSTANT_RATE = 3
+    USER_DEFINED = 4
 
 
 class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin):
@@ -20,7 +22,8 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin):
     def __init__(self, env: Any, eps: float,
                  decay_op: EpsilonDecreaseOption,
                  max_eps: float=1.0, min_eps: float = 0.001,
-                 epsilon_decay_factor: float=0.01) -> None:
+                 epsilon_decay_factor: float=0.01,
+                 user_defined_decrease_method: UserDefinedDecreaseMethod=None) -> None:
         super(EpsilonGreedyPolicy, self).__init__(env=env)
         self._eps = eps
         self._n_actions = env.action_space.n
@@ -28,6 +31,7 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin):
         self._max_eps = max_eps
         self._min_eps = min_eps
         self._epsilon_decay_factor = epsilon_decay_factor
+        self.user_defined_decrease_method: UserDefinedDecreaseMethod = user_defined_decrease_method
 
     def __call__(self, q_func: Any, state: Any) -> int:
         # select greedy action with probability epsilon
@@ -38,19 +42,22 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin):
             return random.choice(np.arange(self._n_actions))
 
     @property
-    def values(self) ->None:
+    def values(self) -> None:
         raise Exception("Should not call")
 
-    def actions_after_episode(self, episode_idx, **options) -> None:
+    def actions_after_episode(self, episode_idx: int, **options) -> None:
         """
-
-        :param episode_idx:
+        Apply actions on the policy after the end of the episode
+        :param episode_idx: The episode index
         :param options:
-        :return:
+        :return: None
         """
 
         if self._decay_op == EpsilonDecreaseOption.NONE:
             return
+
+        if self._decay_op == EpsilonDecreaseOption.USER_DEFINED:
+            self._eps = self.user_defined_decrease_method(self._eps, episode_idx)
 
         if self._decay_op == EpsilonDecreaseOption.INVERSE_STEP:
 
