@@ -1,6 +1,5 @@
 from typing import Any, TypeVar
-import numpy as np
-from collections import defaultdict
+
 from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
 from src.utils.mixins import WithQTableMixin
 from src.utils import INFO
@@ -63,12 +62,12 @@ class Sarsa(TDAlgoBase, WithQTableMixin):
             next_action = self._policy(q_func=self.q_function, state=next_state)
             self.update_q_table(reward=reward, current_action=action, next_state=next_state, next_action=next_action)
 
-            if done:
-                break
-
             action = next_action
             self.state = next_state
             counter += 1
+
+            if done:
+                break
 
         if self.current_episode_index % self.output_msg_frequency == 0:
             print("{0}: On episode {1} training finished with  "
