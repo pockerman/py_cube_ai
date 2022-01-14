@@ -51,7 +51,7 @@ class DoubleQLearning(TDAlgoBase, WithDoubleMaxActionMixin):
         """
 
         # episode score
-        episode_score = 0  
+        episode_score = 0
         counter = 0
 
         for itr in range(self.n_itrs_per_episode):
@@ -80,7 +80,8 @@ class DoubleQLearning(TDAlgoBase, WithDoubleMaxActionMixin):
 
     def _update_Q_table(self, state: int, action: int, reward: float, next_state: int = None) -> None:
         """
-        Update the Q-value for the state
+        Update the Q-value function for the given state when taking the given action.
+        The implementation chooses which of the two tables to update using a coin flip
         """
 
         rand = np.random.random()

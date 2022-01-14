@@ -11,6 +11,9 @@ QTable = TypeVar("QTable")
 
 
 class EpsilonDecreaseOption(Enum):
+    """
+    Enumeration of methods to decrease epsilon in a greedy policy
+    """
 
     NONE = 0
     EXPONENTIAL = 1
@@ -20,9 +23,13 @@ class EpsilonDecreaseOption(Enum):
 
 
 class WithEpsilonDecayMxin(object):
+    """
+    Helper mixin for decaying epsilon
+    """
     def __init__(self, decay_op: EpsilonDecreaseOption, eps: float,
                  max_eps: float=1.0, min_eps: float = 0.001, epsilon_decay_factor: float=0.01,
                  user_defined_decrease_method: UserDefinedDecreaseMethod = None):
+
         self.user_defined_decrease_method: UserDefinedDecreaseMethod = user_defined_decrease_method
         self.decay_op = decay_op
         self.eps = eps
@@ -73,6 +80,7 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMxin):
                  max_eps: float=1.0, min_eps: float = 0.001,
                  epsilon_decay_factor: float=0.01,
                  user_defined_decrease_method: UserDefinedDecreaseMethod = None) -> None:
+
         super(EpsilonGreedyPolicy, self).__init__(env=env)
         self.eps = eps
         self._n_actions = env.action_space.n
@@ -105,9 +113,10 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMxin):
 
 class EpsilonDoubleGreedyPolicy(PolicyBase, WithDoubleMaxActionMixin, WithEpsilonDecayMxin):
     """
-    The class EpsilonGreedyPolicy. Models epsilon-greedy policy for
+    The class EpsilonDoubleGreedyPolicy. Models epsilon-greedy policy for
     selecting actions using a tabular representation of the state-action
-    function.
+    function. This class is the same as EpsilonGreedyPolicy. The only difference
+    is that it uses tow state-action value functions
     """
 
     def __init__(self, env: Any, eps: float,
