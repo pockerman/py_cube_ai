@@ -2,7 +2,6 @@
 Tabular Q-learning algorithm
 """
 
-import numpy as np
 from typing import Any, TypeVar
 from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
 from src.utils.mixins import WithMaxActionMixin
