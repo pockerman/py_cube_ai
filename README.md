@@ -43,11 +43,13 @@ Checkout the instructions <a href="webots_howto.md">here</a> how to install and 
 - <a href="src/examples/td/cliff_walking_q_learning.py">SARSA on ```Cliffwalking-v0```</a> 
 - <a href="src/examples/td/sarsa_cart_pole_v0.py">SARSA on ```CartPole-v0```</a> 
 - <a href="src/examples/td/cliff_walking_q_learning.py">Q-learning on ```Cliffwalking-v0``` </a> 
+- <a href="src/examples/td/q_learning_cart_pole_v0.py">Q-learning on ```CartPole-v0``` </a> 
 - <a href="#">Expected SARSA  </a> (TODO)
 - <a href="#">SARSA lambda  </a> (TODO)
 - <a href="src/examples/td/td_zero_semi_gradient_mountain_car.py">TD(0) semi-gradient on ```MountainCar-v0```</a>
 - <a href="src/examples/td/sarsa_semi_gradient_mountain_car_v0.py">SARSA semi-gradient on ```MountainCar-v0```</a>
 - <a href="src/examples/td/q_learning_moutain_car_v0.py">Q-learning on ```MountainCar-v0```</a>
+- <a href="src/examples/td/double_q_learning_cart_pole_v0.py">Double Q-learning on ```CartPole-v0```</a>
 
 ### DQN
 

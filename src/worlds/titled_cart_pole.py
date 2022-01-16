@@ -1,6 +1,17 @@
 """
-CartPole environment with state aggregation.
- 
+CartPole environment with state aggregation. The original environment
+is described here: https://github.com/openai/gym/blob/master/gym/envs/classic_control/cartpole.py
+The state variables are:
+
+Observation:
+        Type: Box(4)
+        Num     Observation               Min                     Max
+        0       Cart Position             -2.4                    2.4
+        1       Cart Velocity             -Inf                    Inf
+        2       Pole Angle                -0.209 rad (-12 deg)    0.209 rad (12 deg)
+        3       Pole Angular Velocity     -Inf                    Inf
+
+However, in the implementation below, the default behavior is to constrain these variables
 """
 
 import numpy as np
@@ -16,14 +27,15 @@ Action = TypeVar('Action')
 TiledState = TypeVar('TiledState')
 
 # boundaries for the variables in CartPole environment
-TiledCartPoleBounds = namedtuple('TiledCartPoleBounds', ['pole_theta_space', 'pole_theta_velocity_space',
-                                                         'cart_position_space', 'cart_velocity_space'])
+TiledCartPoleBounds = namedtuple('TiledCartPoleBounds', ['cart_position_space', 'cart_velocity_space',
+                                                         'pole_theta_space', 'pole_theta_velocity_space'])
+
 
 class TiledCartPole(TiledEnvWrapper):
     
     def __init__(self, n_states: int, state_var_idx: int = 2,
                  n_actions: int = 2, version: str = "v0",
-                 boundaries: TiledCartPoleBounds = TiledCartPoleBounds((-0.20943951, 0.20943951), (-4, 4), (-2.4, 2.4), (-4, 4))) -> None:
+                 boundaries: TiledCartPoleBounds = TiledCartPoleBounds((-2.4, 2.4), (-4, 4), (-0.20943951, 0.20943951), (-4, 4) )) -> None:
         super(TiledCartPole, self).__init__(env=gym.make("CartPole-" + version),
                                             n_actions=n_actions, n_states=n_states)
 
@@ -41,6 +53,7 @@ class TiledCartPole(TiledEnvWrapper):
 
         # bins for the cart velocity space
         self.cart_vel_space = []
+
         self.state_var_idx = state_var_idx
         self.boundaries: TiledCartPoleBounds = boundaries
         self.create_bins()
@@ -101,7 +114,7 @@ class TiledCartPole(TiledEnvWrapper):
             self._build_cart_position_space()
             self._build_cart_velocity_space()
         elif self.state_var_idx == 2:
-            self._build_theta_velocity_space()
+            self._build_pole_theta_space()
         elif self.state_var_idx == 0:
             self._build_cart_position_space()
         elif self.state_var_idx == 1:
