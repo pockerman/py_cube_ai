@@ -21,11 +21,10 @@ The description of the epuck robot can be found at: https://cyberbotics.com/doc/
 
 from collections import namedtuple
 
-# You may need to import some classes of the controller module. Ex:
 from controller import Robot, Motor, Camera, DistanceSensor
 from src.apps.webots.diff_drive_sys.controllers.motor_wrapper import init_robot_motors
 from src.apps.webots.diff_drive_sys.controllers.action_space import ActionBase
-from src.apps.webots.diff_drive_sys.controllers.proximity_sensors_wrapper import init_robot_proximity_sensors, read_proximity_sensors
+from src.apps.webots.diff_drive_sys.controllers.sensors_wrapper import init_robot_proximity_sensors, read_proximity_sensors
 from src.algorithms.td.q_learning import QLearning
 from src.utils import INFO
 from src.worlds.time_step import TimStep
@@ -47,7 +46,7 @@ MIN_SPEED = 0.0
 # to identify the fact that the robot crushed the wall
 BUMP_THESHOLD = 3520
 
-State = namedtuple("State", ["Sensors", "Motors"])
+State = namedtuple("State", ["sensors", "motors"])
 
 # create the Robot instance.
 robot = Robot()
@@ -68,7 +67,6 @@ right_wheel_encoder.enable(samplingPeriod=TIME_STEP)
 
 print("{0} Distance sensor ps0 type {1}".format(INFO, ps0.getType()))
 print("{0} Distance sensor ps1 type {1}".format(INFO, ps7.getType()))
-
 
 
 # You should insert a getDevice-like function in order to get the
@@ -99,19 +97,14 @@ def step(action: ActionBase) -> TimStep:
     if proximity_sensor_vals[-1]:
         reward = -1.0
 
-    state = State()
-    time_step = TimStep(state=state, reward=reward, done=done, info={})
-
     left_encoder_pos = left_wheel_encoder.getValue()
     right_encoder_pos = right_wheel_encoder.getValue()
 
-
-
-    # how do we check if we have crushed a wall?
+    state = State(sensors=proximity_sensor_vals, motors=(left_encoder_pos, right_encoder_pos))
+    time_step = TimStep(state=state, reward=reward, done=done, info={})
 
     # return the distance measures from the wall
     return time_step
-
 
 
 def main():

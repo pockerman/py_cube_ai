@@ -31,7 +31,6 @@ class ActionBase(ABC):
         :return:
         """
 
-
 class MoveFWDAction(ActionBase):
 
     def __init__(self):
