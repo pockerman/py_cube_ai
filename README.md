@@ -54,7 +54,11 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 - <a href="src/examples/dqn/dqn_lunar_lander.py">Vanilla DQN on LunarLander-v2</a>
 
 
-### Policy gradient methods
+### Approximate methods
+
+- <a href="#">Simple gradient descent solver</a>
+
+#### Policy gradient methods
 
 - <a href="src/examples/pg/reinforce_cart_pole.py">REINFORCE on ```CartPole-v0```</a>
 

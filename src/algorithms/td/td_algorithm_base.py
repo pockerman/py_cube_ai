@@ -4,13 +4,13 @@ from typing import Any, TypeVar
 
 from src.utils.exceptions import InvalidParameterValue
 from src.algorithms.algorithm_base import AlgorithmBase
-from src.algorithms.algo_input import AlgoInput
+from src.algorithms.algo_config import AlgoConfig
 
 QTable = TypeVar('QTable')
 Policy = TypeVar("Policy")
 
 
-class TDAlgoInput(AlgoInput):
+class TDAlgoInput(AlgoConfig):
     def __init__(self) -> None:
         super(TDAlgoInput, self).__init__()
         self.gamma: float = 1.0

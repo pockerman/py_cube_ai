@@ -13,6 +13,7 @@ from typing import List
 import matplotlib.pyplot as plt
 from src.utils import INFO
 from src.utils.image_utils import make_gif, make_gif_from_images
+from src.worlds.tiled_mountain_car import TiledMountainCarEnv
 
 
 class Policy(object):
@@ -70,12 +71,12 @@ class Model(object):
 if __name__ == '__main__':
 
     GAMMA = 1.0
-    env = gym.make('MountainCar-v0')
+    env = TiledMountainCarEnv(version="v0", n_states=8) #gym.make('MountainCar-v0')
 
-    pos_bins = np.linspace(-1.2, 0.5, 8)
-    vel_bins = np.linspace(-0.07, 0.07, 8)
+    #pos_bins = np.linspace(-1.2, 0.5, 8)
+    #vel_bins = np.linspace(-0.07, 0.07, 8)
 
-    state_space = [(i, j) for i in range(1, 9) for j in range(1, 9)]
+    #state_space = [(i, j) for i in range(1, 9) for j in range(1, 9)]
 
     num_episodes = 20000
 

@@ -6,13 +6,13 @@ from typing import Any, TypeVar
 import numpy as np
 
 from src.algorithms.algorithm_base import AlgorithmBase
-from src.algorithms.algo_input import AlgoInput
+from src.algorithms.algo_config import AlgoConfig
 
 
 Policy = TypeVar("Policy")
 
 
-class DPAlgoInput(AlgoInput):
+class DPAlgoInput(AlgoConfig):
     
     def __init__(self):
         super(DPAlgoInput, self).__init__()

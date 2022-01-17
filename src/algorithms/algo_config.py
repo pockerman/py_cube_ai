@@ -7,7 +7,7 @@ from typing import TypeVar
 Env = TypeVar('Env')
 
 
-class AlgoInput(object):
+class AlgoConfig(object):
     """
     The AlgoInput class. Wraps the common input
     that most algorithms use. Concrete algorithms

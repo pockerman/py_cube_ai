@@ -11,7 +11,7 @@ import torch
 import numpy as np
 from typing import Any, TypeVar
 from src.algorithms.algorithm_base import AlgorithmBase
-from src.algorithms.algo_input import AlgoInput
+from src.algorithms.algo_config import AlgoConfig
 from src.policies.policy_base import PolicyTorchBase
 
 
@@ -21,7 +21,7 @@ Policy = TypeVar("Policy")
 Transition = collections.namedtuple("Transition", ["state", "action", "reward", "next_state", "done"])
 
 
-class ReinforceInput(AlgoInput):
+class ReinforceInput(AlgoConfig):
     def __init__(self) -> None:
         super(ReinforceInput, self).__init__()
         self.gamma = 1.0
