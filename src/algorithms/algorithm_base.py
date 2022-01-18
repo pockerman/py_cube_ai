@@ -31,6 +31,8 @@ class AlgorithmBase(ABC):
         self.render_env_freq = algo_in.render_env_freq
         self.output_msg_frequency: int = algo_in.output_freq
 
+        assert self.train_env is not None, "Environment is None"
+
     def __call__(self, **options) -> ItrControlResult:
         """
         Make the module callable
