@@ -42,22 +42,14 @@ class Model(ApproxMonteCarlo):
         if self.current_episode_index % 1000 == 0:
             # Update the tracked performance every
             # 1000 steps
-            #print("{0} working on episdoe {1}/{2}".format(INFO, i, num_episodes))
 
-            k = options["k"]
-            near_exit = options["near_exit"]
-            left_side = options["left_side"]
-            dt = options["dt"]
-
+            self_k = options["k"]
             idx = self.current_episode_index // 1000
             state = self.train_env.get_state_from_obs((0.43, 0.054))
-            near_exit[k][idx] = self.state_value(state=state)
+            options["near_exit"][self_k][idx] = self.state_value(state=state)
             state = self.train_env.get_state_from_obs((-1.1, 0.001))
-            left_side[k][idx] = self.state_value(state=state)
-            dt += 0.1
-
-    def actions_after_episode_ends(self, **options) -> None:
-        super(Model, self).actions_after_episode_ends(**options)
+            options["left_side"][self_k][idx] = self.state_value(state=state)
+            options["dt"] += 0.1
 
 
 if __name__ == '__main__':
@@ -67,7 +59,7 @@ if __name__ == '__main__':
                                           car_velocity_space=(-0.07, 0.07))
 
     env = TiledMountainCarEnv(version="v0", n_states=8,
-                              state_bounds=state_bounds) #gym.make('MountainCar-v0')
+                              state_bounds=state_bounds)
 
     algo_config = ApproxMonteCarloConfig()
     algo_config.n_episodes = 20000
