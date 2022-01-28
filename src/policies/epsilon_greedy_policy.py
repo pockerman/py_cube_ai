@@ -22,7 +22,7 @@ class EpsilonDecreaseOption(Enum):
     USER_DEFINED = 4
 
 
-class WithEpsilonDecayMxin(object):
+class WithEpsilonDecayMixin(object):
     """
     Helper mixin for decaying epsilon
     """
@@ -68,7 +68,7 @@ class WithEpsilonDecayMxin(object):
             self.eps = self.min_eps
 
 
-class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMxin):
+class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMixin):
     """
     The class EpsilonGreedyPolicy. Models epsilon-greedy policy for
     selecting actions using a tabular representation of the state-action
@@ -77,8 +77,8 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMxin):
 
     def __init__(self, env: Any, eps: float,
                  decay_op: EpsilonDecreaseOption,
-                 max_eps: float=1.0, min_eps: float = 0.001,
-                 epsilon_decay_factor: float=0.01,
+                 max_eps: float = 1.0, min_eps: float = 0.001,
+                 epsilon_decay_factor: float = 0.01,
                  user_defined_decrease_method: UserDefinedDecreaseMethod = None) -> None:
 
         super(EpsilonGreedyPolicy, self).__init__(env=env)
@@ -111,7 +111,7 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMxin):
         self.decay(episode_idx=episode_idx)
 
 
-class EpsilonDoubleGreedyPolicy(PolicyBase, WithDoubleMaxActionMixin, WithEpsilonDecayMxin):
+class EpsilonDoubleGreedyPolicy(PolicyBase, WithDoubleMaxActionMixin, WithEpsilonDecayMixin):
     """
     The class EpsilonDoubleGreedyPolicy. Models epsilon-greedy policy for
     selecting actions using a tabular representation of the state-action

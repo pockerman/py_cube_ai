@@ -11,14 +11,18 @@ Env = TypeVar('Env')
 
 
 class PolicyBase(ABC):
-
+    """
+    Base class for policies
+    """
     def __init__(self, env: Env) -> None:
         self.env = env
 
+    """
     @property
     @abstractmethod
     def values(self) -> Any:
         raise Exception("Must be overridden")
+    """
 
     @abstractmethod
     def __call__(self, *args, **kwargs) -> Any:

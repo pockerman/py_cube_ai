@@ -20,6 +20,8 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 ## Examples
 
+- <a href="src/examples/pytorch_examples/advertisement_placement.py">Contextual bandits</a>
+
 ### Dynamic programming
 
 - <a href="src/examples/dp/iterative_policy_evaluation_frozen_lake.py">Iterative policy evaluation on FrozenLake-v0</a>
