@@ -77,13 +77,14 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMixin)
 
     def __init__(self, env: Any, eps: float,
                  decay_op: EpsilonDecreaseOption,
+                 n_actions: int,
                  max_eps: float = 1.0, min_eps: float = 0.001,
                  epsilon_decay_factor: float = 0.01,
                  user_defined_decrease_method: UserDefinedDecreaseMethod = None) -> None:
 
         super(EpsilonGreedyPolicy, self).__init__(env=env)
         self.eps = eps
-        self._n_actions = env.action_space.n
+        self.n_actions = n_actions
         self.decay_op = decay_op
         self.max_eps = max_eps
         self.min_eps = min_eps
@@ -93,13 +94,21 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMixin)
     def __call__(self, q_func: QTable, state: Any) -> int:
         # select greedy action with probability epsilon
         if random.random() > self.eps:
-            return self.max_action(q_func, state=state, n_actions=self._n_actions)
+            return self.max_action(q_func, state=state, n_actions=self.n_actions)
         else:  # otherwise, select an action randomly
-            return random.choice(np.arange(self._n_actions))
+            return random.choice(np.arange(self.n_actions))
 
-    @property
-    def values(self) -> None:
-        raise Exception("Should not call")
+    def choose_action_index(self, values) -> int:
+        """
+        Choose an index from the given values
+        :param values:
+        :return:
+        """
+        # select greedy action with probability epsilon
+        if random.random() > self.eps:
+            return int(np.argmax(values))
+        else:  # otherwise, select an action randomly
+            return random.choice(np.arange(self.n_actions))
 
     def actions_after_episode(self, episode_idx: int, **options) -> None:
         """

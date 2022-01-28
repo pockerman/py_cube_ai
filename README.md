@@ -20,6 +20,7 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 ## Examples
 
+- <a href="src/examples/armed_bandit_epsilon_greedy.py">Armed-bandit with epsilon greedy policy</a>
 - <a href="src/examples/pytorch_examples/advertisement_placement.py">Contextual bandits</a>
 
 ### Dynamic programming
@@ -64,17 +65,8 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 - <a href="src/examples/pg/reinforce_cart_pole.py">REINFORCE on ```CartPole-v0```</a>
 
+## References
 
-## Images
-
-![Mountain car](images/mountain_car.gif)
-**Approximate Monte Carlo on Mountain Car**
-
-![State value function](images/state_value_function_frozen_lake.png)
-**Iterative policy evaluation on FrozenLake**
-
-![State value function](images/q_learning_state_value.png)
-**Q-learning on Cliffwalking**
 
 
 
