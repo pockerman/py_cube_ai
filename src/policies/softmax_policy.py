@@ -16,6 +16,17 @@ class SoftMaxPolicy(object):
     def __str__(self) -> str:
         return self.__name__
 
+    def choose_action_index(self, values) -> int:
+        """
+        Choose an index from the given values
+        :param values:
+        :return:
+        """
+        softmax = np.exp(values / self.tau) / np.sum(np.exp(values / self.tau))
+
+        # return the action index by choosing from
+        return np.random.choice([a for a in range(self.n_actions)], p=softmax)
+
     def __call__(self, q_table: QTable, state: Any) -> int:
         action_values = [q_table[state, a] for a in range(self.n_actions)]
         softmax = np.exp(np.array(action_values) / self.tau) / np.sum(np.exp(np.array(action_values) / self.tau))

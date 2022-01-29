@@ -25,10 +25,12 @@ def get_reward(prob, n=10):
 
 
 def update_record(record, action, r):
+    
     new_r = (record[action,0] * record[action, 1] + r) / (record[action, 0] + 1)
-    record[action,0] += 1
-    record[action,1] = new_r
+    record[action, 0] += 1
+    record[action, 1] = new_r
     return record
+
 
 if __name__ == '__main__':
 
@@ -36,7 +38,7 @@ if __name__ == '__main__':
     policy = EpsilonGreedyPolicy(env=None, n_actions=n, eps=0.2, decay_op=EpsilonDecreaseOption.NONE)
     fig, ax = plt.subplots(1, 1)
     ax.set_xlabel("Plays")
-    ax.set_ylabel("Avg Reward")
+    ax.set_ylabel("Average Reward")
     fig.set_size_inches(9, 5)
     rewards = [0]
     probs = np.random.rand(n)

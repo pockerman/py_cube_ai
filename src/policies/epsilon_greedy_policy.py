@@ -75,14 +75,14 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMixin)
     function.
     """
 
-    def __init__(self, env: Any, eps: float,
+    def __init__(self,  eps: float,
                  decay_op: EpsilonDecreaseOption,
                  n_actions: int,
                  max_eps: float = 1.0, min_eps: float = 0.001,
                  epsilon_decay_factor: float = 0.01,
                  user_defined_decrease_method: UserDefinedDecreaseMethod = None) -> None:
 
-        super(EpsilonGreedyPolicy, self).__init__(env=env)
+        super(EpsilonGreedyPolicy, self).__init__()
         self.eps = eps
         self.n_actions = n_actions
         self.decay_op = decay_op
@@ -128,14 +128,15 @@ class EpsilonDoubleGreedyPolicy(PolicyBase, WithDoubleMaxActionMixin, WithEpsilo
     is that it uses tow state-action value functions
     """
 
-    def __init__(self, env: Any, eps: float,
+    def __init__(self, eps: float,
                  decay_op: EpsilonDecreaseOption,
+                 n_actions: int,
                  max_eps: float=1.0, min_eps: float = 0.001,
                  epsilon_decay_factor: float=0.01,
                  user_defined_decrease_method: UserDefinedDecreaseMethod = None) -> None:
-        super(EpsilonDoubleGreedyPolicy, self).__init__(env=env)
+        super(EpsilonDoubleGreedyPolicy, self).__init__()
         self.eps = eps
-        self._n_actions = env.action_space.n
+        self.n_actions = n_actions
         self.decay_op = decay_op
         self.max_eps = max_eps
         self.min_eps = min_eps
