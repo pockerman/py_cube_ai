@@ -7,14 +7,14 @@ import abc
 
 from src.utils.exceptions import Error, InvalidParameterValue
 from src.algorithms.algorithm_base import AlgorithmBase
-from src.algorithms.algo_input import AlgoInput
+from src.algorithms.algo_config import AlgoConfig
 
 Action = TypeVar("Action")
 State = TypeVar("State")
 MCTreeNode = TypeVar("MCTreeNode")
 
 
-class MCTreeSearchInput(AlgoInput):
+class MCTreeSearchInput(AlgoConfig):
     def __init__(self):
         super(MCTreeSearchInput, self).__init__()
 

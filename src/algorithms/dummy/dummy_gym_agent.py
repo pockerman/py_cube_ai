@@ -1,7 +1,7 @@
 import gym
 import numpy as np
 from src.algorithms.algorithm_base import AlgorithmBase
-from src.algorithms.algo_input import AlgoInput
+from src.algorithms.algo_config import AlgoConfig
 
 
 class DummyGymAgent(AlgorithmBase):
@@ -9,7 +9,7 @@ class DummyGymAgent(AlgorithmBase):
     The DummyGymAgent class. Dummy class to play with OpenAI-Gym environments
     """
 
-    def __init__(self, algo_in: AlgoInput, n_itrs_per_episode: int) -> None:
+    def __init__(self, algo_in: AlgoConfig, n_itrs_per_episode: int) -> None:
         super(DummyGymAgent, self).__init__(algo_in=algo_in)
         self.n_itrs_per_episode = n_itrs_per_episode
         self.rewards = np.zeros(self.n_episodes)

@@ -14,6 +14,8 @@ class TiledEnvWrapper(metaclass=abc.ABCMeta):
     """
 
     EPISODIC_CONSTRAINT = True
+    HAS_DISCRETE_STATES = True
+    HAS_DISCRETE_ACTIONS = True
 
     # consraints list
     CONSTRAINTS = [EPISODIC_CONSTRAINT, ]
