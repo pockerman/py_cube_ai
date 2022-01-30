@@ -4,7 +4,7 @@ Wrapper for the environment to use
 
 from collections import namedtuple
 
-from controller import Robot
+from controller import Robot, Supervisor
 from src.worlds.time_step import TimeStep
 from src.apps.webots.diff_drive_sys.controllers.action_space import ActionBase
 from src.apps.webots.diff_drive_sys.controllers.sensors_wrapper import init_robot_proximity_sensors, read_proximity_sensors
@@ -22,6 +22,7 @@ class EnvConfig(object):
     def __init__(self):
         self.dt: int = TIME_STEP
         self.bump_threshold = BUMP_THESHOLD
+        self.robot_name = "E-puck"
 
 
 State = namedtuple("State", ["sensors", "motors"])
@@ -29,8 +30,9 @@ State = namedtuple("State", ["sensors", "motors"])
 
 class EnvironmentWrapper(object):
 
-    def __init__(self, robot: Robot, config: EnvConfig):
-        self.robot: Robot = robot
+    def __init__(self, supervisor: Supervisor, config: EnvConfig):
+        self.supervisor: Supervisor = supervisor
+        self.robot: Robot = None
         self.config: EnvConfig = config
         self.left_motor = None
         self.right_motor = None
@@ -43,7 +45,8 @@ class EnvironmentWrapper(object):
         :return:
         """
 
-        self.robot.supervisor = True
+        #self.robot = Supervisor()
+        self.robot = self.supervisor.getFromDef(self.config.robot_name)
 
         # get the motors
         self.left_motor, self.right_motor = init_robot_motors(robot=self.robot, left_motor_vel=0.0, right_motor_vel=0.0)
@@ -51,7 +54,6 @@ class EnvironmentWrapper(object):
         self.wheel_encoders = init_robot_wheel_encoders(robot=self.robot, sampling_period=self.config.dt)
 
         return TimeStep(state=None, reward=0.0, done=False, info={})
-
 
     def step(self, action: ActionBase) -> TimeStep:
         # execute the action

@@ -21,13 +21,14 @@ The description of the epuck robot can be found at: https://cyberbotics.com/doc/
 
 from collections import namedtuple
 
-from controller import Robot, Motor, Camera, DistanceSensor
+from controller import Robot, Motor, Camera, DistanceSensor, Supervisor
 from src.apps.webots.diff_drive_sys.controllers.motor_wrapper import init_robot_motors
 from src.apps.webots.diff_drive_sys.controllers.action_space import ActionBase
 from src.apps.webots.diff_drive_sys.controllers.sensors_wrapper import init_robot_proximity_sensors, read_proximity_sensors
 from src.algorithms.td.q_learning import QLearning
 from src.utils import INFO
-from src.worlds.time_step import TimStep
+from src.worlds.time_step import TimeStep
+from src.apps.webots.diff_drive_sys.controllers.environment_wrapper import EnvironmentWrapper, EnvConfig
 
 # Define a variable that defines the duration of each physics step.
 # This macro will be used as argument to the Robot::step function,
@@ -48,27 +49,6 @@ BUMP_THESHOLD = 3520
 
 State = namedtuple("State", ["sensors", "motors"])
 
-# create the Robot instance.
-robot = Robot()
-
-# get the motors
-leftMotor, rightMotor = init_robot_motors(robot=robot, left_motor_vel=0.0, right_motor_vel=0.0)
-proximity_sensors = init_robot_proximity_sensors(robot=robot, sampling_period=TIME_STEP)
-
-# the two front distance sensors
-ps0 = proximity_sensors[0]
-ps7 = proximity_sensors[-1]
-
-left_wheel_encoder = robot.getDevice("left wheel sensor")
-left_wheel_encoder.enable(samplingPeriod=TIME_STEP)
-
-right_wheel_encoder = robot.getDevice("right wheel sensor")
-right_wheel_encoder.enable(samplingPeriod=TIME_STEP)
-
-print("{0} Distance sensor ps0 type {1}".format(INFO, ps0.getType()))
-print("{0} Distance sensor ps1 type {1}".format(INFO, ps7.getType()))
-
-
 # You should insert a getDevice-like function in order to get the
 # instance of a device of the robot. Something like:
 #  motor = robot.getDevice('motorname')
@@ -76,7 +56,7 @@ print("{0} Distance sensor ps1 type {1}".format(INFO, ps7.getType()))
 #  ds.enable(timestep)
 
 
-def step(action: ActionBase) -> TimStep:
+def step(action: ActionBase) -> TimeStep:
     """
     Perform one step in the environment
     :return:
@@ -153,8 +133,83 @@ def main():
         print("{0} Distance sensor ps0 type {1}".format(INFO, ps0.getValue()))
         print("{0} Distance sensor ps1 type {1}".format(INFO, ps7.getValue()))
 
+def main_environment():
+
+    # create the Robot instance.
+    supervisor = Supervisor()
+
+    # get the motors
+    #leftMotor, rightMotor = init_robot_motors(robot=robot, left_motor_vel=0.0, right_motor_vel=0.0)
+    #proximity_sensors = init_robot_proximity_sensors(robot=robot, sampling_period=TIME_STEP)
+
+    # the two front distance sensors
+    #ps0 = proximity_sensors[0]
+    #ps7 = proximity_sensors[-1]
+
+    #left_wheel_encoder = robot.getDevice("left wheel sensor")
+    #left_wheel_encoder.enable(samplingPeriod=TIME_STEP)
+
+    #right_wheel_encoder = robot.getDevice("right wheel sensor")
+    #right_wheel_encoder.enable(samplingPeriod=TIME_STEP)
+
+    #print("{0} Distance sensor ps0 type {1}".format(INFO, ps0.getType()))
+    #print("{0} Distance sensor ps1 type {1}".format(INFO, ps7.getType()))
+
+    env_config = EnvConfig()
+    environment = EnvironmentWrapper(supervisor=supervisor, config=env_config)
+    environment.reset()
+
+    for i in range(10000):
+
+        # Read the sensors:
+        # Enter here functions to read sensor data, like:
+        #  val = ds.getValue()
+
+        print("Position left ", environment.wheel_encoders[0].getValue())
+        print("Position right ", environment.wheel_encoders[1].getValue())
+
+        # The values returned by the distance
+        # sensors are scaled between 0 and 4096 (piecewise linearly to the distance).
+        # While 4096 means that a big amount of light is measured (an obstacle is close)
+        # and 0 means that no light is measured (no obstacle).
+
+        ps0 = environment.proximity_sensors[0]
+        ps7 = environment.proximity_sensors[7]
+
+        # detect obstacles
+        right_obstacle = ps0.getValue() > 80.0
+        left_obstacle = ps7.getValue() > 80.0
+
+        # initialize motor speeds at 50% of MAX_SPEED.
+        leftSpeed = 0.5 * MAX_SPEED
+        rightSpeed = 0.5 * MAX_SPEED
+        # modify speeds according to obstacles
+
+        if right_obstacle and left_obstacle:
+            leftSpeed = 0.0
+            rightSpeed = 0.0
+        elif left_obstacle:
+            # turn right
+            leftSpeed = 0.5 * MAX_SPEED
+            rightSpeed = -0.5 * MAX_SPEED
+        elif right_obstacle:
+            # turn left
+            leftSpeed = -0.5 * MAX_SPEED
+            rightSpeed = 0.5 * MAX_SPEED
+        # write actuators inputs
+        leftMotor.setVelocity(leftSpeed)
+        rightMotor.setVelocity(rightSpeed)
+
+        if i % 20 == 0:
+            environment.reset()
+
+        print("{0} Distance sensor ps0 type {1}".format(INFO, ps0.getValue()))
+        print("{0} Distance sensor ps1 type {1}".format(INFO, ps7.getValue()))
+
+
 
 # Enter here exit cleanup code.
 if __name__ == '__main__':
-    main()
+    #main()
+    main_environment()
 
