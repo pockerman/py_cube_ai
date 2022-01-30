@@ -21,6 +21,7 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 ## Examples
 
 - <a href="src/examples/armed_bandit_epsilon_greedy.py">Armed-bandit with epsilon greedy policy</a>
+- <a href="#">Armed-bandit with softmax policy</a>
 - <a href="src/examples/pytorch_examples/advertisement_placement.py">Contextual bandits</a>
 
 ### Dynamic programming
@@ -53,6 +54,7 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 
 ### DQN
 
+- <a href="src/examples/dqn/dqn_grid_world.py">Vanilla DQN on ```Gridworld```</a>
 - <a href="src/examples/dqn/dqn_lunar_lander.py">Vanilla DQN on ```CartPole-v0```</a>
 - <a href="src/examples/dqn/dqn_lunar_lander.py">Vanilla DQN on LunarLander-v2</a>
 
