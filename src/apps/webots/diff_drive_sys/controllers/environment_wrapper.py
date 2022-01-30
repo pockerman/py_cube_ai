@@ -30,25 +30,32 @@ State = namedtuple("State", ["sensors", "motors"])
 
 class EnvironmentWrapper(object):
 
-    def __init__(self, supervisor: Supervisor, config: EnvConfig):
-        self.supervisor: Supervisor = supervisor
-        self.robot: Robot = None
+    def __init__(self, robot: Robot, config: EnvConfig):
+
+        self.robot: Robot = robot
         self.config: EnvConfig = config
         self.left_motor = None
         self.right_motor = None
         self.proximity_sensors = None
         self.wheel_encoders = None
+        #self._init_env()
 
-    def reset(self) -> TimeStep:
+    @property
+    def dt(self) -> int:
+        return self.config.dt
+
+    def reset(self, robot: Robot) -> TimeStep:
         """
-        Reset the environment to the initial state
+        Reset the environment to the initial state. This
+        is done by getting a new instance of the robot.
+        If the given robot is null it simply uses the current robot
         :return:
         """
 
-        #self.robot = Supervisor()
-        self.robot = self.supervisor.getFromDef(self.config.robot_name)
+        if robot is not None:
+            self.robot = robot
 
-        # get the motors
+        # get the newly reset motors
         self.left_motor, self.right_motor = init_robot_motors(robot=self.robot, left_motor_vel=0.0, right_motor_vel=0.0)
         self.proximity_sensors = init_robot_proximity_sensors(robot=self.robot, sampling_period=self.config.dt)
         self.wheel_encoders = init_robot_wheel_encoders(robot=self.robot, sampling_period=self.config.dt)

@@ -12,6 +12,11 @@ TexturedBackgroundLight {
 }
 RectangleArena {
 }
-E-puck {
+DEF qlearn_e_puck E-puck {
+  name "qlearn_e_puck"
   controller "<extern>"
+  supervisor TRUE
+}
+Robot {
+  supervisor TRUE
 }

@@ -1,3 +1,6 @@
+"""
+Various utilities for sensor manipulation
+"""
 from typing import TypeVar, List
 
 Robot = TypeVar('Robot')
