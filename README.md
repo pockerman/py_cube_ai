@@ -16,7 +16,10 @@ The inital version of the simulator is taken from https://github.com/nmccrea/sob
 - OpenAI Gym
 - PyTorch
 - NumPy
+- Webots
 
+## Installing webots and getting started
+Checkout the instructions <a href="webots_howto.md">here</a> how to install and get started with Webots.
 
 ## Examples
 
