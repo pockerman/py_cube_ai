@@ -23,6 +23,7 @@ Checkout the instructions <a href="webots_howto.md">here</a> how to install and 
 
 ## Examples
 
+- <a href="src/examples/dummy/dummy_gym_agent_example.py">Dummy agent on ```MountainCar-v0```</a>
 - <a href="src/examples/armed_bandit_epsilon_greedy.py">Armed-bandit with epsilon greedy policy</a>
 - <a href="#">Armed-bandit with softmax policy</a>
 - <a href="src/examples/pytorch_examples/advertisement_placement.py">Contextual bandits</a>

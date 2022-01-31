@@ -2,7 +2,7 @@
 Implementation of softmax policy
 """
 import numpy as np
-from typing import TypeVar, Any
+from typing import TypeVar, Any, List
 
 QTable = TypeVar("QTable")
 
@@ -16,7 +16,7 @@ class SoftMaxPolicy(object):
     def __str__(self) -> str:
         return self.__name__
 
-    def choose_action_index(self, values) -> int:
+    def choose_action_index(self, values: List) -> int:
         """
         Choose an index from the given values
         :param values:
@@ -26,6 +26,14 @@ class SoftMaxPolicy(object):
 
         # return the action index by choosing from
         return np.random.choice([a for a in range(self.n_actions)], p=softmax)
+
+    def softmax_values(self, values: List) -> List:
+        """
+        Returns the softmax representation of the given list of values
+        :param values:
+        :return:
+        """
+        return np.exp(values / self.tau) / np.sum(np.exp(values / self.tau))
 
     def __call__(self, q_table: QTable, state: Any) -> int:
         action_values = [q_table[state, a] for a in range(self.n_actions)]
