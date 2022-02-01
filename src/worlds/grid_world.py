@@ -39,7 +39,7 @@ class GridWorldActionType(enum.IntEnum):
     RIGHT = 3
 
 
-class InitMode(enum.IntEnum):
+class GridworldInitMode(enum.IntEnum):
     """
     Enumeration of initialization mode
     """
@@ -51,10 +51,7 @@ class InitMode(enum.IntEnum):
 
 class Gridworld(object):
 
-    VALID_ACTIONS = [GridWorldActionType.UP, GridWorldActionType.DOWN,
-                     GridWorldActionType.LEFT, GridWorldActionType.RIGHT]
 
-    VALID_INIT_MODES = [InitMode.STATIC, InitMode.PLAYER, InitMode.RANDOM]
 
     """
     The Gridworld class models a square board. There are three ways to initialize the board. 
@@ -67,7 +64,22 @@ class Gridworld(object):
     Random initialization means that all the objects are placed randomly  
     """
 
-    def __init__(self, size: int = 4, mode: InitMode = InitMode.STATIC,
+    VALID_ACTIONS = [GridWorldActionType.UP, GridWorldActionType.DOWN,
+                     GridWorldActionType.LEFT, GridWorldActionType.RIGHT]
+
+    VALID_INIT_MODES = [GridworldInitMode.STATIC, GridworldInitMode.PLAYER, GridworldInitMode.RANDOM]
+
+    @staticmethod
+    def get_action(aidx: int) -> GridWorldActionType:
+        """
+        Returns the action that corresponds to the
+        given action index
+        :param aidx:
+        :return:
+        """
+        return Gridworld.VALID_ACTIONS[aidx]
+
+    def __init__(self, size: int = 4, mode: GridworldInitMode = GridworldInitMode.STATIC,
                  add_noise_on_state: bool = True) -> None:
         """
         The Gridworld board is always square, so the size refers to one side’s dimension 4 × 4 grid will be created.
@@ -91,28 +103,20 @@ class Gridworld(object):
     def n_actions(self) -> int:
         return len(Gridworld.VALID_ACTIONS)
 
-    def get_action(self, aidx: int) -> GridWorldActionType:
-        """
-        Returns the action that corresponds to the
-        given action index
-        :param aidx:
-        :return:
-        """
-        return Gridworld.VALID_ACTIONS[aidx]
-
     def reset(self) -> TimeStep:
         """
         Reset the environment
         :return:
         """
         self._initialize()
-        obs = self.board.render_np().reshape(1, 64)
 
         if self.add_noise_on_state:
-            obs += np.random.rand(1, 64) / 10.0
+            obs = self.board.render_np().reshape(1, 64) + np.random.rand(1, 64) / 10.0
+        else:
+            obs = self.board.render_np().reshape(1, 64)
 
         time_step = TimeStep(step_type=StepType.FIRST, reward=self.get_reward(),
-                             info={}, observation=obs)
+                             info={}, observation=obs, discount=0.0)
         return time_step
 
     def step(self, action: GridWorldActionType) -> TimeStep:
@@ -121,6 +125,9 @@ class Gridworld(object):
         :param action:
         :return:
         """
+
+        if action not in Gridworld.VALID_ACTIONS:
+            raise ValueError("{0} not in {1}".format(action.name, Gridworld.VALID_ACTIONS))
 
         # need to determine what object (if any)
         # is in the new grid spot the player is moving to
@@ -138,16 +145,22 @@ class Gridworld(object):
             checkMove((0, -1))
         elif action == GridWorldActionType.RIGHT: #'r': #right
             checkMove((0, 1))
-        else:
-            pass
 
+        if self.add_noise_on_state:
+            obs = self.board.render_np().reshape(1, 64) + np.random.rand(1, 64) / 10.0
+        else:
+            obs = self.board.render_np().reshape(1, 64)
+        """
         obs = self.board.render_np().reshape(1, 64)
 
         if self.add_noise_on_state:
             obs += np.random.rand(1, 64) / 10.0
+        """
 
-        time_step = TimeStep(step_type=StepType.MID, reward=self.get_reward(),
-                             info={}, observation=obs)
+        reward = self.get_reward()
+        step_type = StepType.LAST if reward != -1 else StepType.MID
+        time_step = TimeStep(step_type=step_type, reward=reward,
+                             info={}, observation=obs, discount=0.0)
         return time_step
 
     def _initialize(self) -> None:
@@ -165,9 +178,9 @@ class Gridworld(object):
         self.board.addPiece('Pit', '-', (2, 0))
         self.board.addPiece('Wall', 'W', (3, 0))
 
-        if self.mode == InitMode.STATIC: #'static':
+        if self.mode == GridworldInitMode.STATIC: #'static':
             self.initGridStatic()
-        elif self.mode == InitMode.PLAYER: #'player':
+        elif self.mode == GridworldInitMode.PLAYER: #'player':
             self.initGridPlayer()
         else:
             self.initGridRand()

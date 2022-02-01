@@ -30,10 +30,10 @@ Checkout the instructions <a href="webots_howto.md">here</a> how to install and 
 
 ### Dynamic programming
 
-- <a href="src/examples/dp/iterative_policy_evaluation_frozen_lake.py">Iterative policy evaluation on FrozenLake-v0</a>
-- <a href="src/examples/dp/policy_improvement_frozen_lake.py">Policy improvement on FrozenLake-v0</a>
-- <a href="src/examples/dp/policy_iteration_frozen_lake.py">Policy iteration on FrozenLake-v0</a>
-- <a href="src/examples/dp/value_iteration_frozen_lake.py">Value iteration on FrozenLake-v0</a>
+- <a href="src/examples/dp/iterative_policy_evaluation_frozen_lake.py">Iterative policy evaluation on ```FrozenLake-v0```</a>
+- <a href="src/examples/dp/policy_improvement_frozen_lake.py">Policy improvement on ```FrozenLake-v0```</a>
+- <a href="src/examples/dp/policy_iteration_frozen_lake.py">Policy iteration on ```FrozenLake-v0```</a>
+- <a href="src/examples/dp/value_iteration_frozen_lake.py">Value iteration on ```FrozenLake-v0```</a>
 
 ### Monte Carlo
 
@@ -59,6 +59,7 @@ Checkout the instructions <a href="webots_howto.md">here</a> how to install and 
 ### DQN
 
 - <a href="src/examples/dqn/dqn_grid_world.py">Vanilla DQN on ```Gridworld```</a>
+- <a href="src/examples/dqn/dqn_with_experience_replay_on_grid_world.py">DQN with experience replay on ```Gridworld```</a>
 - <a href="src/examples/dqn/dqn_lunar_lander.py">Vanilla DQN on ```CartPole-v0```</a>
 - <a href="src/examples/dqn/dqn_lunar_lander.py">Vanilla DQN on LunarLander-v2</a>
 
