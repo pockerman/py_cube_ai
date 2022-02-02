@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from matplotlib import pylab as plt
-from src.worlds.grid_world import Gridworld, GridWorldActionType, GridworldInitMode
+from src.worlds.grid_world import Gridworld, GridworldInitMode
 from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecreaseOption
 from src.utils import INFO
 

@@ -150,12 +150,6 @@ class Gridworld(object):
             obs = self.board.render_np().reshape(1, 64) + np.random.rand(1, 64) / 10.0
         else:
             obs = self.board.render_np().reshape(1, 64)
-        """
-        obs = self.board.render_np().reshape(1, 64)
-
-        if self.add_noise_on_state:
-            obs += np.random.rand(1, 64) / 10.0
-        """
 
         reward = self.get_reward()
         step_type = StepType.LAST if reward != -1 else StepType.MID
