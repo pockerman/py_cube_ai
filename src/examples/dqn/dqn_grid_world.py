@@ -26,7 +26,7 @@ def epsilon_decay(eps: float, episode_idx: int) -> float:
 def play_and_test(network, mode: GridworldInitMode = GridworldInitMode.STATIC, display: bool =True):
 
     # dummy counter for moves
-    i = 0
+    moves_played = 0
 
     test_game = Gridworld(size=4, mode=mode)
 
@@ -66,8 +66,9 @@ def play_and_test(network, mode: GridworldInitMode = GridworldInitMode.STATIC, d
                 status = 0
                 if display:
                     print("Game LOST. Reward: %s" % (reward,))
-        i += 1
-        if i > 15:
+
+        moves_played += 1
+        if moves_played > 15:
             if display:
                 print("Game lost; too many moves.")
             break

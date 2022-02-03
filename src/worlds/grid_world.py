@@ -80,7 +80,7 @@ class Gridworld(object):
         return Gridworld.VALID_ACTIONS[aidx]
 
     def __init__(self, size: int = 4, mode: GridworldInitMode = GridworldInitMode.STATIC,
-                 add_noise_on_state: bool = True) -> None:
+                 add_noise_on_state: bool = True, noise_factor: int = 10) -> None:
         """
         The Gridworld board is always square, so the size refers to one side’s dimension 4 × 4 grid will be created.
         :param size: The size of the board in every dimension
@@ -93,9 +93,13 @@ class Gridworld(object):
         if mode not in Gridworld.VALID_INIT_MODES:
             raise ValueError("Mode {0} not in {1}".format(mode, Gridworld.VALID_INIT_MODES))
 
+        if noise_factor <= 0:
+            raise ValueError("Noise factor cannot be less than 1")
+
         self.size = size
         self.mode = mode
         self.add_noise_on_state = add_noise_on_state
+        self.noise_factor = noise_factor
         self.board: GridBoard = None
         self._initialize()
 
@@ -111,7 +115,7 @@ class Gridworld(object):
         self._initialize()
 
         if self.add_noise_on_state:
-            obs = self.board.render_np().reshape(1, 64) + np.random.rand(1, 64) / 10.0
+            obs = self.board.render_np().reshape(1, 64) + np.random.rand(1, 64) / self.noise_factor
         else:
             obs = self.board.render_np().reshape(1, 64)
 
@@ -147,7 +151,7 @@ class Gridworld(object):
             checkMove((0, 1))
 
         if self.add_noise_on_state:
-            obs = self.board.render_np().reshape(1, 64) + np.random.rand(1, 64) / 10.0
+            obs = self.board.render_np().reshape(1, 64) + np.random.rand(1, 64) / self.noise_factor
         else:
             obs = self.board.render_np().reshape(1, 64)
 
@@ -172,9 +176,9 @@ class Gridworld(object):
         self.board.addPiece('Pit', '-', (2, 0))
         self.board.addPiece('Wall', 'W', (3, 0))
 
-        if self.mode == GridworldInitMode.STATIC: #'static':
+        if self.mode == GridworldInitMode.STATIC:
             self.initGridStatic()
-        elif self.mode == GridworldInitMode.PLAYER: #'player':
+        elif self.mode == GridworldInitMode.PLAYER:
             self.initGridPlayer()
         else:
             self.initGridRand()

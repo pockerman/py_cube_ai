@@ -57,3 +57,7 @@ class TimeStep(NamedTuple, Generic[_Reward, _Discount, _Observation, _INFO]):
 
     def last(self) -> bool:
         return self.step_type == StepType.LAST
+
+    @property
+    def done(self) -> bool:
+        return self.last()
