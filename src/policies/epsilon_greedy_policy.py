@@ -27,7 +27,7 @@ class WithEpsilonDecayMixin(object):
     Helper mixin for decaying epsilon
     """
     def __init__(self, decay_op: EpsilonDecreaseOption, eps: float,
-                 max_eps: float=1.0, min_eps: float = 0.001, epsilon_decay_factor: float=0.01,
+                 max_eps: float = 1.0, min_eps: float = 0.001, epsilon_decay_factor: float = 0.01,
                  user_defined_decrease_method: UserDefinedDecreaseMethod = None):
 
         self.user_defined_decrease_method: UserDefinedDecreaseMethod = user_defined_decrease_method
@@ -49,7 +49,7 @@ class WithEpsilonDecayMixin(object):
             return
 
         if self.decay_op == EpsilonDecreaseOption.USER_DEFINED:
-            self.eps = self.user_defined_decrease_method(self.eps, episode_idx)
+            self.eps = self.user_defined_decrease_method(eps=self.eps, episode_idx=episode_idx)
 
         if self.decay_op == EpsilonDecreaseOption.INVERSE_STEP:
 
