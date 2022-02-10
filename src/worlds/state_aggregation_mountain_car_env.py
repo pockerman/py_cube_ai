@@ -25,7 +25,7 @@ import numpy as np
 import gym
 from collections import namedtuple
 from typing import TypeVar, Any
-from src.worlds.tiled_world_wrapper import TiledEnvWrapper
+from src.worlds.state_aggregator_world_wrapper import StateAggregationEnvWrapper
 from src.utils.exceptions import InvalidParameterValue
 
 State = TypeVar('State')
@@ -33,16 +33,16 @@ Action = TypeVar('Action')
 TiledState = TypeVar('TiledState')
 
 # boundaries for the variables in MountainCar environment
-TiledMountainCarBounds = namedtuple('TiledMountainCarBounds', ['car_position_space', 'car_velocity_space'])
+StateAggregationMountainCarBounds = namedtuple('TiledMountainCarBounds', ['car_position_space', 'car_velocity_space'])
 
 
-class TiledMountainCarEnv(TiledEnvWrapper):
+class StateAggregationMountainCarEnv(StateAggregationEnvWrapper):
     
     def __init__(self, version: str, n_states: int, state_var_idx: int = 2,
-                 state_bounds: TiledMountainCarBounds = TiledMountainCarBounds(car_position_space=(-1.2, 0.6),
-                                                                               car_velocity_space=(-0.07, 0.07))):
-        super(TiledMountainCarEnv, self).__init__(env=gym.make("MountainCar-"+version),
-                                                  n_states=n_states, n_actions=3)
+                 state_bounds: StateAggregationMountainCarBounds = StateAggregationMountainCarBounds(car_position_space=(-1.2, 0.6),
+                                                                                                     car_velocity_space=(-0.07, 0.07))):
+        super(StateAggregationMountainCarEnv, self).__init__(env=gym.make("MountainCar-" + version),
+                                                             n_states=n_states, n_actions=3)
 
         if state_var_idx != 0 and state_var_idx != 1 and state_var_idx != 2:
             raise InvalidParameterValue("state_var_idx", param_val=[0, 1, 2])

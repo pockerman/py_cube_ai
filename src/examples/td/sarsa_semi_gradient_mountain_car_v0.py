@@ -15,7 +15,7 @@ from typing import TypeVar
 
 from src.algorithms.td.episodic_sarsa_semi_gradient import EpisodicSarsaSemiGrad
 from src.utils import INFO
-from src.worlds.tiled_world_wrapper import TiledEnvWrapper
+from src.worlds.state_aggregator_world_wrapper import StateAggregationEnvWrapper
 
 GAMMA = 1
 NUM_EPISODES = 500
@@ -29,7 +29,7 @@ Action = TypeVar('Action')
 TiledState = TypeVar('TiledState')
 
 
-class TiledMountainCarEnv(TiledEnvWrapper):
+class TiledMountainCarEnv(StateAggregationEnvWrapper):
 
     def __init__(self):
         super(TiledMountainCarEnv, self).__init__(env=gym.make('MountainCar-v0'), n_actions=3, n_states=8 * 8 * 8)

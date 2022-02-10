@@ -8,7 +8,7 @@ https://livevideo.manning.com/module/56_8_5/reinforcement-learning-in-motion/cli
 import numpy as np
 import matplotlib.pyplot as plt
 from src.utils import INFO
-from src.worlds.tiled_mountain_car import TiledMountainCarEnv, TiledMountainCarBounds
+from src.worlds.state_aggregation_mountain_car_env import StateAggregationMountainCarEnv, StateAggregationMountainCarBounds
 from src.algorithms.mc.approximate_monte_carlo import ApproxMonteCarloConfig, ApproxMonteCarlo
 
 
@@ -55,11 +55,11 @@ class Model(ApproxMonteCarlo):
 if __name__ == '__main__':
 
     GAMMA = 1.0
-    state_bounds = TiledMountainCarBounds(car_position_space=(-1.2, 0.5),
-                                          car_velocity_space=(-0.07, 0.07))
+    state_bounds = StateAggregationMountainCarBounds(car_position_space=(-1.2, 0.5),
+                                                     car_velocity_space=(-0.07, 0.07))
 
-    env = TiledMountainCarEnv(version="v0", n_states=8,
-                              state_bounds=state_bounds)
+    env = StateAggregationMountainCarEnv(version="v0", n_states=8,
+                                         state_bounds=state_bounds)
 
     algo_config = ApproxMonteCarloConfig()
     algo_config.n_episodes = 20000

@@ -7,7 +7,7 @@ import numpy as np
 
 from src.algorithms.td.td_algorithm_base import TDAlgoInput
 from src.algorithms.td.sarsa import Sarsa
-from src.worlds.titled_cart_pole import TiledCartPole
+from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleEnv
 from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecreaseOption
 
 
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     GAMMA = 1.0
     ALPHA = 0.1
     EPS = 1.0
-    env = TiledCartPole(n_states=10, n_actions=2, state_var_idx=4)
+    env = StateAggregationCartPoleEnv(n_states=10, n_actions=2, state_var_idx=4)
 
     sarsa_in = TDAlgoInput()
     sarsa_in.gamma = GAMMA
