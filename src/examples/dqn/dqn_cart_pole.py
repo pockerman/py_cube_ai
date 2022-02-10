@@ -15,7 +15,7 @@ import torch.nn.functional as F
 import torchvision.transforms as T
 
 from src.algorithms import CartPoleDQN
-from src.networks.nn_base import NNBase
+from src.networks_org.nn_base import NNBase
 
 
 class Network(NNBase):

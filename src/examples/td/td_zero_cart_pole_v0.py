@@ -5,7 +5,7 @@ is taken from Reinforcement in motion by Manning publications
 
 from src.algorithms.td.td_zero import TDZero
 from src.algorithms.td.td_algorithm_base import TDAlgoInput
-from src.worlds.titled_cart_pole import TiledCartPole
+from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleEnv
 
 
 def policy(state) -> int:
@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     # create a tiled CartPole environment. The state vector
     # is discretized into 10 discrete bins
-    env = TiledCartPole(version="v0", n_states=10, state_var_idx=2)
+    env = StateAggregationCartPoleEnv(version="v0", n_states=10, state_var_idx=2)
 
     td_algo_input = TDAlgoInput()
     td_algo_input.gamma = GAMMA

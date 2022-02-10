@@ -18,7 +18,7 @@ import numpy as np
 import gym
 from typing import TypeVar
 from collections import namedtuple
-from src.worlds.tiled_world_wrapper import TiledEnvWrapper
+from src.worlds.state_aggregator_world_wrapper import StateAggregationEnvWrapper
 from src.utils.exceptions import InvalidParameterValue
 
 Env = TypeVar('Env')
@@ -27,17 +27,17 @@ Action = TypeVar('Action')
 TiledState = TypeVar('TiledState')
 
 # boundaries for the variables in CartPole environment
-TiledCartPoleBounds = namedtuple('TiledCartPoleBounds', ['cart_position_space', 'cart_velocity_space',
+StateAggregationCartPoleBounds = namedtuple('TiledCartPoleBounds', ['cart_position_space', 'cart_velocity_space',
                                                          'pole_theta_space', 'pole_theta_velocity_space'])
 
 
-class TiledCartPole(TiledEnvWrapper):
+class StateAggregationCartPoleEnv(StateAggregationEnvWrapper):
     
     def __init__(self, n_states: int, state_var_idx: int = 2,
                  n_actions: int = 2, version: str = "v0",
-                 boundaries: TiledCartPoleBounds = TiledCartPoleBounds((-2.4, 2.4), (-4, 4), (-0.20943951, 0.20943951), (-4, 4) )) -> None:
-        super(TiledCartPole, self).__init__(env=gym.make("CartPole-" + version),
-                                            n_actions=n_actions, n_states=n_states)
+                 boundaries: StateAggregationCartPoleBounds = StateAggregationCartPoleBounds((-2.4, 2.4), (-4, 4), (-0.20943951, 0.20943951), (-4, 4))) -> None:
+        super(StateAggregationCartPoleEnv, self).__init__(env=gym.make("CartPole-" + version),
+                                                          n_actions=n_actions, n_states=n_states)
 
         if 0 > state_var_idx > 4:
             raise InvalidParameterValue("state_var_idx", param_val=[0, 3])
@@ -55,7 +55,7 @@ class TiledCartPole(TiledEnvWrapper):
         self.cart_vel_space = []
 
         self.state_var_idx = state_var_idx
-        self.boundaries: TiledCartPoleBounds = boundaries
+        self.boundaries: StateAggregationCartPoleBounds = boundaries
         self.create_bins()
         self.create_state_space()
 

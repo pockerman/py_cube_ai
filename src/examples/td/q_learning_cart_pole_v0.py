@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from src.algorithms.td.q_learning import QLearning
-from src.worlds.titled_cart_pole import TiledCartPole
+from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleEnv
 from src.algorithms.td.td_algorithm_base import TDAlgoInput
 from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecreaseOption
 
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     ALPHA = 0.1
     EPS = 1.0
 
-    env = TiledCartPole(n_states=10, n_actions=2)
+    env = StateAggregationCartPoleEnv(n_states=10, n_actions=2)
     q_algo_in = TDAlgoInput()
     q_algo_in.train_env = env
     q_algo_in.alpha = ALPHA

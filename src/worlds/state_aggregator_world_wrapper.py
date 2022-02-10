@@ -7,7 +7,7 @@ Action = TypeVar('Action')
 TiledState = TypeVar('TiledState')
 
 
-class TiledEnvWrapper(metaclass=abc.ABCMeta):
+class StateAggregationEnvWrapper(metaclass=abc.ABCMeta):
     """
     Abstract wrapper class to the given environment for tiled based
     algorithms
