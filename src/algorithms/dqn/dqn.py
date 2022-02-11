@@ -11,8 +11,8 @@ import random
 import torch
 import torch.nn.functional as F
 
-from src.networks.nn_base import NNBase
-from src.networks.utils import soft_network_update
+from src.networks_org.nn_base import NNBase
+from src.networks_org.utils import soft_network_update
 from src.utils.replay_buffer import ReplayBuffer
 from src.algorithms.algorithm_base import AlgorithmBase
 
