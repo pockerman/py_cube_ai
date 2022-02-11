@@ -30,6 +30,7 @@ class AlgorithmBase(ABC):
         self.render_env = algo_in.render_env
         self.render_env_freq = algo_in.render_env_freq
         self.output_msg_frequency: int = algo_in.output_freq
+        self.break_training_flag: bool = False
 
         assert self.train_env is not None, "Environment is None"
 
@@ -76,6 +77,7 @@ class AlgorithmBase(ABC):
         """
         self._state = self.train_env.reset()
         self._itr_ctrl.reset()
+        self.break_training_flag = False
 
     @time_fn
     def train(self, **options) -> ItrControlResult:
@@ -105,6 +107,13 @@ class AlgorithmBase(ABC):
             self.on_episode(**options)
             self.actions_after_episode_ends(**options)
             counter += 1
+
+            # check if the break training flag
+            # has been set and break
+            if self.break_training_flag:
+                print("{0}: On Episode {1} the break training "
+                      "flag was set. Stop training".format(INFO, self.current_episode_index))
+                break
 
         self.actions_after_training_ends(**options)
 

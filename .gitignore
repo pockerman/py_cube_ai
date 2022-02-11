@@ -9,9 +9,9 @@ algorithms/mc/__pycache__/
 algorithms/td/__pycache__/
 src/policies/__pycache__/
 src/utils/__pycache__/
-src/networks/__pycache__/
+src/networks_org/__pycache__/
 src/algorithms/td_org/
-src/networks/
+src/networks_org/
 src/agents/__pycache__
 src/algorithms/dp/__pycache__/
 src/algorithms/mc/__pycache__/

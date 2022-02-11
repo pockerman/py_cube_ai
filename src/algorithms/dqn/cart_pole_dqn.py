@@ -13,8 +13,8 @@ import torch.nn.functional as F
 import torchvision.transforms as T
 from PIL import Image
 
-from src.networks.nn_base import NNBase
-from src.utils.replay_buffer import Experience
+from src.networks_org.nn_base import NNBase
+from src.utils.replay_buffer import ExperienceTuple
 from .dqn import DQN
 
 
