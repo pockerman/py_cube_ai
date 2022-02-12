@@ -19,18 +19,11 @@ If the agent is trapped in a corner.
 The description of the epuck robot can be found at: https://cyberbotics.com/doc/guide/epuck#e-puck-model
 """
 
-import os
-from multiprocessing import Process
 from collections import namedtuple
 
-from controller import Robot, Motor, Camera, DistanceSensor, Supervisor, Field
-from src.apps.webots.diff_drive_sys.controllers.motor_wrapper import init_robot_motors
-from src.apps.webots.diff_drive_sys.controllers.action_space import ActionBase
-from src.apps.webots.diff_drive_sys.controllers.sensors_wrapper import init_robot_proximity_sensors, read_proximity_sensors
-from src.algorithms.td.q_learning import QLearning
+from controller import Supervisor
 from src.utils import INFO
-from src.worlds.time_step import TimeStep
-from src.apps.webots.diff_drive_sys.controllers.environment_wrapper import EnvironmentWrapper, EnvConfig
+from src.worlds.webot_environment_wrapper import EnvironmentWrapper, EnvConfig
 
 # Define a variable that defines the duration of each physics step.
 # This macro will be used as argument to the Robot::step function,
@@ -69,8 +62,9 @@ def run(environment: EnvironmentWrapper):
     while environment.robot.step(environment.dt) != -1:
 
         # check the position encoders
-        print("Position left ", environment.wheel_encoders[0].getValue())
-        print("Position right ", environment.wheel_encoders[1].getValue())
+        #print("Position left ", environment.wheel_encoders[0].getValue())
+        #print("Position right ", environment.wheel_encoders[1].getValue())
+        print("Position {0}".format(environment.robot_node.getPosition()))
 
         # The values returned by the distance
         # sensors are scaled between 0 and 4096 (piecewise linearly to the distance).
@@ -119,33 +113,38 @@ def controller_main():
 
     # number of steps to play
     supervisor = Supervisor()
+
     robot_node = supervisor.getFromDef(name='qlearn_e_puck')
+
 
     if robot_node is None:
         raise ValueError("Robot node is None")
 
     # initial translation
-    init_translation = [0., 0., 0., ]
-    init_rotation = [0., 1.0,  0., 0., ]
+    #init_translation = [0., 0., 0., ]
+    #init_rotation = [0., 1.0,  0., 0., ]
+
+    robot_node.enablePoseTracking(TIME_STEP)
 
     # get the transition and rtation fields
-    translation = robot_node.getField('translation')
-    rotation = robot_node.getField('rotation')
+    #translation = robot_node.getField('translation')
+    #rotation = robot_node.getField('rotation')
 
     robot = supervisor
     env_config = EnvConfig()
     env_config.robot_name = "qlearn_e_puck"
-    environment = EnvironmentWrapper(robot=robot, config=env_config)
+    environment = EnvironmentWrapper(robot=robot, robot_node=robot_node, config=env_config)
 
+    # number of epochs
     for i in range(10000):
 
         print("{0} At episode={1}".format(INFO, i))
-        environment.reset(robot=None)
+        environment.reset()
 
         run(environment=environment)
 
-        translation.setSFVec3f(init_translation)
-        rotation.setSFRotation(init_rotation)
+        #translation.setSFVec3f(init_translation)
+        #rotation.setSFRotation(init_rotation)
 
 
 # Enter here exit cleanup code.
