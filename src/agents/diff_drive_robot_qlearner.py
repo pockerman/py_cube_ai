@@ -8,6 +8,7 @@ from src.utils.mixins import WithMaxActionMixin, WithQTableMixin
 
 Policy = TypeVar("Policy")
 
+
 class DiffDriveRobotQLearner(TDAlgoBase, WithQTableMixin, WithMaxActionMixin):
 
     def __init__(self, algo_in: TDAlgoInput) -> None:
