@@ -7,7 +7,7 @@ import numpy as np
 from src.algorithms.td.q_learning import QLearning
 from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleEnv
 from src.algorithms.td.td_algorithm_base import TDAlgoInput
-from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecreaseOption
+from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
 
 
 def plot_running_avg(avg_rewards):
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     q_algo_in.n_itrs_per_episode = 10000
     q_algo_in.output_freq = 5000
     q_algo_in.policy = EpsilonGreedyPolicy(env=env, eps=EPS,
-                                           decay_op=EpsilonDecreaseOption.INVERSE_STEP,
+                                           decay_op=EpsilonDecayOption.INVERSE_STEP,
                                            min_eps=0.001)
 
     agent = QLearning(algo_in=q_algo_in)

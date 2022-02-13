@@ -3,13 +3,15 @@ Wrapper for the environment to use
 """
 
 from collections import namedtuple
+from typing import TypeVar
 
-from controller import Robot, Supervisor, Node
+from controller import Robot, Node
 from src.worlds.time_step import TimeStep
-from src.apps.webots.diff_drive_sys.controllers.action_space import ActionBase
+from src.worlds.webot_robot_action_space import WebotRobotActionBase, WebotRobotActionSpace
 from src.apps.webots.diff_drive_sys.controllers.sensors_wrapper import init_robot_proximity_sensors, read_proximity_sensors
 from src.apps.webots.diff_drive_sys.controllers.sensors_wrapper import init_robot_wheel_encoders
 from src.apps.webots.diff_drive_sys.controllers.motor_wrapper import init_robot_motors
+from src.utils import INFO
 
 TIME_STEP = 64
 
@@ -17,14 +19,20 @@ TIME_STEP = 64
 # to identify the fact that the robot crushed the wall
 BUMP_THESHOLD = 3520
 
-# the state
-State = namedtuple("State", ["sensors", "motors"])
+# The State nametuple wraps the information
+# that we collect from the Webot simulator and send
+# to the agent
+State = namedtuple("State", ["position", "orientation", "velocity", "sensors", "motors"])
+Criterion = TypeVar('Criterion')
+
 
 class EnvConfig(object):
     def __init__(self):
         self.dt: int = TIME_STEP
         self.bump_threshold = BUMP_THESHOLD
         self.robot_name = "E-puck"
+        self.on_goal_criterion: Criterion = None
+        self.reward_on_wall_crush = -1.0
 
 
 class EnvironmentWrapper(object):
@@ -47,9 +55,39 @@ class EnvironmentWrapper(object):
         self.translation = robot_node.getField('translation')
         self.rotation = robot_node.getField('rotation')
 
+        self.action_space = WebotRobotActionSpace()
+
     @property
     def dt(self) -> int:
         return self.config.dt
+
+    @property
+    def n_actions(self) -> int:
+        return len(self.action_space)
+
+    @property
+    def actions(self) -> list:
+        return list(self.action_space.actions.keys())
+
+    def add_action(self, action: WebotRobotActionBase) -> None:
+        """
+        Add a new action in the environment
+        :param action:
+        :return:
+        """
+        self.action_space.add_action(action=action)
+
+    def get_action(self, aidx) -> WebotRobotActionBase:
+        return self.action_space[aidx]
+
+    def continue_sim(self) -> bool:
+        """
+        Returns true if the simulation is continued.
+        We need to call robot step to synchronize the
+        robot sensors etc
+        :return:
+        """
+        return self.robot.step(duration=self.dt) != -1
 
     def reset(self) -> TimeStep:
         """
@@ -68,28 +106,103 @@ class EnvironmentWrapper(object):
         self.proximity_sensors = init_robot_proximity_sensors(robot=self.robot, sampling_period=self.config.dt)
         self.wheel_encoders = init_robot_wheel_encoders(robot=self.robot, sampling_period=self.config.dt)
 
-        return TimeStep(state=None, reward=0.0, done=False, info={})
+        left_encoder_pos = self.wheel_encoders[0].getValue()
+        right_encoder_pos = self.wheel_encoders[1].getValue()
 
-    def step(self, action: ActionBase) -> TimeStep:
-        # execute the action
-        action.act(self.robot, self.config.dt)
+        state = State(position=self.robot_node.getPosition(),
+                      velocity=self.robot_node.getVelocity(),
+                      orientation=self.robot_node.getOrientation(),
+                      sensors={"proximity_sensors": self.proximity_sensors},
+                      motors=(left_encoder_pos, right_encoder_pos))
+
+        return TimeStep(state=state, reward=0.0, done=False, info={})
+
+    def get_reward(self, action: WebotRobotActionBase) -> tuple:
+
+        """
+        Returns the reward associated with the action
+        :param action:
+        :return:
+        """
 
         # check if the robot crushed in the environment
         # detect obstacles
-        proximity_sensor_vals = read_proximity_sensors(sensors=self.proximity_sensors, threshold=self.config.bump_threshold)
+        proximity_sensor_vals = read_proximity_sensors(sensors=self.proximity_sensors,
+                                                       threshold=self.config.bump_threshold)
 
         # we may have finished because the goal was reached
-        done = proximity_sensor_vals[-1]
+        # however if we have crushed this is serious
+        # so first check this
+        done_crush = proximity_sensor_vals[-1]
 
-        reward = 1.0
+        if done_crush:
+            print("{0} Robot crushed on the wall...".format(INFO))
+            print("{0} Robot position  {1}".format(INFO, self.robot_node.getPosition()))
+            print("{0} Proximity sensors values {1}".format(INFO, proximity_sensor_vals))
+            print("{0} Bump threshold {1}".format(INFO, self.config.bump_threshold))
+            return self.config.reward_on_wall_crush, True
 
-        if proximity_sensor_vals[-1]:
+        # we haven't crush check if we reached the goal
+        # the goal may depend on the action
+        done, reward, distance = self.config.on_goal_criterion.check(self.robot_node, action)
+
+        if done:
+            print("{0} Robot reached the goal with distance from it {1}".format(INFO, distance))
+            print("{0} Robot position  {1}".format(INFO, self.robot_node.getPosition()))
+            return reward, True
+
+        # we haven't crushed and haven't reached goal
+        return 0.0, False
+
+    def step(self, action: WebotRobotActionBase) -> TimeStep:
+
+        # execute the action
+        action.act(self.robot, self.config.dt)
+
+        reward, done = self.get_reward(action=action)
+
+        # check if the robot crushed in the environment
+        # detect obstacles
+        #proximity_sensor_vals = read_proximity_sensors(sensors=self.proximity_sensors, threshold=self.config.bump_threshold)
+
+        #print("{0} Proximity sensors values {1}".format(INFO, proximity_sensor_vals[: -1]))
+
+        #print("{0} Robot velocity  {1}".format(INFO, self.robot_node.getVelocity()))
+
+        # we may have finished because the goal was reached
+        #done_crush = proximity_sensor_vals[-1]
+
+        # check if we are on the goal
+        #done2, distance = self.config.on_goal_criterion.check(self.robot_node)
+
+        #done = False
+        #reward = 1.0
+
+        """
+        if done_crush:
+            print("{0} Robot crushed on the wall...".format(INFO))
+            print("{0} Robot position  {1}".format(INFO, self.robot_node.getPosition()))
+            print("{0} Proximity sensors values {1}".format(INFO, proximity_sensor_vals))
+            print("{0} Bump threshold {1}".format(INFO, self.config.bump_threshold))
+            done = True
             reward = -1.0
+        elif done2:
+
+            print("{0} Robot reached the goal with distance from it {1}".format(INFO, distance))
+            print("{0} Robot position  {1}".format(INFO, self.robot_node.getPosition()))
+            done = True
+            reward = 1.0
+        """
 
         left_encoder_pos = self.wheel_encoders[0].getValue()
         right_encoder_pos = self.wheel_encoders[1].getValue()
 
-        state = State(sensors=proximity_sensor_vals, motors=(left_encoder_pos, right_encoder_pos))
+        state = State(position=self.robot_node.getPosition(),
+                      velocity=self.robot_node.getVelocity(),
+                      orientation=self.robot_node.getOrientation(),
+                      sensors={"proximity_sensors": self.proximity_sensors},
+                      motors=(left_encoder_pos, right_encoder_pos))
+
         time_step = TimeStep(state=state, reward=reward, done=done, info={})
 
         # return the distance measures from the wall

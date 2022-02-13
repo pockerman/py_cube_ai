@@ -10,7 +10,7 @@ import numpy as np
 from src.algorithms.td.double_q_learning import DoubleQLearning
 from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleEnv
 from src.algorithms.td.td_algorithm_base import TDAlgoInput
-from src.policies.epsilon_greedy_policy import EpsilonDoubleGreedyPolicy, EpsilonDecreaseOption
+from src.policies.epsilon_greedy_policy import EpsilonDoubleGreedyPolicy, EpsilonDecayOption
 
 
 def plot_running_avg(avg_rewards):
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     q_algo_in.n_itrs_per_episode = 10000
     q_algo_in.output_freq = 5000
     q_algo_in.policy = EpsilonDoubleGreedyPolicy(env=env, eps=EPS,
-                                                 decay_op=EpsilonDecreaseOption.NONE,
+                                                 decay_op=EpsilonDecayOption.NONE,
                                                  min_eps=0.001)
 
     agent = DoubleQLearning(algo_in=q_algo_in)

@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from matplotlib import pylab as plt
 from src.worlds.grid_world import Gridworld, GridworldInitMode
-from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecreaseOption
+from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
 from src.utils.replay_buffer import ExperienceTuple, ReplayBuffer
 from src.utils import INFO
 
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     game = Gridworld(size=4, mode=GridworldInitMode.RANDOM, noise_factor=100)
 
     policy = EpsilonGreedyPolicy(n_actions=game.n_actions, eps=EPS,
-                                 decay_op=EpsilonDecreaseOption.NONE,
+                                 decay_op=EpsilonDecayOption.NONE,
                                  user_defined_decrease_method=None,
                                  min_eps=0.00001)
 

@@ -3,14 +3,16 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.6931032800836722 0.6931032800836722 0.1980295085953349 0.75
-  position 1.2 1.6 2.3
+  orientation 0.0686043169358985 0.9839345635144712 0.16482178988030147 3.882328345019169
+  position -1.9983749606995487 1.6740503188123512 -3.4741978376073614
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
+  floorSize 6 6
+  floorTileSize 3 3
 }
 DEF qlearn_e_puck E-puck {
   name "qlearn_e_puck"

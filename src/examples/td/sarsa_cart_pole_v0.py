@@ -8,7 +8,7 @@ import numpy as np
 from src.algorithms.td.td_algorithm_base import TDAlgoInput
 from src.algorithms.td.sarsa import Sarsa
 from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleEnv
-from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecreaseOption
+from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
 
 
 def plot_running_avg(avg_rewards):
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     sarsa_in.alpha = ALPHA
     sarsa_in.train_env = env
     sarsa_in.policy = EpsilonGreedyPolicy(env=env, eps=EPS,
-                                          decay_op=EpsilonDecreaseOption.INVERSE_STEP,
+                                          decay_op=EpsilonDecayOption.INVERSE_STEP,
                                           min_eps=0.001)
     sarsa_in.n_episodes = 50000
     sarsa_in.output_freq = 5000

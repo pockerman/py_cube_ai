@@ -99,7 +99,7 @@ class AlgorithmBase(ABC):
             if self.output_msg_frequency != -1:
                 remains = counter % self.output_msg_frequency
                 if remains == 0:
-
+                    print("============================================================================")
                     print("{0}: Episode {1} of {2}, ({3}% done)".format(INFO, self.current_episode_index,
                                                                         self.itr_control.n_max_itrs,
                                                                         (self._itr_ctrl.current_itr_counter / self.itr_control.n_max_itrs)*100.0))

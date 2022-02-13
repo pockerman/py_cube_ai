@@ -19,11 +19,19 @@ If the agent is trapped in a corner.
 The description of the epuck robot can be found at: https://cyberbotics.com/doc/guide/epuck#e-puck-model
 """
 
+import numpy as np
 from collections import namedtuple
 
-from controller import Supervisor
+from controller import Supervisor, Node
 from src.utils import INFO
 from src.worlds.webot_environment_wrapper import EnvironmentWrapper, EnvConfig
+from src.worlds.state_aggregation_webot_env import StateAggregationWebotEnv, StateAggregationWebotEnvBoundaries
+from src.worlds.webot_robot_action_space import WebotRobotActionType, WebotRobotActionBase, WebotRobotMoveBWDAction, \
+    WebotRobotMoveFWDAction, WebotRobotMoveRightLeftAction, WebotRobotStopAction, WebotRobotMoveTurnLeftAction
+
+from src.agents.diff_drive_robot_qlearner import DiffDriveRobotQLearner
+from src.algorithms.td.td_algorithm_base import TDAlgoInput
+from src.policies import EpsilonGreedyPolicy, EpsilonDecayOption
 
 # Define a variable that defines the duration of each physics step.
 # This macro will be used as argument to the Robot::step function,
@@ -40,7 +48,7 @@ MIN_SPEED = 0.0
 
 # threshold value for the proximity sensors
 # to identify the fact that the robot crushed the wall
-BUMP_THESHOLD = 3520
+BUMP_THESHOLD = 90
 
 State = namedtuple("State", ["sensors", "motors"])
 
@@ -51,58 +59,43 @@ State = namedtuple("State", ["sensors", "motors"])
 #  ds.enable(timestep)
 
 
-def run(environment: EnvironmentWrapper):
-    """
-    Runs one episode in the environment
-    :param environment:
-    :return:
-    """
+class OnGoal(object):
 
-    counter = 0
-    while environment.robot.step(environment.dt) != -1:
+    def __init__(self, goal_position: list) -> None:
 
-        # check the position encoders
-        #print("Position left ", environment.wheel_encoders[0].getValue())
-        #print("Position right ", environment.wheel_encoders[1].getValue())
-        print("Position {0}".format(environment.robot_node.getPosition()))
+        # radius away from the goal
+        self.goal_radius: float = 0.1
+        self.robot_radius = 7.4 / 100.0
+        self.goal_position = np.array(goal_position)
+        self.start_position = np.array([0., 0., 0., ])
 
-        # The values returned by the distance
-        # sensors are scaled between 0 and 4096 (piecewise linearly to the distance).
-        # While 4096 means that a big amount of light is measured (an obstacle is close)
-        # and 0 means that no light is measured (no obstacle).
-        ps0 = environment.proximity_sensors[0]
-        ps7 = environment.proximity_sensors[7]
+    def check(self, robot_node: Node, action: WebotRobotActionBase) -> tuple:
 
-        # detect obstacles
-        right_obstacle = ps0.getValue() > 80.0
-        left_obstacle = ps7.getValue() > 80.0
+        position = robot_node.getPosition()
+        position = np.array(position)
 
-        # initialize motor speeds at 50% of MAX_SPEED.
-        left_speed = 0.5 * MAX_SPEED
-        right_speed = 0.5 * MAX_SPEED
-        # modify speeds according to obstacles
+        # compute l2 norm from goal
+        l2_norm = np.linalg.norm(position - self.start_position)
 
-        if right_obstacle and left_obstacle:
-            left_speed = 0.0
-            right_speed = 0.0
-        elif left_obstacle:
-            # turn right
-            left_speed = 0.5 * MAX_SPEED
-            right_speed = -0.5 * MAX_SPEED
-        elif right_obstacle:
-            # turn left
-            left_speed = -0.5 * MAX_SPEED
-            right_speed = 0.5 * MAX_SPEED
-        # write actuators inputs
+        # we don't want to be stacked where we started
+        # we want to make progress
+        if l2_norm < 1.0e-4 and action.action_type == WebotRobotActionType.STOP:
+            return False, -2.0, l2_norm
 
-        environment.left_motor.setVelocity(left_speed)
-        environment.right_motor.setVelocity(right_speed)
+        # compute l2 norm from goal
+        l2_norm = np.linalg.norm(position - self.goal_position)
 
-        if left_speed == 0.0 and right_speed == 0.0:
-            break
+        if l2_norm < self.goal_radius:
 
-        if counter >= 1000:
-            break
+            # we reached the goal but we also want
+            # the robot to stop
+
+            if action.action_type == WebotRobotActionType.STOP:
+                return True, 10.0, l2_norm
+            else:
+                return False, 5.0, l2_norm
+
+        return False, 0.0, l2_norm
 
 
 def controller_main():
@@ -116,35 +109,48 @@ def controller_main():
 
     robot_node = supervisor.getFromDef(name='qlearn_e_puck')
 
-
     if robot_node is None:
         raise ValueError("Robot node is None")
 
-    # initial translation
-    #init_translation = [0., 0., 0., ]
-    #init_rotation = [0., 1.0,  0., 0., ]
-
     robot_node.enablePoseTracking(TIME_STEP)
 
-    # get the transition and rtation fields
-    #translation = robot_node.getField('translation')
-    #rotation = robot_node.getField('rotation')
+    goal_position = [0.0, 0.0, -2.5]
+    on_goal_criterion = OnGoal(goal_position=goal_position)
 
     robot = supervisor
     env_config = EnvConfig()
+    env_config.dt = 32
     env_config.robot_name = "qlearn_e_puck"
+    env_config.bump_threshold = BUMP_THESHOLD
+    env_config.on_goal_criterion = on_goal_criterion
+    env_config.reward_on_wall_crush = -5.0
     environment = EnvironmentWrapper(robot=robot, robot_node=robot_node, config=env_config)
 
-    # number of epochs
-    for i in range(10000):
+    environment.add_action(action=WebotRobotStopAction())
+    environment.add_action(action=WebotRobotMoveFWDAction(motor_speed=0.5*MAX_SPEED))
 
-        print("{0} At episode={1}".format(INFO, i))
-        environment.reset()
+    # position aggregation environment
+    boundaries = StateAggregationWebotEnvBoundaries(xcoords=(-3.0, 3.0),
+                                                    ycoords=(-3.0, 3.0))
 
-        run(environment=environment)
+    state_aggregation_env = StateAggregationWebotEnv(env=environment,
+                                                     boundaries=boundaries, states=(10, 10))
 
-        #translation.setSFVec3f(init_translation)
-        #rotation.setSFRotation(init_rotation)
+    agent_config = TDAlgoInput()
+    agent_config.n_episodes = 20
+    agent_config.n_itrs_per_episode = 3000
+    agent_config.gamma = 0.99
+    agent_config.alpha = 0.1
+    agent_config.output_freq = 1
+    agent_config.train_env = state_aggregation_env
+    agent_config.policy = EpsilonGreedyPolicy(eps=1.0, decay_op=EpsilonDecayOption.INVERSE_STEP, n_actions=state_aggregation_env.n_actions)
+
+    agent = DiffDriveRobotQLearner(algo_in=agent_config)
+    agent.train()
+
+    print("{0} Finished training")
+    # once the agent is trained let's play
+    agent.play(env=state_aggregation_env, n_games=2)
 
 
 # Enter here exit cleanup code.

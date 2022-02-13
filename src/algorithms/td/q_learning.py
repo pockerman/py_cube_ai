@@ -51,7 +51,7 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
         """
 
         # episode score
-        episode_score = 0  # initialize score
+        episode_score = 0
         counter = 0
 
         for itr in range(self.n_itrs_per_episode):
