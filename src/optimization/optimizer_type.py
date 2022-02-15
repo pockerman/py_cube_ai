@@ -1,4 +1,8 @@
+"""
+Enumeration for optimizer types
+"""
 import enum
+
 
 class OptimzerType(enum.IntEnum):
 

@@ -5,7 +5,7 @@ from typing import TypeVar
 from src.algorithms.algorithm_base import AlgorithmBase
 from src.algorithms.algo_config import AlgoConfig
 from src.utils.replay_buffer import ReplayBuffer
-from src.utils.pytorch_optimizer_builder import build_optimizer
+from src.optimization.pytorch_optimizer_builder import pytorch_optimizer_builder
 from src.utils import INFO
 
 Optimizer = TypeVar('Optimizer')
@@ -48,8 +48,8 @@ class DQNTargetNetworkGridWorld(AlgorithmBase):
         self.net2 = copy.deepcopy(self.net1)
         self.net2.load_state_dict(self.net1.state_dict())
         self.memory: ReplayBuffer = ReplayBuffer(buffer_size=config.memory_size)
-        self.optimizer = build_optimizer(opt_type=config.optimizer, model_params=self.net1.parameters(),
-                                         **{"learning_rate": config.learning_rate})
+        self.optimizer = pytorch_optimizer_builder(opt_type=config.optimizer, model_params=self.net1.parameters(),
+                                                   **{"learning_rate": config.learning_rate})
         self.loss_fn = config.loss
         self.policy = config.policy
 
