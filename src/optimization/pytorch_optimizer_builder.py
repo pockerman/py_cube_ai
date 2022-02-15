@@ -1,6 +1,6 @@
 from typing import Any
 import torch.optim as optim
-from src.utils.optimizer_type import OptimzerType
+from src.optimization.optimizer_type import OptimzerType
 
 TORCH_OPTIMIZER_TYPES = [OptimzerType.ADAM]
 
