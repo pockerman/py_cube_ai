@@ -10,17 +10,20 @@ from src.optimization.optimizer_type import OptimzerType
 from src.algorithms.rl_agent_base import RLAgentBase
 from src.parallel_utils.torch_processes_handler import TorchProcsHandler
 from src.optimization.pytorch_optimizer_builder import pytorch_optimizer_builder
+from src.utils.episode_info import EpisodeInfo
+from src.utils.play_info import PlayInfo
 
 MasterNode = TypeVar('MasterNode')
 Env = TypeVar('Env')
-
+Criterion = TypeVar('Criterion')
+Action = TypeVar('Action')
 
 class A2CConfig(object):
     """
     Configuration parameters for A2C algorithms
     """
     def __init__(self):
-        self.n_episodes: int = 0
+        #self.n_episodes: int = 0
         self.n_itrs_per_episode: int = 0
         self.opt_type: OptimzerType = OptimzerType.INVALID
         self.n_procs: int = 1
@@ -55,8 +58,9 @@ class A2CBase(RLAgentBase):
         super(A2CBase, self).__init__()
         self.model: A2CNetworkBase = model
         self.config: A2CConfig = config
-        self.master_node: MasterNode = None
-        self.procs_handler: TorchProcsHandler = None #(n_procs=N_PROCS)
+
+    def parameters(self, recurse: bool = True):
+        return self.model.parameters(recurse=recurse)
 
     def get_configuration(self) -> A2CConfig:
         return self.config
@@ -70,9 +74,62 @@ class A2CBase(RLAgentBase):
         :param info:
         :return:
         """
-        self.master_node = self.model
-        self.master_node.share_memory()
-        self.procs_handler = TorchProcsHandler(n_procs=self.config.n_procs)
+        # make the PyTorch model to share memory
+        self.model.share_memory()
 
-    def on_training_episode(self, env: Env, episode_idx: int, **info) -> EpisodeInfo
+    def on_training_episode(self, env: Env, episode_idx: int, **info) -> EpisodeInfo:
         pass
+
+    def play(self, env: Env, criterion: Criterion) -> PlayInfo:
+        """
+        Play the trained agent on the given environment
+        :param env: The environment to play on
+        :param criterion: Specifies the criteria such that the play stops
+        :return: PlayInfo
+        """
+        pass
+
+    def on_state(self, state) -> Action:
+        """
+        Retrurns an action on the given state
+        :param state:
+        :return:
+        """
+
+    def actions_before_training_begins(self, env: Env, episode_idx: int, **info) -> None:
+        """
+        Execute any actions the algorithm needs before
+        starting the episode
+        :param env:
+        :param episode_idx:
+        :param info:
+        :return:
+        """
+        pass
+
+    def actions_before_episode_begins(self, env: Env, episode_idx: int, **info) -> None:
+        """
+        Execute any actions the algorithm needs before
+        starting the episode
+        :param options:
+        :return:
+        """
+        pass
+
+    def actions_after_episode_ends(self, env: Env, episode_idx: int, **info) -> None:
+        """
+        Execute any actions the algorithm needs after
+        ending the episode
+        :param options:
+        :return:
+        """
+        pass
+
+    def actions_after_training_ends(self, env: Env, episode_idx: int, **info) -> None:
+        """
+        Execute any actions the algorithm needs after
+        the iterations are finished
+        """
+        pass
+
+

@@ -25,7 +25,7 @@ Action = TypeVar('Action')
 Config = TypeVar('Config')
 
 
-class RLAgentBase(metaclass=abc.ABC):
+class RLAgentBase(metaclass=abc.ABCMeta):
 
     def __init__(self) -> None:
         pass
@@ -48,7 +48,7 @@ class RLAgentBase(metaclass=abc.ABC):
         """
 
     @abc.abstractmethod
-    def  play(self, env: Env, criterion: Criterion) -> PlayInfo:
+    def play(self, env: Env, criterion: Criterion) -> PlayInfo:
         """
         Play the trained agent on the given environment
         :param env: The environment to play on
