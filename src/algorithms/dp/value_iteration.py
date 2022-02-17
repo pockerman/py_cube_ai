@@ -8,7 +8,7 @@ https://github.com/udacity/deep-reinforcement-learning
 import collections
 from typing import Any, TypeVar
 
-from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoInput
+from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoConfig
 from src.algorithms.dp.policy_improvement import PolicyImprovement
 from src.algorithms.dp.utils import state_actions_from_v as q_s_a
 from src.policies.policy_adaptor_base import PolicyAdaptorBase
@@ -31,7 +31,7 @@ class ValueIteration(DPAlgoBase):
     former implementation.
     """
 
-    def __init__(self, algo_in: DPAlgoInput,
+    def __init__(self, algo_in: DPAlgoConfig,
                  policy_adaptor: PolicyAdaptorBase) -> None:
         """
         Constructor
