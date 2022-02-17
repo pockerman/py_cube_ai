@@ -6,16 +6,18 @@ from src.policies.policy_base import PolicyBase
 
 class UniformPolicy(PolicyBase):
 
-    def __init__(self, env: Any, init_val: float = None) -> None:
-        super(UniformPolicy, self).__init__(env=env)
+    def __init__(self, n_actions: int, n_states: int, init_val: float = None) -> None:
+        super(UniformPolicy, self).__init__()
+        self.n_actions: int = n_actions
+        self.n_states: int = n_states
         self.init_val = init_val
         self.policy = self.init()
 
     def init(self) -> np.ndarray:
         if self.init_val is not None:
             return np.ndarray(
-                [[self.init_val for _ in range(self.env.action_space.n)] for _ in range(self.env.observation_space.n)])
-        return np.ones([self.env.observation_space.n, self.env.action_space.n]) / self.env.action_space.n
+                [[self.init_val for _ in range(self.n_actions)] for _ in range(self.n_states)])
+        return np.ones([self.n_states, self.n_actions]) / self.n_actions
 
     @property
     def values(self):

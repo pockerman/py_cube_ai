@@ -37,21 +37,6 @@ class A2CNetworkBase(nn.Module):
         super(A2CNetworkBase, self).__init__()
 
 
-def _a2c_worker(env: Env, model, opt_type: OptimzerType, lr: float):
-
-    worker_env = copy.deepcopy(env) #gym.make("CartPole-v1")
-    worker_env.reset()
-    worker_opt = pytorch_optimizer_builder(model.config.opt_type,
-                                           params=model.parameters(),
-                                           **{"learning_rate": lr})
-    worker_opt.zero_grad()
-    for i in range(model.config.n_episodes):
-        worker_opt.zero_grad()
-        values, logprobs, rewards = run_episode(worker_env, model)  # B
-        actor_loss, critic_loss, eplen = update_params(worker_opt, values, logprobs, rewards)  # C
-        counter.value = counter.value + 1  # D
-
-
 class A2CBase(RLAgentBase):
 
     def __init__(self, model: A2CNetworkBase, config: A2CConfig) -> None:
@@ -95,17 +80,6 @@ class A2CBase(RLAgentBase):
         :param state:
         :return:
         """
-
-    def actions_before_training_begins(self, env: Env, episode_idx: int, **info) -> None:
-        """
-        Execute any actions the algorithm needs before
-        starting the episode
-        :param env:
-        :param episode_idx:
-        :param info:
-        :return:
-        """
-        pass
 
     def actions_before_episode_begins(self, env: Env, episode_idx: int, **info) -> None:
         """

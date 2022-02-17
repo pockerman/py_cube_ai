@@ -14,14 +14,14 @@ An RL agent exposes the following functions
 """
 
 import abc
-from typing import TypeVar
+from typing import TypeVar, Any
 
 Env = TypeVar('Env')
 EpisodeInfo = TypeVar('EpisodeInfo')
 Criterion = TypeVar('Criterion')
 PlayInfo = TypeVar('PlayInfo')
 State = TypeVar('State')
-Action = TypeVar('Action')
+#Action = TypeVar('Action')
 Config = TypeVar('Config')
 
 
@@ -57,7 +57,7 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def on_state(self, state) -> Action:
+    def on_state(self, state) -> Any:
         """
         Retrurns an action on the given state
         :param state:

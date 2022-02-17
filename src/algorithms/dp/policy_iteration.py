@@ -15,7 +15,7 @@ import copy
 #from src.algorithms.algorithm_base import AlgorithmBase
 #from src.algorithms.algo_input import AlgoInput
 
-from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoInput
+from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoConfig
 from src.algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator
 from src.algorithms.dp.policy_improvement import PolicyImprovement
 from src.policies.policy_base import PolicyBase
@@ -30,7 +30,7 @@ class PolicyIteration(DPAlgoBase):
     Policy iteration class
     """
 
-    def __init__(self, algo_in: DPAlgoInput,  policy_adaptor: PolicyAdaptorBase):
+    def __init__(self, algo_in: DPAlgoConfig,  policy_adaptor: PolicyAdaptorBase):
         super(PolicyIteration, self).__init__(algo_in=algo_in)
 
         self._p_eval = IterativePolicyEvaluator(algo_in=algo_in)

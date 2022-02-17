@@ -31,15 +31,14 @@ class RLAgentTrainerBase(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def train(self, env: Env) -> TrainInfo:
+    def train(self, env: Env, **options) -> TrainInfo:
         """
-
         :return:
         :rtype:
         """
 
     @abc.abstractmethod
-    def actions_before_training_begins(self, env: Env,  **info) -> None:
+    def actions_before_training_begins(self, env: Env,  **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the episode
@@ -50,7 +49,7 @@ class RLAgentTrainerBase(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def actions_before_episode_begins(self, env: Env,  **info) -> None:
+    def actions_before_episode_begins(self, env: Env,  **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the episode
@@ -68,7 +67,7 @@ class RLAgentTrainerBase(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def actions_after_training_ends(self, env: Env,  **info) -> None:
+    def actions_after_training_ends(self, env: Env,  **options) -> None:
         """
         Execute any actions the algorithm needs after
         the iterations are finished
