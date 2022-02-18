@@ -105,7 +105,6 @@ class DPAlgoBase(RLAgentBase):
         """
         pass
 
-    @abc.abstractmethod
     def on_state(self, state: int) -> Any:
         """
         Retrurns an action on the given state

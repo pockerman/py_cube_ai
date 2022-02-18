@@ -1,13 +1,15 @@
 import gym
 import numpy as np
-from typing import Any
 import matplotlib.pyplot as plt
 
-from algorithms.dp.policy_iteration import PolicyIteration
-from policies.uniform_policy import UniformPolicy
-from policies.stochastic_policy_adaptor import StochasticAdaptorPolicy
+from src.algorithms.dp.policy_iteration import PolicyIteration, DPAlgoConfig
+from src.policies.uniform_policy import UniformPolicy
+from src.policies.max_action_policy_adaptor import MaxActionPolicyAdaptor
+from src.worlds.world_helpers import n_actions, n_states
+from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 
 
+"""
 class Agent(PolicyIteration):
 
     def __init__(self, env: Any, n_max_itrs: int, n_policy_eval_steps: int,
@@ -19,6 +21,7 @@ class Agent(PolicyIteration):
                                     tolerance=tolerance,
                                     env=env, policy_init=polic_init, gamma=gamma,
                                     policy_adaptor=policy_adaptor)
+"""
 
 
 def plot_values(v):
@@ -38,21 +41,38 @@ def plot_values(v):
 
 if __name__ == '__main__':
     env = gym.make("FrozenLake-v0")
-    policy_init = UniformPolicy(env=env, init_val=None)
-    policy_adaptor = StochasticAdaptorPolicy()
 
+    policy_init = UniformPolicy(n_actions=n_actions(env),
+                                n_states=n_states(env),
+                                init_val=None)
+    policy_adaptor = MaxActionPolicyAdaptor()
+
+    """
     agent = Agent(env=env, n_max_itrs=100, n_policy_eval_steps=100,
                   gamma=1.0,
                   tolerance=1.0e-7, polic_init=policy_init,
                   policy_adaptor=policy_adaptor)
+    """
 
-    ctrl_res = agent.train()
+    agent_config = DPAlgoConfig()
+    agent_config.gamma = 1.0
+    agent_config.n_itrs_per_episode = 100
+    agent_config.policy = policy_init
+
+    agent = PolicyIteration(algo_config=agent_config, policy_adaptor=policy_adaptor)
+
+    config = RLSerialTrainerConfig()
+    config.n_episodes = 100
+
+    trainer = RLSerialAgentTrainer(agent=agent, config=config)
+
+    ctrl_res = trainer.train(env)
 
     print(f"Converged {ctrl_res.converged}")
     print(f"Number of iterations {ctrl_res.n_itrs}")
     print(f"Residual {ctrl_res.residual}")
 
     print("\nOptimal Policy (LEFT = 0, DOWN = 1, RIGHT = 2, UP = 3):")
-    print(agent.policy.values, "\n")
+    print(agent.policy.policy, "\n")
 
     plot_values(agent.v)
