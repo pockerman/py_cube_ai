@@ -23,6 +23,8 @@ class IterativePolicyEvaluator(DPAlgoBase, WithValueTableMixin):
 
     def __init__(self, algo_config: DPAlgoConfig) -> None:
         super(IterativePolicyEvaluator, self).__init__(algo_config)
+        self.vtable = None
+
 
 
     '''
@@ -89,7 +91,7 @@ class IterativePolicyEvaluator(DPAlgoBase, WithValueTableMixin):
         """
 
         # zero the value function
-        self.vtable = np.zeros(env.observation_space.n)
+        self.v = np.zeros(env.observation_space.n)
 
     def on_state(self, state: int) -> float:
         """

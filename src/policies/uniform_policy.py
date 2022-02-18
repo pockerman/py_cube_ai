@@ -19,10 +19,6 @@ class UniformPolicy(PolicyBase):
                 [[self.init_val for _ in range(self.n_actions)] for _ in range(self.n_states)])
         return np.ones([self.n_states, self.n_actions]) / self.n_actions
 
-    @property
-    def values(self):
-        return self.policy
-
     def __call__(self, *args, **kwargs) -> Any:
         pass
 

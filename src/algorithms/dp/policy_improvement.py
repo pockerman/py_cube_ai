@@ -5,30 +5,65 @@ https://github.com/udacity/deep-reinforcement-learning
 """
 
 import numpy as np
-
+from typing import TypeVar
 from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoConfig
 from src.algorithms.dp.utils import state_actions_from_v as q_s_a
-from src.policies.policy_adaptor_base import PolicyAdaptorBase
+
+from src.utils.mixins import WithValueTableMixin
+from src.utils.episode_info import EpisodeInfo
+from src.utils.wrappers import time_fn
+from src.worlds.world_helpers import n_states
+
+PolicyAdaptor = TypeVar('PolicyAdaptor')
+Env = TypeVar('Env')
 
 
-class PolicyImprovement(DPAlgoBase):
+class PolicyImprovement(DPAlgoBase, WithValueTableMixin):
+    """Implementation of policy improvement
     """
-    Implementation of policy improvement
-    """
 
-    def __init__(self, algo_in: DPAlgoConfig, v: np.array,  policy_adaptor: PolicyAdaptorBase) -> None:
-        super().__init__(algo_in=algo_in)
+    def __init__(self, algo_in: DPAlgoConfig, v: np.array,  policy_adaptor: PolicyAdaptor) -> None:
+        """
+
+        :param algo_in:
+        :type algo_in:
+        :param v:
+        :type v:
+        :param policy_adaptor:
+        :type policy_adaptor:
+        """
+        super(PolicyImprovement, self).__init__(algo_config=algo_in)
         self.v = v
-        self._policy_adaptor = policy_adaptor
+        self.policy_adaptor: PolicyAdaptor = policy_adaptor
 
-    def on_episode(self):
+    @time_fn
+    def on_training_episode(self, env: Env, episode_idx: int, **info) -> EpisodeInfo:
+
         """
-        Perform one step of the algorithm
+         Train the algorithm on the given environment
+        Parameters
+        ----------
+        env The environment to train on
+        episode_idx The episode the trainer is currently
+        info Any useful info needed for the training
+
+        Returns
+        -------
+
+        EpisodeInfo
+
         """
+        episode_reward = 0.0
+        episode_itrs = 0
 
-        for s in range(self.train_env.observation_space.n):
-            state_actions = q_s_a(env=self.train_env, v=self._v, state=s, gamma=self.gamma)
-            self.policy = self._policy_adaptor(s, state_actions, self.policy)
+        n_states_ = n_states(env)
 
-        # set the residual so that we always converge
-        self.itr_control.residual = 1.0e-5
+        for s in range(n_states_):
+            state_actions = q_s_a(env=env, v=self.v, state=s, gamma=self.gamma)
+            self.policy = self.policy_adaptor(s, state_actions, self.policy)
+
+        episode_info = EpisodeInfo()
+        episode_info.episode_reward = episode_reward
+        episode_info.episode_iterations = episode_itrs
+        episode_info.info["break_training"] = True
+        return episode_info
