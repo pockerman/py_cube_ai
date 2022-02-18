@@ -3,9 +3,11 @@ import numpy as np
 from typing import Any
 import matplotlib.pyplot as plt
 
-from algorithms.dp.policy_iteration import PolicyIteration
-from policies.uniform_policy import UniformPolicy
-from policies.stochastic_policy_adaptor import StochasticAdaptorPolicy
+from src.algorithms.dp.policy_iteration import PolicyIteration
+from src.policies.uniform_policy import UniformPolicy
+from src.policies.max_action_policy_adaptor import MaxActionPolicyAdaptor
+from src.worlds.world_helpers import n_actions
+from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 
 
 class Agent(PolicyIteration):
@@ -38,15 +40,21 @@ def plot_values(v):
 
 if __name__ == '__main__':
     env = gym.make("FrozenLake-v0")
-    policy_init = UniformPolicy(env=env, init_val=None)
-    policy_adaptor = StochasticAdaptorPolicy()
+    policy_init = UniformPolicy(n_actions=n_actions(env),
+                                ninit_val=None)
+    policy_adaptor = MaxActionPolicyAdaptor()
 
     agent = Agent(env=env, n_max_itrs=100, n_policy_eval_steps=100,
                   gamma=1.0,
                   tolerance=1.0e-7, polic_init=policy_init,
                   policy_adaptor=policy_adaptor)
 
-    ctrl_res = agent.train()
+    config = RLSerialTrainerConfig()
+    config.n_episodes = 100
+
+    trainer = RLSerialAgentTrainer(agent=agent, config=config)
+
+    ctrl_res = trainer.train(env)
 
     print(f"Converged {ctrl_res.converged}")
     print(f"Number of iterations {ctrl_res.n_itrs}")

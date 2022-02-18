@@ -1,20 +1,11 @@
 import gym
 import numpy as np
-from typing import Any
+
 import matplotlib.pyplot as plt
 
 from src.algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator, DPAlgoConfig
 from src.policies.uniform_policy import UniformPolicy
 from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
-
-
-"""
-class Agent(IterativePolicyEvaluator):
-
-    def __init__(self, config) -> None:
-        super(Agent, self).__init__(n_max_iterations=n_max_itrs, tolerance=tolerance,
-                                    env=env, policy_init=polic_init, gamma=gamma)
-"""
 
 
 def plot_values(v):
