@@ -15,7 +15,7 @@ class PolicyAdaptorBase(ABC):
         pass
 
     @abstractmethod
-    def __call__(self, policy: PolicyBase, *args, **kwargs) -> PolicyBase:
+    def adapt(self, policy: PolicyBase, **kwargs) -> PolicyBase:
         """
         Adapts the given policy
         :param policy: The policy to adapt

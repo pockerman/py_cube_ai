@@ -17,11 +17,11 @@ class MaxActionEqualProbabilityAdaptorPolicy(PolicyAdaptorBase):
     def __init__(self) -> None:
         super(MaxActionEqualProbabilityAdaptorPolicy, self).__init__()
 
-    def __call__(self, policy: PolicyBase, *args, **kwargs) -> PolicyBase:
+    def adapt(self, policy: PolicyBase, **kwargs) -> PolicyBase:
 
         s: int = kwargs["s"]
         state_actions: np.ndarray = kwargs["state_actions"]
 
         best_a = np.argwhere(state_actions == np.max(state_actions)).flatten()
-        policy[s] = np.sum([np.eye(policy.env.action_space.n)[i] for i in best_a], axis=0) / len(best_a)
+        policy[s] = np.sum([np.eye(policy.n_actions)[i] for i in best_a], axis=0) / len(best_a)
         return policy

@@ -1,7 +1,12 @@
 Examples
 ========
 
-Some examples can be found below
+The following is a list of examples a user can go through
 
-- `Qlearning agent on a three columns dataset <src/examples/qlearning_three_columns.py>`_
-- `N-step semi-gradient SARSA on  a three columns dataset <src/examples/nstep_semi_grad_sarsa_three_columns.py>`_
+.. toctree::
+   :maxdepth: 4
+   
+   Examples/Dp/iterative_policy_evaluation_frozen_lake_v0
+   
+
+

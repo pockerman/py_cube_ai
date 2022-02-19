@@ -2,9 +2,6 @@
 iteration at each step we do one policy evaluation and one policy
 improvement.
 
-Implementation refactored from
-https://github.com/udacity/deep-reinforcement-learning
-
 """
 
 import numpy as np
@@ -51,7 +48,7 @@ class PolicyIteration(DPAlgoBase):
     def policy(self):
         return self._p_eval.policy
 
-    def actions_before_training_begins(self, env: Env, episode_idx: int, **options) -> None:
+    def actions_before_training_begins(self, env: Env,  **options) -> None:
         """Execute any actions the algorithm needs before
         starting the iterations
 
@@ -68,18 +65,17 @@ class PolicyIteration(DPAlgoBase):
         """
 
         # call the base class version
-        super(PolicyIteration, self).actions_before_training_begins(env, episode_idx, **options)
-        self._p_eval.actions_before_training_begins(env, episode_idx, **options)
-        self._p_imprv.actions_before_training_begins(env, episode_idx, **options)
+        super(PolicyIteration, self).actions_before_training_begins(env,  **options)
+        self._p_eval.actions_before_training_begins(env,  **options)
+        self._p_imprv.actions_before_training_begins(env,  **options)
 
-    def actions_after_training_ends(self, env: Env, episode_idx: int, **options) -> None:
+    def actions_after_training_ends(self, env: Env, **options) -> None:
         """Any actions the algorithm should perform after the training ends
 
         Parameters
         ----------
 
         env The environment the agent is trained on
-        episode_idx The psidoe index
         options Any options passed by the client code
 
         Returns
@@ -88,9 +84,9 @@ class PolicyIteration(DPAlgoBase):
         None
 
         """
-        super(PolicyIteration, self).actions_after_training_ends(env, episode_idx, **options)
-        self._p_eval.actions_after_training_ends(env, episode_idx, **options)
-        self._p_imprv.actions_after_training_ends(env, episode_idx, **options)
+        super(PolicyIteration, self).actions_after_training_ends(env,  **options)
+        self._p_eval.actions_after_training_ends(env,  **options)
+        self._p_imprv.actions_after_training_ends(env,  **options)
 
     @time_fn
     def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:

@@ -60,7 +60,7 @@ class PolicyImprovement(DPAlgoBase, WithValueTableMixin):
 
         for s in range(n_states_):
             state_actions = q_s_a(env=env, v=self.v, state=s, gamma=self.gamma)
-            self.policy = self.policy_adaptor(s, state_actions, self.policy)
+            self.policy = self.policy_adaptor.adapt(self.policy, state_actions=state_actions,  s=s)
 
         episode_info = EpisodeInfo()
         episode_info.episode_reward = episode_reward

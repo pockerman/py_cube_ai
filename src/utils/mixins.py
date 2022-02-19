@@ -20,6 +20,7 @@ class WithValueTableMixin(object):
     def v(self, value: np.array):
         self.vtable = value
 
+
 class WithQTableMixin(object):
     """
     Helper class to associate a q_table with an algorithm

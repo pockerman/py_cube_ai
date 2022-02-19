@@ -1,21 +1,14 @@
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Any
 
-from src.algorithms.dp.value_iteration import ValueIteration
+from src.algorithms.dp.value_iteration import ValueIteration, DPAlgoConfig
+from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 from src.policies.uniform_policy import UniformPolicy
 from src.policies.max_action_equal_probability_stochastic_policy_adaptor import MaxActionEqualProbabilityAdaptorPolicy
+from src.worlds.world_helpers import n_states, n_actions
 
 
-class Agent(ValueIteration):
-
-    def __init__(self, env: Any, gamma: float, policy_init: UniformPolicy,
-                 policy_adaptor: MaxActionEqualProbabilityAdaptorPolicy, n_max_iterations: int=1000, tolerance: float=1.0e-10) -> None:
-        super(Agent, self).__init__(env=env, gamma=gamma, policy_init=policy_init,
-                                    policy_adaptor=policy_adaptor,
-                                    n_max_iterations=n_max_iterations, tolerance=tolerance)
-        
 def plot_values(v):
     # reshape value function
     V_sq = np.reshape(v, (4, 4))
@@ -37,19 +30,31 @@ if __name__ == '__main__':
     GAMMA = 1.0
 
     env = gym.make(ENV_NAME)
-    policy_init = UniformPolicy(env=env, init_val=None)
+    policy_init = UniformPolicy(n_actions=n_actions(env),
+                                n_states=n_states(env),
+                                init_val=None)
     policy_adaptor = MaxActionEqualProbabilityAdaptorPolicy()
-    agent = Agent(gamma=GAMMA, env=env,
-                  policy_init=policy_init, policy_adaptor=policy_adaptor)
 
-    ctrl_res = agent.train()
+    agent_config = DPAlgoConfig()
+    agent_config.gamma = GAMMA
+    agent_config.tolerance = 1.0e-10
+    agent_config.policy = policy_init
+
+    agent = ValueIteration(agent_config, policy_adaptor)
+
+    trainer_config = RLSerialTrainerConfig(n_episodes=1000,
+                                           tolerance=1.0e-10,
+                                           output_msg_frequency=100)
+
+    trainer = RLSerialAgentTrainer(config=trainer_config, agent=agent)
+    ctrl_res = trainer.train(env)
 
     print(f"Converged {ctrl_res.converged}")
     print(f"Number of iterations {ctrl_res.n_itrs}")
     print(f"Residual {ctrl_res.residual}")
 
     print("\nOptimal Policy (LEFT = 0, DOWN = 1, RIGHT = 2, UP = 3):")
-    print(agent.policy.values, "\n")
+    print(agent.policy.policy, "\n")
 
     plot_values(agent.v)
 
