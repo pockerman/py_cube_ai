@@ -84,7 +84,7 @@ class IterativePolicyEvaluator(DPAlgoBase, WithValueTableMixin):
 
         return info
 
-    def actions_before_training_begins(self, env: Env, episode_idx: int, **options) -> None:
+    def actions_before_training_begins(self, env: Env,  **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the iterations

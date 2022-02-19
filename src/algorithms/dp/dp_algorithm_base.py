@@ -4,6 +4,7 @@ algorithms
 """
 import abc
 from typing import Any, TypeVar
+from dataclasses import dataclass
 
 from src.algorithms.rl_agent_base import RLAgentBase
 from src.algorithms.algo_config import AlgoConfig
@@ -16,14 +17,16 @@ Criterion = TypeVar('Criterion')
 PlayInfo = TypeVar('PlayInfo')
 
 
+@dataclass(init=True, repr=True)
 class DPAlgoConfig(AlgoConfig):
-    
-    def __init__(self):
-        super(DPAlgoConfig, self).__init__()
-        self.gamma: float = 0.1
-        self.tolerance: float = 1.0e-8
-        self.policy: Policy = None
+    """Data class to wrap configuration parameters for
+    Dynamic programming algorithms
+    """
 
+    gamma: float = 0.1
+    tolerance: float = 1.0e-8
+    policy: Policy = None
+    
 
 class DPAlgoBase(RLAgentBase):
     """
@@ -31,15 +34,41 @@ class DPAlgoBase(RLAgentBase):
     """
 
     def __init__(self, algo_config: DPAlgoConfig) -> None:
-        super(DPAlgoBase, self).__init__()
-        self.config = algo_config
+        """
+        Constructor. Initialize the algorithm by passing the configuration
+        instance needed.
+
+        Parameters
+        ----------
+        algo_config Algorithm configuration
+
+        """
+        super(DPAlgoBase, self).__init__(algo_config)
 
     @property
     def gamma(self) -> float:
+        """
+        Returns the gamma i.e. the discount constant
+
+        Returns
+        -------
+
+        Returns the gamma i.e. the discount constant
+        
+        """
         return self.config.gamma
 
     @property
     def policy(self) -> Policy:
+        """
+        Returns the policy instance
+
+        Returns
+        -------
+
+        An instance of the Policy type
+
+        """
         return self.config.policy
 
     @policy.setter
@@ -64,28 +93,28 @@ class DPAlgoBase(RLAgentBase):
         """
         pass
 
-    def actions_before_training_begins(self, env: Env, episode_idx: int, **options) -> None:
+    def actions_before_training_begins(self, env: Env, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the iterations
         """
         pass
 
-    def actions_after_training_ends(self, env: Env, episode_idx: int, **options) -> None:
+    def actions_after_training_ends(self, env: Env, **options) -> None:
         """
         Execute any actions the algorithm needs after
         the iterations are finished
         """
         pass
 
-    def actions_before_episode_begins(self, env: Env, episode_idx: int, **info) -> None:
+    def actions_before_episode_begins(self, env: Env, episode_idx: int, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the episode
         :param options:
         :return:
         """
-        pass
+        super(DPAlgoBase, self).actions_before_episode_begins(env, episode_idx, **options)
 
     def actions_after_episode_ends(self, env: Env, episode_idx: int, **info) -> None:
         """

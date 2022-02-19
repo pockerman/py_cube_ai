@@ -1,4 +1,6 @@
 from typing import TypeVar
+from dataclasses import dataclass
+
 from src.algorithms.rl_agent_trainer_base import RLAgentTrainerBase
 from src.utils.iteration_controller import ItrControlResult, IterationController
 from src.utils.wrappers import time_fn
@@ -8,23 +10,21 @@ Env = TypeVar('Env')
 Agent = TypeVar('Agent')
 
 
+@dataclass(init=True, repr=True,)
 class RLSerialTrainerConfig(object):
-    """
-    The AlgoInput class. Wraps the common input
+    """The RLSerialTrainerConfig class. Configuration
+    parameters for the
+     raps the common input
     that most algorithms use. Concrete algorithms
     can extend this class to accommodate their specific
     input as well
     """
 
-    def __init__(self):
-        self.n_episodes: int = 0
-        self.tolerance: float = 1.0e-8
-
-        # negative means do not output
-        # any messages
-        self.output_msg_frequency: int = -1
-        self.render_env: bool = False
-        self.render_env_freq = 100
+    n_episodes: int = 0
+    tolerance: float = 1.0e-8
+    output_msg_frequency: int = -1
+    render_env: bool = False
+    render_env_freq = 100
 
 
 class RLSerialAgentTrainer(RLAgentTrainerBase):
@@ -54,7 +54,6 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
         :return:
         :rtype:
         """
-        self.actions_before_training_begins(env, **options)
 
         itr_ctrl_rsult = ItrControlResult(tol=self._itr_ctrl.tolerance,
                                           residual=self._itr_ctrl.residual,
@@ -73,7 +72,7 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
                                                                         self.itr_control.n_max_itrs,
                                                                         (self.itr_control.current_itr_counter / self.itr_control.n_max_itrs) * 100.0))
             self.actions_before_episode_begins(env, **options)
-            episode_info = self.agent.on_training_episode(env, **{"episode_idx": self.current_episode_index})
+            episode_info = self.agent.on_training_episode(env, self.current_episode_index, **options)
             self.rewards.append(episode_info.episode_reward)
             self.iterations_per_episode.append(episode_info.episode_iterations)
 
@@ -89,6 +88,9 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
             if self.break_training_flag:
                 print("{0}: On Episode {1} the break training "
                       "flag was set. Stop training".format(INFO, self.current_episode_index))
+
+                # if we get here then assume we have converged
+                self._itr_ctrl.residual = self.trainer_config.tolerance * 1.0e-2
                 break
 
         self.actions_after_training_ends(env, **options)
@@ -111,7 +113,7 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
         env.reset()
         self.rewards = []
         self.iterations_per_episode = []
-        self.agent.actions_before_training_begins(env, self.current_episode_index, **options)
+        self.agent.actions_before_training_begins(env,  **options)
 
     def actions_before_episode_begins(self, env: Env, **options) -> None:
         """
@@ -136,4 +138,4 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
         Execute any actions the algorithm needs after
         the iterations are finished
         """
-        self.agent.actions_after_training_ends(env, self.current_episode_index, **options)
+        self.agent.actions_after_training_ends(env, **options)

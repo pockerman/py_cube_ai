@@ -22,6 +22,7 @@ Criterion = TypeVar('Criterion')
 PlayInfo = TypeVar('PlayInfo')
 State = TypeVar('State')
 Config = TypeVar('Config')
+State = TypeVar('State')
 
 
 class RLAgentBase(metaclass=abc.ABCMeta):
@@ -30,25 +31,19 @@ class RLAgentBase(metaclass=abc.ABCMeta):
 
     """
 
-    def __init__(self) -> None:
+    def __init__(self, config: Config) -> None:
         """
-        Constructor.
+        Constructor. Initialize the agent with the configuration
+        instance needed
 
-        """
-
-        pass
-
-    @abc.abstractmethod
-    def get_configuration(self) -> Config:
-        """
-        Returns the configuration of the agent
-
-        Returns
-        -------
-
-        An instance of the configuration relevant to each agent
+        Parameters
+        ----------
+        config The configuration of the agent
 
         """
+
+        self.config = config
+        self.state: State = None
 
     @abc.abstractmethod
     def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
@@ -103,14 +98,13 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def actions_before_training_begins(self, env: Env, episode_idx: int, **options) -> None:
+    def actions_before_training_begins(self, env: Env,  **options) -> None:
         """
         Execute any actions the algorithm needs before
 
         Parameters
         ----------
         env The environment to train on
-        episode_idx The episode index
         options Any options passed by the client code
 
         Returns None
@@ -120,7 +114,6 @@ class RLAgentBase(metaclass=abc.ABCMeta):
 
         """
 
-    @abc.abstractmethod
     def actions_before_episode_begins(self, env: Env, episode_idx: int, **options) -> None:
         """
         Execute any actions the algorithm needs before
@@ -139,6 +132,7 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         Returns None
 
         """
+        self.state = env.reset()
 
     @abc.abstractmethod
     def actions_after_episode_ends(self, env: Env, episode_idx: int, **options) -> None:
@@ -160,7 +154,7 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def actions_after_training_ends(self, env: Env, episode_idx: int, **options) -> None:
+    def actions_after_training_ends(self, env: Env,  **options) -> None:
         """
         Execute any actions the algorithm needs after
         the iterations are finished
@@ -168,7 +162,6 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         Parameters
         ----------
         env The environment to train on
-        episode_idx The episode index
         options Any options passed by the client code
 
         Returns
