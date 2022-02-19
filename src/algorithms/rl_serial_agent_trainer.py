@@ -34,8 +34,7 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
     """
 
     def __init__(self, config: RLSerialTrainerConfig, agent: Agent) -> None:
-        self.config = config
-        self.agent = agent
+        super(RLSerialAgentTrainer, self).__init__(config=config, agent=agent)
         self._itr_ctrl = IterationController(tol=config.tolerance, n_max_itrs=config.n_episodes)
         self.break_training_flag: bool = False
         self.rewards = []
@@ -48,13 +47,6 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
     @property
     def itr_control(self) -> IterationController:
         return self._itr_ctrl
-
-    def get_configuration(self) -> RLSerialTrainerConfig:
-        """
-        Returns the configuration of the agent
-        :return:
-        """
-        return self.config
 
     @time_fn
     def train(self, env: Env, **options) -> ItrControlResult:
@@ -74,8 +66,8 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
         counter = 0
         while self._itr_ctrl.continue_itrs():
 
-            if self.config.output_msg_frequency != -1:
-                remains = counter % self.config.output_msg_frequency
+            if self.trainer_config.output_msg_frequency != -1:
+                remains = counter % self.trainer_config.output_msg_frequency
                 if remains == 0:
                     print("{0}: Episode {1} of {2}, ({3}% done)".format(INFO, self.current_episode_index,
                                                                         self.itr_control.n_max_itrs,
@@ -107,7 +99,7 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
 
         return itr_ctrl_rsult
 
-    def actions_before_training_begins(self, env: Env, **info) -> None:
+    def actions_before_training_begins(self, env: Env, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the episode
@@ -119,29 +111,29 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
         env.reset()
         self.rewards = []
         self.iterations_per_episode = []
-        self.agent.actions_before_training_begins(env, self.current_episode_index)
+        self.agent.actions_before_training_begins(env, self.current_episode_index, **options)
 
-    def actions_before_episode_begins(self, env: Env, **info) -> None:
+    def actions_before_episode_begins(self, env: Env, **options) -> None:
         """
         Execute any actions the algorithm needs before
         starting the episode
         :param options:
         :return:
         """
-        self.agent.actions_before_episode_begins(env, self.current_episode_index)
+        self.agent.actions_before_episode_begins(env, self.current_episode_index, **options)
 
-    def actions_after_episode_ends(self, env: Env, **info) -> None:
+    def actions_after_episode_ends(self, env: Env, **options) -> None:
         """
         Execute any actions the algorithm needs after
         ending the episode
         :param options:
         :return:
         """
-        self.agent.actions_after_episode_ends(env, self.current_episode_index)
+        self.agent.actions_after_episode_ends(env, self.current_episode_index, **options)
 
-    def actions_after_training_ends(self, env: Env, **info) -> None:
+    def actions_after_training_ends(self, env: Env, **options) -> None:
         """
         Execute any actions the algorithm needs after
         the iterations are finished
         """
-        self.agent.actions_after_training_ends(env, self.current_episode_index)
+        self.agent.actions_after_training_ends(env, self.current_episode_index, **options)

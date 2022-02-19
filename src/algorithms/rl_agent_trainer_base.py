@@ -1,74 +1,63 @@
+"""The module rl_agent_trainer_base. Specifies the
+minimum interface that RL trainers should implement
+Base class for deriving RL agent trainers. Specifically,
+an RL trainer class should expose at least the following API
+
+- __init__(config: Config, agent: Agent) -> None:
+- train(self, env: Env, **options) -> TrainInfo:
+
 """
-Base class for deriving RL agent trainers
-"""
+
+
 import abc
 from typing import TypeVar
+from dataclasses import dataclass
 
 Env = TypeVar('Env')
 TrainInfo = TypeVar('TrainInfo')
-Criterion = TypeVar('Criterion')
-PlayInfo = TypeVar('PlayInfo')
-State = TypeVar('State')
-Action = TypeVar('Action')
 Config = TypeVar('Config')
+Agent = TypeVar('Agent')
 
 
+@dataclass
 class RLAgentTrainerConfig(object):
-    def __init__(self):
-        self.n_episodes: int = 0
+    """The RLAgentTrainerConfig class. Basic configuration
+    for RL trainers
+
+    """
+    n_episodes: int = 0
 
 
 class RLAgentTrainerBase(metaclass=abc.ABCMeta):
+    """The RLAgentTrainerBase class. Specifies the minimum interface
+    that RL trainers should implement
 
-    def __init__(self) -> None:
-        pass
+    """
 
-    @abc.abstractmethod
-    def get_configuration(self) -> Config:
+    def __init__(self, config: Config, agent: Agent) -> None:
+        """Constructor
+
+        Parameters
+        ----------
+        config The configuration of the trainer
+        agent The agent to train
+
         """
-        Returns the configuration of the agent
-        :return:
-        """
+        self.trainer_config: Config = config
+        self.agent: Agent = agent
 
     @abc.abstractmethod
     def train(self, env: Env, **options) -> TrainInfo:
-        """
-        :return:
-        :rtype:
-        """
+        """Train the agent on the given environment
 
-    @abc.abstractmethod
-    def actions_before_training_begins(self, env: Env,  **options) -> None:
-        """
-        Execute any actions the algorithm needs before
-        starting the episode
-        :param env:
-        :param episode_idx:
-        :param info:
-        :return:
-        """
+        Parameters
+        ----------
+        env The environment to train on
+        options Any options that client code should pass
 
-    @abc.abstractmethod
-    def actions_before_episode_begins(self, env: Env,  **options) -> None:
-        """
-        Execute any actions the algorithm needs before
-        starting the episode
-        :param options:
-        :return:
-        """
+        Returns
+        -------
 
-    @abc.abstractmethod
-    def actions_after_episode_ends(self, env: Env,  **info) -> None:
-        """
-        Execute any actions the algorithm needs after
-        ending the episode
-        :param options:
-        :return:
-        """
+        An instance of the TrainInfo class
 
-    @abc.abstractmethod
-    def actions_after_training_ends(self, env: Env,  **options) -> None:
-        """
-        Execute any actions the algorithm needs after
-        the iterations are finished
         """

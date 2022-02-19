@@ -29,7 +29,8 @@ class PolicyIteration(DPAlgoBase):
 
     def __init__(self, algo_config: DPAlgoConfig,  policy_adaptor: PolicyAdaptorBase):
         """
-        Constructor
+        Constructor.
+
         Parameters
         ----------
 
@@ -92,7 +93,24 @@ class PolicyIteration(DPAlgoBase):
         self._p_imprv.actions_after_training_ends(env, episode_idx, **options)
 
     @time_fn
-    def on_training_episode(self, env: Env, episode_idx: int, **info) -> EpisodeInfo:
+    def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
+        """
+
+        Train the agent on the given environment and the given episode
+
+        Parameters
+        ----------
+
+        env The environment to train on
+        episode_idx The episode index
+        options Various data passed by the client
+
+        Returns
+        -------
+
+        Instance of EpisodeInfo class
+
+        """
 
         # make a copy of the policy already obtained
         old_policy = copy.deepcopy(self._p_eval.policy)
