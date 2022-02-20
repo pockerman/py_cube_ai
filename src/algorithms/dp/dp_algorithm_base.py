@@ -54,7 +54,7 @@ class DPAlgoBase(RLAgentBase):
         -------
 
         Returns the gamma i.e. the discount constant
-        
+
         """
         return self.config.gamma
 
@@ -74,13 +74,6 @@ class DPAlgoBase(RLAgentBase):
     @policy.setter
     def policy(self, value: Policy) -> None:
         self.config.policy = value
-
-    def get_configuration(self) -> DPAlgoConfig:
-        """
-        Returns the configuration of the agent
-        :return:
-        """
-        return self.config
 
     @abc.abstractmethod
     def on_training_episode(self, env: Env, episode_idx: int, **info) -> EpisodeInfo:
