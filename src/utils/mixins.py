@@ -8,6 +8,19 @@ from typing import TypeVar, Any
 QTable = TypeVar('QTable')
 
 
+class WithValueTableMixin(object):
+    def __init__(self):
+        self.vtable: np.array = None
+
+    @property
+    def v(self) -> np.array:
+        return self.vtable
+
+    @v.setter
+    def v(self, value: np.array):
+        self.vtable = value
+
+
 class WithQTableMixin(object):
     """
     Helper class to associate a q_table with an algorithm

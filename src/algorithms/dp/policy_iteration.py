@@ -1,40 +1,44 @@
-"""
-Implementation of Policy iteration algorithm. In policy
+"""Implementation of Policy iteration algorithm. In policy
 iteration at each step we do one policy evaluation and one policy
 improvement.
-
-Implementation refactored from
-https://github.com/udacity/deep-reinforcement-learning
 
 """
 
 import numpy as np
-from typing import Any
+from typing import TypeVar
 import copy
 
-#from src.algorithms.algorithm_base import AlgorithmBase
-#from src.algorithms.algo_input import AlgoInput
 
-from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoInput
+from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoConfig
 from src.algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator
 from src.algorithms.dp.policy_improvement import PolicyImprovement
-from src.policies.policy_base import PolicyBase
 from src.policies.policy_adaptor_base import PolicyAdaptorBase
+from src.utils.episode_info import EpisodeInfo
+from src.utils.wrappers import time_fn
 
 
-
+Env = TypeVar('Env')
 
 
 class PolicyIteration(DPAlgoBase):
-    """
-    Policy iteration class
+    """Policy iteration class
     """
 
-    def __init__(self, algo_in: DPAlgoInput,  policy_adaptor: PolicyAdaptorBase):
-        super(PolicyIteration, self).__init__(algo_in=algo_in)
+    def __init__(self, algo_config: DPAlgoConfig,  policy_adaptor: PolicyAdaptorBase):
+        """
+        Constructor.
 
-        self._p_eval = IterativePolicyEvaluator(algo_in=algo_in)
-        self._p_imprv = PolicyImprovement(algo_in=algo_in, v=self._p_eval.v, policy_adaptor=policy_adaptor)
+        Parameters
+        ----------
+
+        algo_config Configuration for the algorithm
+        policy_adaptor How the policy should be adapted
+
+        """
+        super(PolicyIteration, self).__init__(algo_config=algo_config)
+
+        self._p_eval = IterativePolicyEvaluator(algo_config=algo_config)
+        self._p_imprv = PolicyImprovement(algo_in=algo_config, v=self._p_eval.v, policy_adaptor=policy_adaptor)
 
     @property
     def v(self) -> np.array:
@@ -44,39 +48,88 @@ class PolicyIteration(DPAlgoBase):
     def policy(self):
         return self._p_eval.policy
 
-    def actions_before_training_begins(self, **options) -> None:
-        """
-        Execute any actions the algorithm needs before
+    def actions_before_training_begins(self, env: Env,  **options) -> None:
+        """Execute any actions the algorithm needs before
         starting the iterations
+
+        Parameters
+        ----------
+        env The environment to train on
+        options Any options passed by the application
+
+        Returns
+        -------
+
+        None
+
         """
 
         # call the base class version
-        super(PolicyIteration, self).actions_before_training_begins(**options)
-        self._p_eval.actions_before_training_begins(**options)
-        self._p_imprv.actions_before_training_begins(**options)
+        super(PolicyIteration, self).actions_before_training_begins(env,  **options)
+        self._p_eval.actions_before_training_begins(env,  **options)
+        self._p_imprv.actions_before_training_begins(env,  **options)
 
-    def actions_after_training_ends(self, **options) -> None:
-        pass
+    def actions_after_training_ends(self, env: Env, **options) -> None:
+        """Any actions the algorithm should perform after the training ends
 
-    def on_episode(self) -> None:
+        Parameters
+        ----------
+
+        env The environment the agent is trained on
+        options Any options passed by the client code
+
+        Returns
+        -------
+
+        None
+
+        """
+        super(PolicyIteration, self).actions_after_training_ends(env,  **options)
+        self._p_eval.actions_after_training_ends(env,  **options)
+        self._p_imprv.actions_after_training_ends(env,  **options)
+
+    @time_fn
+    def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
+        """
+
+        Train the agent on the given environment and the given episode
+
+        Parameters
+        ----------
+
+        env The environment to train on
+        episode_idx The episode index
+        options Various data passed by the client
+
+        Returns
+        -------
+
+        Instance of EpisodeInfo class
+
+        """
 
         # make a copy of the policy already obtained
         old_policy = copy.deepcopy(self._p_eval.policy)
 
         # evaluate the policy
-        self._p_eval.train()
+        train_info = self._p_eval.on_training_episode(env, episode_idx, **info)
 
         # update the value function to
         # improve for
         self._p_imprv.v = self._p_eval.v
 
         # improve the policy
-        self._p_imprv.train()
+        self._p_imprv.on_training_episode(env, episode_idx, **info)
 
         new_policy = self._p_imprv.policy
 
+        episode_info = EpisodeInfo()
+        episode_info.episode_reward = train_info.episode_reward
+        episode_info.episode_iterations = train_info.episode_iterations
+
         # check of the two policies are the same
         if old_policy == new_policy:
-            self.itr_control.residual = self.itr_control.tolerance*10**-1
+            episode_info.info["break_training"] = True
 
         self._p_eval.policy = new_policy
+        return episode_info
