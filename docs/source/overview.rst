@@ -1,6 +1,6 @@
 Overview
 ===================
 
-RoboRL is robotics with reinforcement learning
+``PyCubeAI`` is robotics with reinforcement learning
 
 
