@@ -40,3 +40,4 @@ src/algorithms/td/__pycache__/
 src/algorithms/dummy/__pycache__/
 src/worlds/__pycache__/
 src/algorithms/planning/__pycache__/
+src/examples/webots/epuck_robot/controllers/__pycache__/
