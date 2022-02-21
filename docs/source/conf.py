@@ -32,7 +32,7 @@ print(sys.path)
 
 # -- Project information -----------------------------------------------------
 
-project = 'RoboRL'
+project = 'PyCubeAI'
 copyright = '2022, Alexandros Giavaras'
 author = 'Alexandros Giavaras'
 
@@ -91,7 +91,7 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'default' #'alabaster'
+html_theme = 'sphinx_rtd_theme' #'default' #'alabaster'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
