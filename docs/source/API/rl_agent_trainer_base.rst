@@ -17,7 +17,7 @@ rl\_agent\_trainer\_base
 
    
    
-   .. rubric:: RLAgentBase
+   .. rubric:: RLAgentTrainerBase
 
    .. autosummary::
    
