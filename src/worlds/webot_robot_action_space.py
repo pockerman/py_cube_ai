@@ -25,6 +25,10 @@ class WebotRobotActionBase(ABC):
         self.action_type = action_type
         self.idx: int = self.action_type
 
+    @property
+    def name(self) -> str:
+        return self.action_type.name
+
     @abc.abstractmethod
     def act(self, *args, **options):
         """
@@ -33,7 +37,6 @@ class WebotRobotActionBase(ABC):
         :param options:
         :return:
         """
-
 
 class WebotRobotMoveFWDAction(WebotRobotActionBase):
     """

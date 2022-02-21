@@ -113,7 +113,7 @@ class StateAggregationWebotEnv(object):
 
         position = time_step.state.position
 
-        position_bin = self.get_position_bins(raw_position=position)
+        position_bin = self.get_position_bins(raw_position=position[1:])
 
         state = State(position=position_bin, velocity=time_step.state.velocity,
                       orientation=time_step.state.orientation,

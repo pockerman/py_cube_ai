@@ -17,4 +17,7 @@ class AlgoConfig(object):
 
     def __init__(self):
         self.n_itrs_per_episode: int = 0
+        self.tolerance: float = 1.0e-8
+        self.render_env: bool = False
+        self.render_env_freq: int = -1
 

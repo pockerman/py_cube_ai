@@ -2,9 +2,12 @@
 Learner for controlling a differential drive robot
 """
 from typing import TypeVar
+import json
+from pathlib import Path
 from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
 from src.utils.mixins import WithMaxActionMixin, WithQTableMixin
 from src.utils import INFO
+from src.py_cubeai_io.json_io import write_q_function, load_q_function
 
 Env = TypeVar('Env')
 Policy = TypeVar("Policy")
@@ -19,17 +22,39 @@ class DiffDriveRobotQLearner(TDAlgoBase, WithQTableMixin, WithMaxActionMixin):
         self.policy: Policy = algo_in.policy
         self.training_finished: bool = False
 
+    def save_q_function(self, filename: Path) -> None:
+        write_q_function(qtable=self.q_table, filename=filename, **{})
+
+    def load_q_function(self, filename: Path) -> None:
+        table = load_q_function(filename=filename, **{})
+
+        # need to transform the keys from strs
+        # to a tuple
+        for key in table:
+            new_key = key.replace('(', '')
+            new_key = new_key.replace(')', '')
+            new_key_list = new_key.split(',')
+
+            qtable_key = ((int(new_key_list[0]), int(new_key_list[1])), int(new_key_list[2]))
+            self.q_table[qtable_key] = float(table[key])
+
     def play(self, env: Env, n_games: int):
 
         for game in range(n_games):
             print("{0} Playing game {1}".format(INFO, game))
             time_step = env.reset()
+            counter = 0
             while env.continue_sim():
                 action = self.get_action(state=env.resolve_time_step_as_key(time_step))
                 action = env.get_action(action)
 
                 print("{0} At state {1} action selected {2}".format(INFO, time_step.state.position, action.action_type.name))
                 time_step = env.step(action)
+
+                counter += 1
+
+                #if counter >= 10:
+                #    break
 
     def get_action(self, state: State):
         """
@@ -81,10 +106,13 @@ class DiffDriveRobotQLearner(TDAlgoBase, WithQTableMixin, WithMaxActionMixin):
 
         while self.train_env.continue_sim():
 
+
             # use policy to select an action
             action = self.policy(q_func=self.q_table, state=self.train_env.resolve_time_step_as_key(self.state))
 
             action = self.train_env.get_action(action)
+
+            print("{0} INFO at state={1} action={2}".format(INFO, self.train_env.resolve_time_step_as_key(self.state), action.name))
 
             # take action A, observe R, S'
             time_step = self.train_env.step(action)

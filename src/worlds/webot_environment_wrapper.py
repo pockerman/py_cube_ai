@@ -4,6 +4,7 @@ Wrapper for the environment to use
 
 from collections import namedtuple
 from typing import TypeVar
+import numpy as np
 
 from controller import Robot, Node
 from src.worlds.time_step import TimeStep
@@ -152,7 +153,7 @@ class EnvironmentWrapper(object):
             return reward, True
 
         # we haven't crushed and haven't reached goal
-        return 0.0, False
+        return reward, False
 
     def step(self, action: WebotRobotActionBase) -> TimeStep:
 
@@ -161,42 +162,11 @@ class EnvironmentWrapper(object):
 
         reward, done = self.get_reward(action=action)
 
-        # check if the robot crushed in the environment
-        # detect obstacles
-        #proximity_sensor_vals = read_proximity_sensors(sensors=self.proximity_sensors, threshold=self.config.bump_threshold)
-
-        #print("{0} Proximity sensors values {1}".format(INFO, proximity_sensor_vals[: -1]))
-
-        #print("{0} Robot velocity  {1}".format(INFO, self.robot_node.getVelocity()))
-
-        # we may have finished because the goal was reached
-        #done_crush = proximity_sensor_vals[-1]
-
-        # check if we are on the goal
-        #done2, distance = self.config.on_goal_criterion.check(self.robot_node)
-
-        #done = False
-        #reward = 1.0
-
-        """
-        if done_crush:
-            print("{0} Robot crushed on the wall...".format(INFO))
-            print("{0} Robot position  {1}".format(INFO, self.robot_node.getPosition()))
-            print("{0} Proximity sensors values {1}".format(INFO, proximity_sensor_vals))
-            print("{0} Bump threshold {1}".format(INFO, self.config.bump_threshold))
-            done = True
-            reward = -1.0
-        elif done2:
-
-            print("{0} Robot reached the goal with distance from it {1}".format(INFO, distance))
-            print("{0} Robot position  {1}".format(INFO, self.robot_node.getPosition()))
-            done = True
-            reward = 1.0
-        """
-
         left_encoder_pos = self.wheel_encoders[0].getValue()
         right_encoder_pos = self.wheel_encoders[1].getValue()
 
+        velocity = self.robot_node.getVelocity()
+        #print("{0} Robot velocity {1}".format(INFO, np.linalg.norm(np.array([0., 0., 0.]) - np.array(velocity[0:3]))))
         state = State(position=self.robot_node.getPosition(),
                       velocity=self.robot_node.getVelocity(),
                       orientation=self.robot_node.getOrientation(),

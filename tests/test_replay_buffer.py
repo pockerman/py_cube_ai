@@ -2,7 +2,6 @@
 Unit-tests for ReplayBuffer
 """
 import unittest
-import torch
 from src.utils.replay_buffer import ReplayBuffer
 
 

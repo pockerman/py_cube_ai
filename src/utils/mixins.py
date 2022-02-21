@@ -50,7 +50,10 @@ class WithMaxActionMixin(object):
         :param n_actions: Total number of actions allowed
         :return: The action that corresponds to the maximum value
         """
-        values = np.array(q_table[state, a] for a in range(n_actions))
+        values = []
+        for a in range(n_actions):
+            values.append(q_table[state, a])
+        #values = np.array(q_table[state, a] for a in range(n_actions))
         action = np.argmax(values)
         return int(action)
 
