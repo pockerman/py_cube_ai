@@ -17,7 +17,7 @@ value\_iteration
 
    
    
-   .. rubric:: RLAgentBase
+   .. rubric:: ValueIteration
 
    .. autosummary::
          
