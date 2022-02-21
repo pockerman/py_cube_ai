@@ -83,17 +83,19 @@ class RLAgentBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def on_state(self, state) -> Any:
-        """
-        Retrurns an action on the given state
+        """Get an agent specific result e.g. an action or
+        the state value
 
         Parameters
         ----------
+        
         state The state instance presented to the agent
 
         Returns
         -------
 
-        An instance of the action type
+        An agent specific result e.g. an action or
+        the state value
 
         """
 
