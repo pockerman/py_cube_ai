@@ -1,5 +1,7 @@
 ## rl-python
 
+[![Documentation Status](https://readthedocs.org/projects/pockerman-py-cubeai/badge/?version=latest)](https://pockerman-py-cubeai.readthedocs.io/en/latest/?badge=latest)
+
 Implementation of reinforcement learning algorithms. Algorithms have been refactored/reimplemented
 from various resources such as:
 
