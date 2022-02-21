@@ -20,20 +20,20 @@ The description of the epuck robot can be found at: https://cyberbotics.com/doc/
 """
 
 import numpy as np
+from collections import namedtuple
 from pathlib import Path
 import matplotlib.pyplot as plt
 
 from controller import Supervisor, Node
-
+from src.utils import INFO
 from src.worlds.webot_environment_wrapper import EnvironmentWrapper, EnvConfig
 from src.worlds.state_aggregation_webot_env import StateAggregationWebotEnv, StateAggregationWebotEnvBoundaries
-from src.worlds.webot_robot_action_space import WebotRobotActionType, WebotRobotActionBase, \
-    WebotRobotMoveFWDAction, WebotRobotStopAction
+from src.worlds.webot_robot_action_space import WebotRobotActionType, WebotRobotActionBase, WebotRobotMoveBWDAction, \
+    WebotRobotMoveFWDAction, WebotRobotMoveRightLeftAction, WebotRobotStopAction, WebotRobotMoveTurnLeftAction
 
 from src.agents.diff_drive_robot_qlearner import DiffDriveRobotQLearner
 from src.algorithms.td.td_algorithm_base import TDAlgoInput
 from src.policies import EpsilonGreedyPolicy, EpsilonDecayOption
-from src.utils import INFO
 
 # Define a variable that defines the duration of each physics step.
 # This macro will be used as argument to the Robot::step function,
@@ -53,8 +53,8 @@ PLOT_STEP = 10
 N_ITRS_PER_EPISODE = 2000
 EPS = 1.0
 EPS_DECAY_OP = EpsilonDecayOption.INVERSE_STEP
-ALPHA = 0.1
-GAMMA = 0.99
+
+#State = namedtuple("State", ["sensors", "motors"])
 
 
 def plot_running_avg(avg_rewards, step):
@@ -79,9 +79,22 @@ class Policy(EpsilonGreedyPolicy):
         if state == (5, 5):
             return 1
 
+        # if we are close to the goal
+        # then stop
+        #if state == (1, 5) or state == (5, 1):
+        #    return 0
+
         return super(Policy, self).__call__(q_func, state)
 
     def select_action(self, q_func, state) -> int:
+        """
+        Deterministically choose the best action from
+        the given q-table at the given state
+        :param q_func:
+        :param state:
+        :return:
+        """
+
         # if we are at the origin always choose FWD
         if state == (5, 5):
             return 1
@@ -136,6 +149,10 @@ class OnGoal(object):
 
 
 def controller_main():
+    """
+    Create the robot, establish the Environment. Train the QLearner
+    :return:
+    """
 
     # number of steps to play
     supervisor = Supervisor()
@@ -172,8 +189,8 @@ def controller_main():
     agent_config = TDAlgoInput()
     agent_config.n_episodes = N_EPISODES
     agent_config.n_itrs_per_episode = N_ITRS_PER_EPISODE
-    agent_config.gamma = GAMMA
-    agent_config.alpha = ALPHA
+    agent_config.gamma = 0.99
+    agent_config.alpha = 0.1
     agent_config.output_freq = 1
     agent_config.train_env = state_aggregation_env
     agent_config.policy = Policy(n_actions=state_aggregation_env.n_actions)
@@ -181,16 +198,18 @@ def controller_main():
     agent = DiffDriveRobotQLearner(algo_in=agent_config)
     agent.train()
 
-    agent.save_q_function(filename=Path("q_learner.json"))
+    agent.save_q_function(filename=Path("/home/alex/qi3/rl_python/src/apps/webots/diff_drive_sys/controllers/epuck_q_learn_simple_controller/q_learner.json"))
     plot_running_avg(agent.total_rewards, step=PLOT_STEP)
 
-    print("{0} Finished training".format(INFO))
+    #print(agent.q_table)
+    #print("{0} Finished training".format(INFO))
     # once the agent is trained let's play
     agent.training_finished = True
-    agent.load_q_function(filename=Path("q_learner.json"))
+    agent.load_q_function(filename=Path("/home/alex/qi3/rl_python/src/apps/webots/diff_drive_sys/controllers/epuck_q_learn_simple_controller/q_learner.json"))
     agent.play(env=state_aggregation_env, n_games=1)
 
 
+# Enter here exit cleanup code.
 if __name__ == '__main__':
 
     controller_main()

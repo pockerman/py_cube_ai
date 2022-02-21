@@ -15,7 +15,7 @@ from typing import TypeVar
 
 from src.algorithms.td.episodic_sarsa_semi_gradient import EpisodicSarsaSemiGrad
 from src.utils import INFO
-from src.worlds.state_aggregator_world_wrapper import StateAggregationEnvWrapper
+from src.worlds.state_aggregation_world_wrapper import StateAggregationEnvWrapper
 
 GAMMA = 1
 NUM_EPISODES = 500

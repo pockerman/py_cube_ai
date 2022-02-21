@@ -18,7 +18,7 @@ import numpy as np
 import gym
 from typing import TypeVar
 from collections import namedtuple
-from src.worlds.state_aggregator_world_wrapper import StateAggregationEnvWrapper
+from src.worlds.state_aggregation_world_wrapper import StateAggregationEnvWrapper
 from src.utils.exceptions import InvalidParameterValue
 
 Env = TypeVar('Env')

@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from matplotlib import pylab as plt
 from src.worlds.grid_world import Gridworld, GridworldInitMode
-from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecreaseOption
+from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
 from src.utils import INFO
 
 # constants to use
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
     policy = EpsilonGreedyPolicy(n_actions=env.n_actions, eps=EPS,
-                                 decay_op=EpsilonDecreaseOption.USER_DEFINED,
+                                 decay_op=EpsilonDecayOption.USER_DEFINED,
                                  user_defined_decrease_method=epsilon_decay,
                                  min_eps=0.00001)
 

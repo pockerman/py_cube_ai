@@ -37,7 +37,7 @@ copyright = '2022, Alexandros Giavaras'
 author = 'Alexandros Giavaras'
 
 # The full version, including alpha/beta/rc tags
-release = 'v0.0.4-alpha'
+release = 'v0.0.8-alpha'
 
 
 # -- General configuration ---------------------------------------------------

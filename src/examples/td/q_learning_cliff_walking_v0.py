@@ -2,7 +2,7 @@ import gym
 import numpy as np
 import matplotlib.pyplot as plt
 from src.algorithms.td import QLearning
-from src.policies.epsilon_greedy_policy import EpsilonDecreaseOption, EpsilonGreedyPolicy
+from src.policies.epsilon_greedy_policy import EpsilonDecayOption, EpsilonGreedyPolicy
 
 
 def plot_values(V):
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     num_episodes = 5000
     plot_every = 100
     policy = EpsilonGreedyPolicy(eps=1.0, env=env,
-                                 decay_op=EpsilonDecreaseOption.INVERSE_STEP,
+                                 decay_op=EpsilonDecayOption.INVERSE_STEP,
                                  min_eps=0.0001)
     q_learner = QLearning(env=env, n_max_iterations=num_episodes, gamma=1.0, alpha=0.01,
                           plot_freq=plot_every, policy=policy, max_num_iterations_per_episode=1000,

@@ -17,7 +17,7 @@ plt.rcParams.update({'font.size': 20})
 
 from src.utils import INFO
 from src.algorithms.td.q_learning import QLearning
-from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecreaseOption
+from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
 
 # We have to limit the states to small finite number.
 N_STATES = 36
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     print('{0} Observation space and speed values (MAX): {1}'.format(INFO, str(env.observation_space.high)))
     print('{0} Observation space and speed values (MIN): {1}'.format(INFO, str(env.observation_space.low)))
 
-    policy_init = EpsilonGreedyPolicy(env=env, decay_op=EpsilonDecreaseOption.NONE, eps=0.02)
+    policy_init = EpsilonGreedyPolicy(env=env, decay_op=EpsilonDecayOption.NONE, eps=0.02)
 
     qlearner = MyQLearning(n_episodes=10000, tolerance=1e-10,
                            env=env, gamma=GAMMA, policy=policy_init,

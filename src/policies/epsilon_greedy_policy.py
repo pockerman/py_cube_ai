@@ -10,7 +10,7 @@ UserDefinedDecreaseMethod = TypeVar('UserDefinedDecreaseMethod')
 QTable = TypeVar("QTable")
 
 
-class EpsilonDecreaseOption(Enum):
+class EpsilonDecayOption(Enum):
     """
     Enumeration of methods to decrease epsilon in a greedy policy
     """
@@ -26,7 +26,7 @@ class WithEpsilonDecayMixin(object):
     """
     Helper mixin for decaying epsilon
     """
-    def __init__(self, decay_op: EpsilonDecreaseOption, eps: float,
+    def __init__(self, decay_op: EpsilonDecayOption, eps: float,
                  max_eps: float = 1.0, min_eps: float = 0.001, epsilon_decay_factor: float = 0.01,
                  user_defined_decrease_method: UserDefinedDecreaseMethod = None):
 
@@ -45,23 +45,23 @@ class WithEpsilonDecayMixin(object):
         :return: None
         """
 
-        if self.decay_op == EpsilonDecreaseOption.NONE:
+        if self.decay_op == EpsilonDecayOption.NONE:
             return
 
-        if self.decay_op == EpsilonDecreaseOption.USER_DEFINED:
+        if self.decay_op == EpsilonDecayOption.USER_DEFINED:
             self.eps = self.user_defined_decrease_method(eps=self.eps, episode_idx=episode_idx)
 
-        if self.decay_op == EpsilonDecreaseOption.INVERSE_STEP:
+        if self.decay_op == EpsilonDecayOption.INVERSE_STEP:
 
             if episode_idx == 0:
                 episode_idx = 1
 
             self.eps = 1.0 / episode_idx
 
-        elif self.decay_op == EpsilonDecreaseOption.EXPONENTIAL:
+        elif self.decay_op == EpsilonDecayOption.EXPONENTIAL:
             self.eps = self.min_eps + (self.max_eps - self.min_eps) * np.exp(-self.epsilon_decay_factor * episode_idx)
 
-        elif self.decay_op == EpsilonDecreaseOption.CONSTANT_RATE:
+        elif self.decay_op == EpsilonDecayOption.CONSTANT_RATE:
             self.eps -= self.epsilon_decay_factor
 
         if self.eps < self.min_eps:
@@ -75,8 +75,8 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMixin)
     function.
     """
 
-    def __init__(self,  eps: float,
-                 decay_op: EpsilonDecreaseOption,
+    def __init__(self, eps: float,
+                 decay_op: EpsilonDecayOption,
                  n_actions: int,
                  max_eps: float = 1.0, min_eps: float = 0.001,
                  epsilon_decay_factor: float = 0.01,
@@ -97,6 +97,16 @@ class EpsilonGreedyPolicy(PolicyBase, WithMaxActionMixin, WithEpsilonDecayMixin)
             return self.max_action(q_func, state=state, n_actions=self.n_actions)
         else:  # otherwise, select an action randomly
             return random.choice(np.arange(self.n_actions))
+
+    def select_action(self, q_func: QTable, state: Any) -> int:
+        """
+        Deterministically choose the best action from
+        the given q-table at the given state
+        :param q_func:
+        :param state:
+        :return:
+        """
+        return self.max_action(q_func, state=state, n_actions=self.n_actions)
 
     def choose_action_index(self, values) -> int:
         """
@@ -129,7 +139,7 @@ class EpsilonDoubleGreedyPolicy(PolicyBase, WithDoubleMaxActionMixin, WithEpsilo
     """
 
     def __init__(self, eps: float,
-                 decay_op: EpsilonDecreaseOption,
+                 decay_op: EpsilonDecayOption,
                  n_actions: int,
                  max_eps: float=1.0, min_eps: float = 0.001,
                  epsilon_decay_factor: float=0.01,

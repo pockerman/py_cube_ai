@@ -8,6 +8,7 @@ def suite():
     suite.addTest(TestReplayBuffer)
     return suite
 
+
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
     runner.run(suite())
