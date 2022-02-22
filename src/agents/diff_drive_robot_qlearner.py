@@ -4,7 +4,7 @@ Learner for controlling a differential drive robot
 from typing import TypeVar
 import json
 from pathlib import Path
-from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoConfig
 from src.utils.mixins import WithMaxActionMixin, WithQTableMixin
 from src.utils import INFO
 from src.py_cubeai_io.json_io import write_q_function, load_q_function
@@ -16,7 +16,7 @@ State = TypeVar('State')
 
 class DiffDriveRobotQLearner(TDAlgoBase, WithQTableMixin, WithMaxActionMixin):
 
-    def __init__(self, algo_in: TDAlgoInput) -> None:
+    def __init__(self, algo_in: TDAlgoConfig) -> None:
         super(DiffDriveRobotQLearner, self).__init__(algo_in=algo_in)
         self.q_table = {}
         self.policy: Policy = algo_in.policy

@@ -3,7 +3,7 @@ TD(0) algorithm
 """
 
 import numpy as np
-from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoConfig
 
 
 class TDZero(TDAlgoBase):
@@ -11,7 +11,7 @@ class TDZero(TDAlgoBase):
     Implements TD(0) algorithm
     """
     
-    def __init__(self, algo_in: TDAlgoInput) -> None:
+    def __init__(self, algo_in: TDAlgoConfig) -> None:
         super(TDZero, self).__init__(algo_in=algo_in)
 
         self.v_function = np.zeros(self.train_env.n_states + 1)

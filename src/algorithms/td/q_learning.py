@@ -3,7 +3,7 @@ Tabular Q-learning algorithm
 """
 
 from typing import Any, TypeVar
-from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoConfig
 from src.utils.mixins import WithMaxActionMixin
 from src.utils import INFO
 
@@ -17,16 +17,20 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
     epsilon-greedy Q-learning algorithm
     """
 
-    def __init__(self, algo_in: TDAlgoInput) -> None:
+    def __init__(self, algo_config: TDAlgoConfig) -> None:
 
-        super(QLearning, self).__init__(algo_in=algo_in)
+        super(QLearning, self).__init__(algo_config=algo_config)
 
         self.q_table = {}
-        self._policy = algo_in.policy
+
 
     @property
     def q_function(self) -> QTable:
         return self.q_table
+
+    @property
+    def policy(self) -> Policy:
+        return self.config.policy
 
     def actions_before_training_begins(self, **options) -> None:
         super(QLearning, self).actions_before_training_begins(**options)

@@ -35,10 +35,7 @@ if __name__ == '__main__':
                                 init_val=None)
     policy_adaptor = MaxActionEqualProbabilityAdaptorPolicy()
 
-    agent_config = DPAlgoConfig()
-    agent_config.gamma = GAMMA
-    agent_config.tolerance = 1.0e-10
-    agent_config.policy = policy_init
+    agent_config = DPAlgoConfig(gamma=GAMMA, tolerance=1.0e-10, policy=policy_init)
 
     agent = ValueIteration(agent_config, policy_adaptor)
 

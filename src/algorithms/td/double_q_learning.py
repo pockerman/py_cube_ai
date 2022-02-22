@@ -6,7 +6,7 @@ found at https://www.researchgate.net/publication/221619239_Double_Q-learning
 import numpy as np
 from typing import  TypeVar
 
-from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoConfig
 from src.utils.mixins import WithDoubleMaxActionMixin
 from src.utils import INFO
 
@@ -19,7 +19,7 @@ class DoubleQLearning(TDAlgoBase, WithDoubleMaxActionMixin):
     epsilon-greedy Q-learning algorithm
     """
 
-    def __init__(self, algo_in: TDAlgoInput) -> None:
+    def __init__(self, algo_in: TDAlgoConfig) -> None:
 
         super(DoubleQLearning, self).__init__(algo_in=algo_in)
 

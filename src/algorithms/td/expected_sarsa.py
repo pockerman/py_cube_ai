@@ -3,7 +3,7 @@ import numpy as np
 import random
 
 
-from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoConfig
 
 
 class ExpectedSARSA(TDAlgoBase):

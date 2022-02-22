@@ -6,7 +6,7 @@ import numpy as np
 
 from src.algorithms.td.q_learning import QLearning
 from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleEnv
-from src.algorithms.td.td_algorithm_base import TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoConfig
 from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
 
 
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     EPS = 1.0
 
     env = StateAggregationCartPoleEnv(n_states=10, n_actions=2)
-    q_algo_in = TDAlgoInput()
+    q_algo_in = TDAlgoConfig()
     q_algo_in.train_env = env
     q_algo_in.alpha = ALPHA
     q_algo_in.gamma = GAMMA

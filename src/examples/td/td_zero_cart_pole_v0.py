@@ -4,7 +4,7 @@ is taken from Reinforcement in motion by Manning publications
 """
 
 from src.algorithms.td.td_zero import TDZero
-from src.algorithms.td.td_algorithm_base import TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoConfig
 from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleEnv
 
 
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     # is discretized into 10 discrete bins
     env = StateAggregationCartPoleEnv(version="v0", n_states=10, state_var_idx=2)
 
-    td_algo_input = TDAlgoInput()
+    td_algo_input = TDAlgoConfig()
     td_algo_input.gamma = GAMMA
     td_algo_input.alpha = ALPHA
     td_algo_input.train_env = env
