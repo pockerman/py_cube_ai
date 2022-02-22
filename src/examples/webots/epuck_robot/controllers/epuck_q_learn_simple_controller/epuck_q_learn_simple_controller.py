@@ -32,7 +32,7 @@ from src.worlds.webot_robot_action_space import WebotRobotActionType, WebotRobot
     WebotRobotMoveFWDAction, WebotRobotMoveRightLeftAction, WebotRobotStopAction, WebotRobotMoveTurnLeftAction
 
 from src.agents.diff_drive_robot_qlearner import DiffDriveRobotQLearner
-from src.algorithms.td.td_algorithm_base import TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoConfig
 from src.policies import EpsilonGreedyPolicy, EpsilonDecayOption
 
 # Define a variable that defines the duration of each physics step.
@@ -186,7 +186,7 @@ def controller_main():
     state_aggregation_env = StateAggregationWebotEnv(env=environment,
                                                      boundaries=boundaries, states=(10, 10))
 
-    agent_config = TDAlgoInput()
+    agent_config = TDAlgoConfig()
     agent_config.n_episodes = N_EPISODES
     agent_config.n_itrs_per_episode = N_ITRS_PER_EPISODE
     agent_config.gamma = 0.99

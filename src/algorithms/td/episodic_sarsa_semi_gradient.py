@@ -5,7 +5,7 @@ Semi-gradient SARSA for episodic environments
 from typing import TypeVar
 import numpy as np
 
-from src.algorithms.td. td_algorithm_base import TDAlgoBase, TDAlgoInput
+from src.algorithms.td. td_algorithm_base import TDAlgoBase, TDAlgoConfig
 
 Env = TypeVar('Env')
 Action = TypeVar('Action')
@@ -17,7 +17,7 @@ class EpisodicSarsaSemiGrad(TDAlgoBase):
     Episodic semi-gradient SARSA
     """
 
-    def __init__(self,  algo_in: TDAlgoInput) -> None:
+    def __init__(self, algo_in: TDAlgoConfig) -> None:
         super(EpisodicSarsaSemiGrad, self).__init__(algo_in=algo_in)
 
         # make sure we are working on a tiled environment

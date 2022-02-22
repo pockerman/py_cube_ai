@@ -3,8 +3,8 @@ Train a Q-learning agent on Frozen Lake
 """
 import gym
 from tensorboardX import SummaryWriter
-from algorithms.td.q_learning import QLearning
-from algorithms.algorithm_base import TrainMode
+from src.algorithms.td.q_learning import QLearning, TDAlgoConfig
+from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 
 
 class Agent(QLearning):
@@ -34,15 +34,21 @@ if __name__ == '__main__':
 
     TEST_EPISODES = 20
     GAMMA = 0.9
-    ETA = 0.2
+    ALPHA = 0.2
     ENV_NAME = "FrozenLake-v0"
 
     test_env = gym.make(ENV_NAME)
     writer = SummaryWriter(comment="-q-learning")
-    agent = Agent(env_name=ENV_NAME,
-                  gamma=0.9, eta=ETA, n_max_itrs=20,
-                  use_action_with_greedy_method=False)
 
+    agent_config = TDAlgoConfig(gamma=0.9, alpha=ALPHA,
+                                n_itrs_per_episode=TEST_EPISODES)
+    agent = QLearning(agent_config)
+
+    trainer_config = RLSerialTrainerConfig(n_episodes=TEST_EPISODES)
+    trainer = RLSerialAgentTrainer(config=trainer_config, agent=agent)
+    trainer.train(test_env, **{"n_episodes": TEST_EPISODES})
+
+    """
     agent.reset()
 
     iter_no = 0
@@ -69,5 +75,5 @@ if __name__ == '__main__':
         if reward > 0.80:
             print("Solved in %d iterations!" % iter_no)
             break
-
+    """
     writer.close()

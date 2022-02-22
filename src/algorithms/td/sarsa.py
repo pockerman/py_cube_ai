@@ -1,6 +1,6 @@
 from typing import Any, TypeVar
 
-from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoConfig
 from src.utils.mixins import WithQTableMixin
 from src.utils import INFO
 
@@ -13,7 +13,7 @@ class Sarsa(TDAlgoBase, WithQTableMixin):
     Finds the optimal epsilon-greedy policy.
     """
 
-    def __init__(self, algo_in: TDAlgoInput) -> None:
+    def __init__(self, algo_in: TDAlgoConfig) -> None:
 
         super().__init__(algo_in=algo_in)
         self.q_table = {}

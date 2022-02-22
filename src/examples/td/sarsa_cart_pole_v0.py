@@ -5,7 +5,7 @@ has a continuous state vector we perform state aggregation
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.algorithms.td.td_algorithm_base import TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoConfig
 from src.algorithms.td.sarsa import Sarsa
 from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleEnv
 from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     EPS = 1.0
     env = StateAggregationCartPoleEnv(n_states=10, n_actions=2, state_var_idx=4)
 
-    sarsa_in = TDAlgoInput()
+    sarsa_in = TDAlgoConfig()
     sarsa_in.gamma = GAMMA
     sarsa_in.alpha = ALPHA
     sarsa_in.train_env = env

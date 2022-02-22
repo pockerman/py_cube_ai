@@ -1,6 +1,6 @@
 import numpy as np
 from typing import TypeVar
-from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoInput
+from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoConfig
 
 Env = TypeVar("Env")
 Policy = TypeVar("Policy")
@@ -9,7 +9,7 @@ State = TypeVar("State")
 
 class TDZeroSemiGrad(TDAlgoBase):
 
-    def __init__(self, algo_in: TDAlgoInput) -> None:
+    def __init__(self, algo_in: TDAlgoConfig) -> None:
         super(TDZeroSemiGrad, self).__init__(algo_in=algo_in)
 
         # make sure we are working on a tiled environment
