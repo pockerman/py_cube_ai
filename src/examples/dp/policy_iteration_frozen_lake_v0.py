@@ -47,13 +47,6 @@ if __name__ == '__main__':
                                 init_val=None)
     policy_adaptor = MaxActionPolicyAdaptor()
 
-    """
-    agent = Agent(env=env, n_max_itrs=100, n_policy_eval_steps=100,
-                  gamma=1.0,
-                  tolerance=1.0e-7, polic_init=policy_init,
-                  policy_adaptor=policy_adaptor)
-    """
-
     agent_config = DPAlgoConfig()
     agent_config.gamma = 1.0
     agent_config.n_itrs_per_episode = 100
