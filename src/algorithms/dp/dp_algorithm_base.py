@@ -1,6 +1,5 @@
-"""
-Base class for dynamic programming
-algorithms
+"""The module dp_algorithm_base. Specifies the
+base class for dynamic programming algorithms.
 """
 import abc
 from typing import Any, TypeVar
@@ -76,62 +75,121 @@ class DPAlgoBase(RLAgentBase):
         self.config.policy = value
 
     @abc.abstractmethod
-    def on_training_episode(self, env: Env, episode_idx: int, **info) -> EpisodeInfo:
+    def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
+        """Train the algorithm on the episode
+
+        Parameters
+        ----------
+        env: The environment to run the training episode
+        episode_idx: The episode index
+        options: Any named options passed by the client code
+
+        Returns
+        -------
+
+        An instance of EpisodeInfo
+
         """
-        Train the algorithm on the episode
-        :param env: The environment to run the training episode
-        :param episode_idx: Episode index
-        :param info: info that a  Trainer may pass
-        :return: EpisodeInfo
-        """
-        pass
 
     def actions_before_training_begins(self, env: Env, **options) -> None:
-        """
-        Execute any actions the algorithm needs before
-        starting the iterations
+        """ Execute any actions the algorithm needs before
+        starting the training episodes
+
+        Parameters
+        ----------
+        env: The environment to train on
+        options: Any named options passed by the client code
+
+        Returns
+        -------
+
+        None
+
         """
         pass
 
     def actions_after_training_ends(self, env: Env, **options) -> None:
-        """
-        Execute any actions the algorithm needs after
+        """Execute any actions the algorithm needs after
         the iterations are finished
+
+        Parameters
+        ----------
+        env: The environment to train on
+        options: Any named options passed by the client code
+
+        Returns
+        -------
+
+        None
+
         """
         pass
 
     def actions_before_episode_begins(self, env: Env, episode_idx: int, **options) -> None:
-        """
-        Execute any actions the algorithm needs before
+        """Execute any actions the algorithm needs before
         starting the episode
-        :param options:
-        :return:
+
+        Parameters
+        ----------
+        env: The environment to train on
+        episode_idx: The episode index
+        options: Any named options passed by the client code
+
+        Returns
+        -------
+
+        None
+
         """
         super(DPAlgoBase, self).actions_before_episode_begins(env, episode_idx, **options)
 
-    def actions_after_episode_ends(self, env: Env, episode_idx: int, **info) -> None:
-        """
-        Execute any actions the algorithm needs after
+    def actions_after_episode_ends(self, env: Env, episode_idx: int, **options) -> None:
+        """Execute any actions the algorithm needs after
         ending the episode
-        :param options:
-        :return:
+
+        Parameters
+        ----------
+        env: The environment to train on
+        episode_idx: The episode index
+        options: Any named options passed by the client code
+
+        Returns
+        -------
+
+        None
+
         """
         pass
 
     def play(self, env: Env, criterion: Criterion) -> PlayInfo:
+        """Apply the agent on the given environment
+
+        Parameters
+        ----------
+        env: The environment to play on
+        criterion: Specifies the criteria such that the play stops
+
+        Returns
+        -------
+
+        An instance of PlayInfo
+
         """
-        Play the trained agent on the given environment
-        :param env: The environment to play on
-        :param criterion: Specifies the criteria such that the play stops
-        :return: PlayInfo
-        """
+
         pass
 
     def on_state(self, state: int) -> Any:
-        """
-        Retrurns an action on the given state
-        :param state:
-        :return:
+        """Get an agent specific result whilst on the given state
+
+        Parameters
+        ----------
+        state: The state to observe
+
+        Returns
+        -------
+
+        Agent specific result
+
         """
         pass
 

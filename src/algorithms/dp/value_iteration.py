@@ -39,11 +39,22 @@ class ValueIteration(DPAlgoBase, WithValueTableMixin):
                                           v=None,  policy_adaptor=policy_adaptor)
 
     def actions_before_training_begins(self, env: Env,  **options) -> None:
-        """
-        Execute any actions the algorithm needs before
+        """Execute any actions the algorithm needs before
         starting the iterations
+
+        Parameters
+        ----------
+        env: The environment to train on
+        options: Any options passed by the client code
+
+        Returns
+        -------
+
+        None
+
         """
 
+        super(ValueIteration, self).actions_before_training_begins(env, **options)
         # zero the value function
         self.v = np.zeros(n_states(env))
         self._p_imprv.v = self.v
@@ -55,7 +66,8 @@ class ValueIteration(DPAlgoBase, WithValueTableMixin):
 
         Parameters
         ----------
-        state The state given
+
+        state: The state presented to the agent
 
         Returns
         -------
@@ -73,9 +85,9 @@ class ValueIteration(DPAlgoBase, WithValueTableMixin):
         Parameters
         ----------
 
-        env The environment to train on
-        episode_idx The episode index
-        options Any options passes by the client code
+        env: The environment to train on
+        episode_idx: The episode index
+        options: Any options passes by the client code
 
         Returns
         -------

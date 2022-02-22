@@ -6,6 +6,8 @@ when using the various environments.
 from typing import TypeVar
 
 Env = TypeVar('Env')
+TimeStep = TypeVar('TimeStep')
+Action = TypeVar('Action')
 
 
 def n_states(env: Env) -> int:
@@ -57,5 +59,41 @@ def n_actions(env: Env) -> int:
         n_actions_ = env.n_actions
 
     return n_actions_
+
+
+def reset(env: Env) -> TimeStep:
+    """Reset the environment
+
+    Parameters
+    ----------
+    env: The environment to reset
+
+    Returns
+    -------
+
+    An instance to TimeStep
+
+    """
+    state, reward, done, info = env.reset()
+    time_step = TimeStep(state=state, reward=reward, done=done, info=info)
+    return time_step
+
+
+def step(env: Env, action: Action) -> TimeStep:
+    """Step in the environment using the given action
+
+    Parameters
+    ----------
+    env: The environment to step
+    action: The action to execute
+
+    Returns
+    -------
+    An instance to TimeStep
+
+    """
+    state, reward, done, info = env.step(action)
+    time_step = TimeStep(state=state, reward=reward, done=done, info=info)
+    return time_step
 
 
