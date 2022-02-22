@@ -17,7 +17,7 @@ def n_states(env: Env) -> int:
 
     Parameters
     ----------
-    env The environment to query
+    env: The environment to query
 
     Returns
     -------
@@ -43,7 +43,7 @@ def n_actions(env: Env) -> int:
 
     Parameters
     ----------
-    env The environment to query
+    env: The environment to query
 
     Returns
     -------
