@@ -6,10 +6,10 @@ exposes the following functions
 - on_training_episode(env, episode_idx, **info) -> EpisodeInfo
 - play(env, Criterion) -> PlayInfo
 - on_state(state) -> Action
-- actions_before_training_begins(env, episode_idx, **info) -> None
+- actions_before_training_begins(env, **info) -> None
 - actions_before_episode_begins(env, episode_idx, **info) -> None
 - actions_after_episode_ends(env, episode_idx, **info) -> None
-- actions_after_training_ends(env, episode_idx, **info) -> None
+- actions_after_training_ends(env, **info) -> None
 
 """
 
@@ -38,6 +38,7 @@ class RLAgentBase(metaclass=abc.ABCMeta):
 
         Parameters
         ----------
+
         config The configuration of the agent
 
         """
@@ -77,7 +78,7 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         Returns
         -------
 
-        Returns an instance of PlayInfo
+        An instance of PlayInfo
 
         """
 
@@ -109,7 +110,7 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         env The environment to train on
         options Any options passed by the client code
 
-        Returns None
+        Returns
         -------
 
         None
@@ -131,7 +132,7 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         Returns
         -------
 
-        Returns None
+        None
 
         """
         self.state = env.reset()
@@ -151,7 +152,7 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         Returns
         -------
 
-        Returns None
+        None
 
         """
 
@@ -169,7 +170,7 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         Returns
         -------
 
-        Returns None
+        None
 
         """
 

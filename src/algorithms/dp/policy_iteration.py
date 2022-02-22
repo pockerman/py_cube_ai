@@ -18,6 +18,7 @@ from src.utils.wrappers import time_fn
 
 
 Env = TypeVar('Env')
+Policy = TypeVar('Policy')
 
 
 class PolicyIteration(DPAlgoBase):
@@ -45,7 +46,16 @@ class PolicyIteration(DPAlgoBase):
         return self._p_imprv.v
 
     @property
-    def policy(self):
+    def policy(self) -> Policy:
+        """
+        Get the trained policy
+
+        Returns
+        -------
+
+        An instance of Policy
+
+        """
         return self._p_eval.policy
 
     def actions_before_training_begins(self, env: Env,  **options) -> None:
@@ -54,8 +64,9 @@ class PolicyIteration(DPAlgoBase):
 
         Parameters
         ----------
-        env The environment to train on
-        options Any options passed by the application
+
+        env: The environment to train on
+        options: Any options passed by the application
 
         Returns
         -------
