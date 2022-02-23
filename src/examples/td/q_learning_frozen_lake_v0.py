@@ -46,7 +46,13 @@ if __name__ == '__main__':
 
     trainer_config = RLSerialTrainerConfig(n_episodes=TEST_EPISODES)
     trainer = RLSerialAgentTrainer(config=trainer_config, agent=agent)
-    trainer.train(test_env, **{"n_episodes": TEST_EPISODES})
+    ctrl_res = trainer.train(test_env, **{"n_episodes": TEST_EPISODES})
+
+    print(f"Converged {ctrl_res.converged}")
+    print(f"Number of iterations {ctrl_res.n_itrs}")
+    print(f"Residual {ctrl_res.residual}")
+
+    print("\nOptimal Policy (LEFT = 0, DOWN = 1, RIGHT = 2, UP = 3):")
 
     """
     agent.reset()
