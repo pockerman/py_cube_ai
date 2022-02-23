@@ -1,11 +1,16 @@
-"""
-Helper class to wrap return result from
-training on an episode
+"""the module episode_info. Specifies a helper
+class to wrap the result when training
+an agent.
+
 """
 
+from dataclasses import dataclass
 
+
+@dataclass(init=True, repr=True)
 class EpisodeInfo(object):
-    def __init__(self):
-        self.episode_reward: float = 0.0
-        self.episode_iterations: int = 0
-        self.info = {}
+
+    episode_reward: float = 0.0
+    episode_iterations: int = 0
+    info = {}
+

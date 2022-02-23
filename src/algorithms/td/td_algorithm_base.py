@@ -5,12 +5,13 @@ from dataclasses import dataclass
 
 from src.algorithms.rl_agent_base import RLAgentBase
 from src.utils.exceptions import InvalidParameterValue
-from src.algorithms.algorithm_base import AlgorithmBase
 from src.algorithms.algo_config import AlgoConfig
+from src.utils.play_info import PlayInfo
 
 QTable = TypeVar('QTable')
 Policy = TypeVar("Policy")
 Env = TypeVar('Env')
+Criterion = TypeVar('Criterion')
 
 
 @dataclass(init=True, repr=True)
@@ -25,17 +26,14 @@ class TDAlgoConfig(AlgoConfig):
 
 
 class TDAlgoBase(RLAgentBase, ABC):
-    """
-    Base class for temporal differences algorithms
+    """Base class for temporal differences algorithms
     """
 
     def __init__(self, algo_config: TDAlgoConfig):
         super(TDAlgoBase, self).__init__(config=algo_config)
 
-        self.n_itrs_per_episode: int = algo_in.n_itrs_per_episode
-
         # monitor performance
-        self.total_rewards: np.array = np.zeros(self.n_episodes)
+        self.total_rewards: np.array = np.zeros(self.config.n_episodes)
         self.iterations_per_episode = []
 
         self.current_episode_itr_index: int = 0
@@ -67,10 +65,13 @@ class TDAlgoBase(RLAgentBase, ABC):
         # call the base class version
         super(TDAlgoBase, self).actions_before_training_begins(env, **options)
 
-        if self.n_itrs_per_episode == 0:
-            raise InvalidParameterValue(param_name="n_itrs_per_episode", param_val=self.n_itrs_per_episode)
+        if self.config.n_episodes == 0:
+            raise InvalidParameterValue(param_name="n_episodes", param_val=self.config.n_episodes)
 
-        self.total_rewards = np.zeros(options['n_episodes'])
+        if self.config.n_itrs_per_episode == 0:
+            raise InvalidParameterValue(param_name="n_itrs_per_episode", param_val=self.config.n_itrs_per_episode)
+
+        self.total_rewards = np.zeros(self.config.n_episodes)
         self.iterations_per_episode = []
 
     @property
@@ -97,6 +98,42 @@ class TDAlgoBase(RLAgentBase, ABC):
         -------
 
         None
+
+        """
+        pass
+
+    def play(self, env: Env, criterion: Criterion) -> PlayInfo:
+        """
+        Play the trained agent on the given environment
+
+        Parameters
+        ----------
+
+        env The environment to play on
+        criterion Specifies the criteria such that the play stops
+
+        Returns
+        -------
+
+        An instance of PlayInfo
+
+        """
+        return PlayInfo()
+
+    def on_state(self, state) -> Any:
+        """Get an agent specific result e.g. an action or
+        the state value
+
+        Parameters
+        ----------
+
+        state The state instance presented to the agent
+
+        Returns
+        -------
+
+        An agent specific result e.g. an action or
+        the state value
 
         """
         pass

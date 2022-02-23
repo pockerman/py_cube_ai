@@ -1,23 +1,25 @@
-"""
-Utility class to establish algorithm input
+"""The algo_config module. Specifies a configuration
+class for that is used as an input to RL algorithms
+
 """
 
 from typing import TypeVar
+from dataclasses import dataclass
 
 Env = TypeVar('Env')
 
 
+@dataclass(init=True, repr=True)
 class AlgoConfig(object):
     """
-    The AlgoInput class. Wraps the common input
+    The AlgoConfig class. Wraps the common input
     that most algorithms use. Concrete algorithms
     can extend this class to accommodate their specific
     input as well
     """
 
-    def __init__(self):
-        self.n_itrs_per_episode: int = 0
-        self.tolerance: float = 1.0e-8
-        self.render_env: bool = False
-        self.render_env_freq: int = -1
+    n_episodes: int = 0
+    tolerance: float = 1.0e-8
+    render_env: bool = False
+    render_env_freq: int = -1
 

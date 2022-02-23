@@ -1,6 +1,7 @@
-"""
-Train a Q-learning agent on Frozen Lake
-"""
+
+QLearning on ``FrozenLake-v0``
+==============================
+
 import gym
 from tensorboardX import SummaryWriter
 from src.algorithms.td.q_learning import QLearning, TDAlgoConfig
