@@ -1,6 +1,6 @@
 ## rl-python
 
-[![Documentation Status](https://readthedocs.org/projects/pockerman-py-cubeai/badge/?version=latest)](https://pockerman-py-cubeai.readthedocs.io/en/latest/?badge=latest) [![Python application](https://github.com/pockerman/rl_python/actions/workflows/python-app.yml/badge.svg)](https://github.com/pockerman/rl_python/actions/workflows/python-app.yml)
+[![Documentation Status](https://readthedocs.org/projects/pockerman-py-cubeai/badge/?version=latest)](https://pockerman-py-cubeai.readthedocs.io/en/latest/?badge=latest) [![Python application](https://github.com/pockerman/rl_python/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/pockerman/rl_python/actions/workflows/python-app.yml)
 
 Implementation of reinforcement learning algorithms. Algorithms have been refactored/reimplemented
 from various resources such as:
