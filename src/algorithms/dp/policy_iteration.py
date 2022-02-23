@@ -108,9 +108,9 @@ class PolicyIteration(DPAlgoBase):
         Parameters
         ----------
 
-        env The environment to train on
-        episode_idx The episode index
-        options Various data passed by the client
+        env: The environment to train on
+        episode_idx: The episode index
+        options: Various data passed by the client
 
         Returns
         -------
@@ -123,14 +123,14 @@ class PolicyIteration(DPAlgoBase):
         old_policy = copy.deepcopy(self._p_eval.policy)
 
         # evaluate the policy
-        train_info = self._p_eval.on_training_episode(env, episode_idx, **info)
+        train_info = self._p_eval.on_training_episode(env, episode_idx, **options)
 
         # update the value function to
         # improve for
         self._p_imprv.v = self._p_eval.v
 
         # improve the policy
-        self._p_imprv.on_training_episode(env, episode_idx, **info)
+        self._p_imprv.on_training_episode(env, episode_idx, **options)
 
         new_policy = self._p_imprv.policy
 

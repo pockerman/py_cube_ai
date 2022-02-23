@@ -151,7 +151,7 @@ class CartPoleDQN(DQN):
 
         try:
             transitions = self.memory.sample()
-            batch = Experience(*zip(*transitions))
+            batch = ExperienceTuple(*zip(*transitions))
         except ValueError as e:
             print("Exception is thrown ", str(e))
 

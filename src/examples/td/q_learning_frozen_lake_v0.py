@@ -6,7 +6,7 @@ from tensorboardX import SummaryWriter
 from src.algorithms.td.q_learning import QLearning, TDAlgoConfig
 from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 
-
+"""
 class Agent(QLearning):
 
     def __init__(self, env_name: str, gamma: float,
@@ -28,7 +28,7 @@ class Agent(QLearning):
                 break
             state = new_state
         return total_reward
-
+"""
 
 if __name__ == '__main__':
 

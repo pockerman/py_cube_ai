@@ -52,11 +52,11 @@ def worker(model: A2CCartPole):
     worker_opt = pytorch_optimizer_builder(model.config.opt_type, params=model.parameters(),
                                            **{"learning_rate": LEARNING_RATE})
     worker_opt.zero_grad()
-    for i in range(model.config.n_episodes):
+    for i in range(10):
         worker_opt.zero_grad()
-        values, logprobs, rewards = run_episode(worker_env, model)  # B
-        actor_loss, critic_loss, eplen = update_params(worker_opt, values, logprobs, rewards)  # C
-        counter.value = counter.value + 1  # D
+        #values, logprobs, rewards = run_episode(worker_env, model)  # B
+        #actor_loss, critic_loss, eplen = update_params(worker_opt, values, logprobs, rewards)  # C
+        #counter.value = counter.value + 1  # D
 
 
 if __name__ == '__main__':
@@ -68,9 +68,9 @@ if __name__ == '__main__':
     config.n_itrs_per_episode = N_ITRS_PER_EPISODE
 
     MasterNode = A2CCartPole(config=config)
-    MasterNode.share_memory()
+    #MasterNode.share_memory()
 
-    procs_handler = TorchProcsHandler(n_procs=N_PROCS)
-    procs_handler.create_and_start(target=worker, args=None)
-    procs_handler.join_and_terminate()
+    #procs_handler = TorchProcsHandler(n_procs=N_PROCS)
+    #procs_handler.create_and_start(target=worker, args=None)
+    #procs_handler.join_and_terminate()
 
