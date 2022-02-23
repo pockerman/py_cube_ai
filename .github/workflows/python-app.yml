@@ -33,9 +33,9 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with unittest
       run: |
-        pytest
+        pytest tests/test_suite.py -v --junitxml="test_result.xml"
     - name: Upload Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()
       with:
-        files: test-results/**/*.xml
+        files: test_result.xml #test-results/**/*.xml
