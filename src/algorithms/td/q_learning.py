@@ -1,5 +1,6 @@
-"""
-Tabular Q-learning algorithm
+"""The module q_learning. Implements a tabular-based
+Q-learning algorithm
+
 """
 
 from typing import Any, TypeVar
