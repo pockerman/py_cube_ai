@@ -8,7 +8,7 @@ package
 def transform_str_key_to_int_tuple(key: str) -> tuple:
     return tuple(map(int, key.split(', ')))
 
-
+"""
 def clean_key(key: str, split_del=', '):
     if not key.startswith('(') and not key.endswith(')'):
         return key
@@ -32,3 +32,4 @@ def transform_str_tuple_key_to_int_tuple(key: str, split_del=', ') -> tuple:
 
     new_key = " ".join(splits)
     return tuple(map(int, new_key.split(splits)))
+"""
