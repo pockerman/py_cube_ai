@@ -5,8 +5,9 @@ when using the various environments.
 
 from typing import TypeVar
 
+from src.worlds.time_step import TimeStep
+
 Env = TypeVar('Env')
-TimeStep = TypeVar('TimeStep')
 Action = TypeVar('Action')
 
 

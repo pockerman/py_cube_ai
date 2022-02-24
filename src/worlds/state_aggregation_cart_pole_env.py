@@ -33,13 +33,16 @@ StateAggregationCartPoleBounds = namedtuple('TiledCartPoleBounds', ['cart_positi
 
 class StateAggregationCartPoleEnv(StateAggregationEnvWrapper):
     
-    def __init__(self, n_states: int, state_var_idx: int = 2,
-                 n_actions: int = 2, version: str = "v0",
+    def __init__(self, n_states: int, #state_var_idx: int = 2,
+                 #n_actions: int = 2,
+                 version: str = "v0",
                  boundaries: StateAggregationCartPoleBounds = StateAggregationCartPoleBounds((-2.4, 2.4), (-4, 4), (-0.20943951, 0.20943951), (-4, 4))) -> None:
         super(StateAggregationCartPoleEnv, self).__init__(env=gym.make("CartPole-" + version),
-                                                          n_actions=n_actions, n_states=n_states)
+                                                          n_actions=2, n_states=n_states)
 
-        if 0 > state_var_idx > 4:
+        self.state_var_idx = 4
+
+        if 0 > self.state_var_idx > 4:
             raise InvalidParameterValue("state_var_idx", param_val=[0, 3])
 
         # bins for the pole position space
@@ -54,7 +57,6 @@ class StateAggregationCartPoleEnv(StateAggregationEnvWrapper):
         # bins for the cart velocity space
         self.cart_vel_space = []
 
-        self.state_var_idx = state_var_idx
         self.boundaries: StateAggregationCartPoleBounds = boundaries
         self.create_bins()
         self.create_state_space()

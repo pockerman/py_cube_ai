@@ -101,7 +101,7 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
 
             # add reward to agent's score
             episode_score += time_step.reward
-            next_state = time_step.observation
+            next_state = time_step.state
             self._update_q_table(env=env, state=self.state, action=action,
                                  reward=time_step.reward, next_state=next_state)
             self.state = next_state  # S <- S'
@@ -109,10 +109,6 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
 
             if time_step.done:
                 break
-
-        #if episode_idx % self.output_msg_frequency == 0:
-        #    print("{0}: On episode {1} training finished with  "
-        #          "{2} iterations. Total reward={3}".format(INFO, current_episode_index, counter, episode_score))
 
         # self.iterations_per_episode.append(counter)
         # self.total_rewards[self.current_episode_index] = episode_score
@@ -143,7 +139,7 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
 
         # value of next state
         Qsa_next = \
-            self.q_function[next_state, self.max_action(next_state,
+            self.q_function[next_state, self.max_action(self.q_table, state=next_state,
                                                         n_actions=n_actions(env))] if next_state is not None else 0
         # construct TD target
         target = reward + (self.gamma * Qsa_next)
