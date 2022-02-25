@@ -1,10 +1,10 @@
-"""
-Episodic semi-gradient SARSA algorithm applied
+"""Episodic semi-gradient SARSA algorithm applied
 on MountainCar-v0.
 
 The initial version of the algorithm is
 taken from
 https://livevideo.manning.com/module/56_8_8/reinforcement-learning-in-motion/climbing-the-mountain-with-approximation-methods/episodic-semi-gradient-control%3a-sarsa?
+
 """
 
 import random
@@ -13,9 +13,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from typing import TypeVar
 
-from src.algorithms.td.episodic_sarsa_semi_gradient import EpisodicSarsaSemiGrad
-from src.utils import INFO
+from src.algorithms.td.episodic_sarsa_semi_gradient import EpisodicSarsaSemiGrad, SemiGradSARSAConfig
 from src.worlds.state_aggregation_world_wrapper import StateAggregationEnvWrapper
+from src.worlds.state_aggregation_mountain_car_env import StateAggregationMountainCarEnv
+from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
+from src.utils import INFO
 
 GAMMA = 1
 NUM_EPISODES = 500
@@ -81,9 +83,8 @@ class TiledMountainCarEnv(StateAggregationEnvWrapper):
 
 class Policy(object):
 
-    def __init__(self, epsilon: float, env: TiledMountainCarEnv):
+    def __init__(self, epsilon: float):
         self.eps = epsilon
-        self.env = env
 
     def __call__(self, values, observation, **kwargs):
 
@@ -105,7 +106,7 @@ class Policy(object):
 
 if __name__ == '__main__':
 
-    env = TiledMountainCarEnv()
+    env = StateAggregationMountainCarEnv(version="v0", n_states=8 * 8 * 8)
 
     lrs = [0.01, 0.1, 0.2]
     episode_lengths = np.zeros((3, NUM_EPISODES, NUM_RUNS))
@@ -121,10 +122,17 @@ if __name__ == '__main__':
         # of runs
         for j in range(NUM_RUNS):
             print("{0}: run {1}".format(INFO, j))
-            policy = Policy(epsilon=1.0, env=env)
-            agent = EpisodicSarsaSemiGrad(env=env, tolerance=1.0e-4, gamma=GAMMA, alpha=lr,
-                                          n_episodes=NUM_EPISODES, n_itrs_per_episode=2000, policy=policy)
-            agent.train()
+            policy = Policy(epsilon=1.0)
+
+            agent_config = SemiGradSARSAConfig(n_episodes=NUM_EPISODES,
+                                               n_itrs_per_episode=2000, policy=policy, alpha=lr,
+                                               gamma=GAMMA, dt_update_frequency=100, dt_update_factor=1.0)
+
+            agent = EpisodicSarsaSemiGrad(algo_config=agent_config)
+
+            trainer_config = RLSerialTrainerConfig(n_episodes=NUM_EPISODES, tolerance=1.0e-4, output_msg_frequency=100)
+            trainer = RLSerialAgentTrainer(trainer_config, agent)
+            trainer.train(env)
 
             counters = agent.counters
 
