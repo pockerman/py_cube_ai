@@ -114,6 +114,7 @@ class Gridworld(object):
         """
         self._initialize()
 
+        # 64 is not correct only when self.size is 4
         if self.add_noise_on_state:
             obs = self.board.render_np().reshape(1, 64) + np.random.rand(1, 64) / self.noise_factor
         else:
