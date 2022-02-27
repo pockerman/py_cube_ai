@@ -18,6 +18,7 @@ Contents
    overview
    install
    examples
+   specification
    modules
    
 Indices and tables

@@ -1,4 +1,4 @@
-## rl-python
+## PyCubeAI
 
 [![Documentation Status](https://readthedocs.org/projects/pockerman-py-cubeai/badge/?version=latest)](https://pockerman-py-cubeai.readthedocs.io/en/latest/?badge=latest) [![Python application](https://github.com/pockerman/rl_python/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/pockerman/rl_python/actions/workflows/python-app.yml)
 

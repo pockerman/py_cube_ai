@@ -1,5 +1,5 @@
 value\_iteration
-===============
+================
 
 .. automodule:: value_iteration
          
