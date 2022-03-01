@@ -22,14 +22,14 @@ class DummyAlgoConfig(object):
     render_env_freq: int = 10
 
 
-class DummyGymAgent(RLAgentBase):
+class DummyAgent(RLAgentBase):
     """The DummyGymAgent class. Dummy class to play
     with OpenAI-Gym environments
 
     """
 
     def __init__(self, algo_config: DummyAlgoConfig) -> None:
-        super(DummyGymAgent, self).__init__(algo_config)
+        super(DummyAgent, self).__init__(algo_config)
 
     def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
         """
