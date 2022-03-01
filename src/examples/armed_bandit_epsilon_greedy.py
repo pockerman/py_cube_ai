@@ -35,7 +35,7 @@ def update_record(record, action, r):
 if __name__ == '__main__':
 
     n = 10
-    policy = EpsilonGreedyPolicy(env=None, n_actions=n, eps=0.2, decay_op=EpsilonDecayOption.NONE)
+    policy = EpsilonGreedyPolicy(n_actions=n, eps=0.2, decay_op=EpsilonDecayOption.NONE)
     fig, ax = plt.subplots(1, 1)
     ax.set_xlabel("Plays")
     ax.set_ylabel("Average Reward")
