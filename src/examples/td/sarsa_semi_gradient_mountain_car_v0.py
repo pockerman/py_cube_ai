@@ -16,7 +16,7 @@ from typing import TypeVar
 from src.algorithms.td.episodic_sarsa_semi_gradient import EpisodicSarsaSemiGrad, SemiGradSARSAConfig
 from src.worlds.state_aggregation_world_wrapper import StateAggregationEnvWrapper
 from src.worlds.state_aggregation_mountain_car_env import StateAggregationMountainCarEnv
-from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
+from src.trainers.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 from src.utils import INFO
 
 GAMMA = 1

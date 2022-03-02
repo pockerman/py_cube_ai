@@ -9,7 +9,7 @@ from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleE
 from src.algorithms.td.td_algorithm_base import TDAlgoConfig
 from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
 from src.worlds.world_helpers import n_actions
-from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
+from src.trainers.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 
 
 def plot_running_avg(avg_rewards):

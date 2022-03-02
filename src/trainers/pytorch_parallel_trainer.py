@@ -5,7 +5,7 @@ import copy
 from typing import TypeVar
 from src.utils.train_info import TrainInfo
 from src.parallel_utils.torch_processes_handler import TorchProcsHandler
-from src.algorithms.rl_agent_trainer_base import RLAgentTrainerBase, RLAgentTrainerConfig
+from src.trainers.rl_agent_trainer_base import RLAgentTrainerBase, RLAgentTrainerConfig
 from src.utils.exceptions import InvalidParameterValue
 from src.optimization.pytorch_optimizer_builder import pytorch_optimizer_builder
 

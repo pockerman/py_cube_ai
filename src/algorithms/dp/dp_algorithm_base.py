@@ -5,7 +5,7 @@ import abc
 from typing import Any, TypeVar
 from dataclasses import dataclass
 
-from src.algorithms.rl_agent_base import RLAgentBase
+from src.algorithms.rl_algorithm_base import RLAgentBase
 from src.algorithms.algo_config import AlgoConfig
 from src.utils.episode_info import EpisodeInfo
 

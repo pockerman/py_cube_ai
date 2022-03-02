@@ -4,7 +4,7 @@ Train a Q-learning agent on Frozen Lake
 import gym
 
 from src.algorithms.td.q_learning import QLearning, TDAlgoConfig
-from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
+from src.trainers.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
 from src.worlds.world_helpers import n_actions
 
