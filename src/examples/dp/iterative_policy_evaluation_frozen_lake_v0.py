@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 # RoboRL related imports
 from src.algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator, DPAlgoConfig
 from src.policies.uniform_policy import UniformPolicy
-from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
+from src.trainers.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 from src.worlds.world_helpers import n_states, n_actions
 
 # This is a helper function to plot the given

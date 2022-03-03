@@ -7,7 +7,7 @@ import copy
 from typing import TypeVar
 from torch import nn
 from src.optimization.optimizer_type import OptimzerType
-from src.algorithms.rl_agent_base import RLAgentBase
+from src.algorithms.rl_algorithm_base import RLAgentBase
 from src.parallel_utils.torch_processes_handler import TorchProcsHandler
 from src.optimization.pytorch_optimizer_builder import pytorch_optimizer_builder
 from src.utils.episode_info import EpisodeInfo

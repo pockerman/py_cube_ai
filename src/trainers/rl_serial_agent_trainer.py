@@ -1,7 +1,7 @@
 from typing import TypeVar
 from dataclasses import dataclass
 
-from src.algorithms.rl_agent_trainer_base import RLAgentTrainerBase
+from src.trainers.rl_agent_trainer_base import RLAgentTrainerBase
 from src.utils.iteration_controller import ItrControlResult, IterationController
 from src.utils.wrappers import time_fn
 from src.utils import INFO

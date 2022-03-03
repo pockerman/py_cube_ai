@@ -5,7 +5,7 @@ Specifies a dummy agent
 from typing import TypeVar, Any
 from dataclasses import dataclass
 
-from src.algorithms.rl_agent_base import RLAgentBase
+from src.algorithms.rl_algorithm_base import RLAgentBase
 from src.utils.episode_info import EpisodeInfo
 from src.utils.play_info import PlayInfo
 
@@ -22,14 +22,15 @@ class DummyAlgoConfig(object):
     render_env_freq: int = 10
 
 
-class DummyAgent(RLAgentBase):
-    """The DummyGymAgent class. Dummy class to play
+class DummyAlgorithm(RLAgentBase):
+    """The DummyAlgorithm class. Dummy class to play
     with OpenAI-Gym environments
 
     """
 
     def __init__(self, algo_config: DummyAlgoConfig) -> None:
-        super(DummyAgent, self).__init__(algo_config)
+        super(DummyAlgorithm, self).__init__(algo_config)
+        self.policy = []
 
     def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
         """
@@ -44,11 +45,12 @@ class DummyAgent(RLAgentBase):
         for episode_itr in range(self.config.n_itrs_per_episode):
 
             action = env.sample_action()
+            self.policy.append(action)
             time_step = env.step(action=action)
             episode_reward += time_step.reward
 
-            if self.config.render_env and episode_idx % self.config.render_env_freq == 0:
-                env.render(mode="human")
+            #if self.config.render_env and episode_idx % self.config.render_env_freq == 0:
+            #   env.render(mode="human")
 
             if done:
                 break
@@ -58,41 +60,6 @@ class DummyAgent(RLAgentBase):
         episode_info.episode_reward = episode_reward
         episode_info.episode_iterations = counter
         return episode_info
-
-    def play(self, env: Env, criterion: Criterion) -> PlayInfo:
-        """Play the trained agent on the given environment
-
-        Parameters
-        ----------
-
-        env: The environment to play on
-        criterion: Specifies the criteria such that the play stops
-
-        Returns
-        -------
-
-        An instance of PlayInfo
-
-        """
-        pass
-
-    def on_state(self, state: State) -> Any:
-        """Get an agent specific result e.g. an action or
-        the state value
-
-        Parameters
-        ----------
-
-        state: The state instance presented to the agent
-
-        Returns
-        -------
-
-        An agent specific result e.g. an action or
-        the state value
-
-        """
-        pass
 
     def actions_before_training_begins(self, env: Env, **options) -> None:
         """Execute any actions the algorithm needs before
