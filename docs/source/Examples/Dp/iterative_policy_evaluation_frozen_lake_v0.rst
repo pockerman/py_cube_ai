@@ -1,7 +1,7 @@
-Iterative policy evaluation on FrozenLake-v0
-============================================
+Iterative policy evaluation on ``FrozenLake-v0``
+================================================
 
-.. autosummary::
+
 
 Iterative policy evaluation on OpenAI-Gym ``FrozenLake-v0``.
 

@@ -6,7 +6,10 @@ API
    
    API/rl_agent_base
    API/rl_agent_trainer_base
+   API/dummy_agent
    API/dp_algorithm_base
    API/value_iteration
    API/q_learning
+   API/episodic_sarsa_semi_gradient
+   API/gym_world_wrapper
    API/world_helpers
