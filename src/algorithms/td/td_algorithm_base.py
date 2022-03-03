@@ -3,7 +3,7 @@ import numpy as np
 from typing import Any, TypeVar
 from dataclasses import dataclass
 
-from src.algorithms.rl_agent_base import RLAgentBase
+from src.algorithms.rl_algorithm_base import RLAgentBase
 from src.utils.exceptions import InvalidParameterValue
 from src.algorithms.algo_config import AlgoConfig
 from src.utils.play_info import PlayInfo

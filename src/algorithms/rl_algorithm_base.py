@@ -61,41 +61,6 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def play(self, env: Env, criterion: Criterion) -> PlayInfo:
-        """Play the trained agent on the given environment
-
-        Parameters
-        ----------
-
-        env: The environment to play on
-        criterion: Specifies the criteria such that the play stops
-
-        Returns
-        -------
-
-        An instance of PlayInfo
-
-        """
-
-    @abc.abstractmethod
-    def on_state(self, state) -> Any:
-        """Get an agent specific result e.g. an action or
-        the state value
-
-        Parameters
-        ----------
-        
-        state: The state instance presented to the agent
-
-        Returns
-        -------
-
-        An agent specific result e.g. an action or
-        the state value
-
-        """
-
-    @abc.abstractmethod
     def actions_before_training_begins(self, env: Env,  **options) -> None:
         """Execute any actions the algorithm needs before
 
