@@ -1,9 +1,8 @@
-﻿rl\_agent\_base
+﻿agent\_base
 ===============
 
-.. automodule:: rl_agent_base
+.. automodule:: agent_base
    
-.. autoclass:: RLAgentBase
-   :members: __init__, get_configuration, on_training_episode, play, on_state, actions_before_episode_begins, actions_after_episode_ends, actions_after_training_ends
+.. autoclass:: AgentBase
+   :members: __init__, play, on_state
 
-   
