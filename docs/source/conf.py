@@ -28,6 +28,9 @@ sys.path.append(os.path.abspath("../../src/policies/"))
 sys.path.append(os.path.abspath("../../src/utils/"))
 sys.path.append(os.path.abspath("../../src/worlds/"))
 sys.path.append(os.path.abspath("../../src/examples/dp/"))
+sys.path.append(os.path.abspath("../../src/agents/"))
+sys.path.append(os.path.abspath("../../src/agents/torch_agents/"))
+sys.path.append(os.path.abspath("../../src/trainers/"))
 print(sys.path)
 
 
