@@ -8,3 +8,5 @@ The following is a list of documents that complements the API and examples docum
    
    Specs/rl_101
    Specs/trainer_specification
+   Specs/agent_specification
+   Specs/algorithm_specification

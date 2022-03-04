@@ -2,6 +2,13 @@
 
 [![Documentation Status](https://readthedocs.org/projects/pockerman-py-cubeai/badge/?version=latest)](https://pockerman-py-cubeai.readthedocs.io/en/latest/?badge=latest) [![Python application](https://github.com/pockerman/rl_python/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/pockerman/rl_python/actions/workflows/python-app.yml)
 
+PyCubeAI is an effort to create an environment for design, devlopment simulation and deployment of reinforcement learning algorithms 
+that target robotic platforms. 
+
+The project documentation can be found at <a href="https://pockerman-py-cubeai.readthedocs.io/en/latest/">CubeAI documentaion</a>.
+The C++ flavor of the project can be found as <a href="https://github.com/pockerman/cubeai">CubeAI</a>.
+
+
 Implementation of reinforcement learning algorithms. Algorithms have been refactored/reimplemented
 from various resources such as:
 
