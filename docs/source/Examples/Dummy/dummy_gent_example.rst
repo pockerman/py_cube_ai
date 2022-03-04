@@ -1,15 +1,16 @@
-Example 0: ``DummyAgent`` class 
+Example 0: Some basic concepts 
 ===============================
 
 This example uses the ```DummyAlgorithm`` to train a ``DummyAgent`` agent. As its name
 suggest, the ``DummyAgent`` is not really smart. However, this example illustrates some core
-concepts in ``PyCubeAI``. Namely, we have three core ideas
+concepts in ``PyCubeAI``. Namely, we have three core ideas:
 
 - A trainer class (see  `Trainer specification <../../Specs/trainer_specification.html>`_)
-- An algorithm to train (see `Algorithm specification <../../Specs/trainer_specification.html>`_)
-- An agent that uses the output of the trained algorithm to step in the environemnt (see `Agent specification <../../Specs/trainer_specification.html>`_)
+- An algorithm to train (see `Algorithm specification <../../Specs/algorithm_specification.html>`_)
+- An agent that uses the output of the trained algorithm to step in the environemnt (see `Agent specification <../../Specs/agent_specification.html>`_)
 
-The specifications for these three concep
+Moreover, we use the `GymWorldWrapper <../../API/gym_world_wrapper.html>`_. This class wraps an OpenAI-Gym environment so that it conforms to 
+the `DeepMind acme environment <https://github.com/deepmind/acme>`_.
 
 Let's start with the necessary imports
 
@@ -24,6 +25,7 @@ Let's start with the necessary imports
 	from src.utils.iteration_controller import IterationController
 
 
+The driver code is shown below. 
 .. code-block::
 
 
