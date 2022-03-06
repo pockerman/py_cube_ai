@@ -1,9 +1,10 @@
 Iterative policy evaluation on ``FrozenLake-v0``
 ================================================
 
+In this example, we use the iterative policy iteration algorithm to train an
+agent on the ``FrozenLake-v0`` environment. In ``PyCubeAI`` there is a
+tabular implementation of the algorithm implemented in the ``IterativePolicyEvaluator`` class.
 
-
-Iterative policy evaluation on OpenAI-Gym ``FrozenLake-v0``.
 
 Imports needed to run the example.
 
@@ -13,12 +14,6 @@ Imports needed to run the example.
 	import gym
 	import numpy as np
 	import matplotlib.pyplot as plt
-
-Then the ``RoboRL`` related imports.
-
-
-.. code-block:: 
-
 	from src.algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluator, DPAlgoConfig
 	from src.policies.uniform_policy import UniformPolicy
 	from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer

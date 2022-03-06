@@ -17,34 +17,13 @@ Env = TypeVar('Env')
 
 
 class IterativePolicyEvaluator(DPAlgoBase, WithValueTableMixin):
-    """
-    Implements iterative policy evaluation algorithm
+    """Implements iterative policy evaluation algorithm
+
     """
 
     def __init__(self, algo_config: DPAlgoConfig) -> None:
         super(IterativePolicyEvaluator, self).__init__(algo_config)
         self.vtable = None
-
-
-
-    '''
-    @property
-    def q(self) -> dict:
-        """
-        Returns the state-action value function for the
-        approximated value function
-        """
-        return q_from_v(env=self.train_env, v=self._v, gamma=self.gamma)
-    '''
-
-    '''
-    def state_actions_from_v(self, state: int) -> np.ndarray:
-        """
-        Given the state index returns the list of actions under the
-        established value functions
-        """
-        return q_s_a(env=self.train_env, v=self._v, gamma=self.gamma, state=state)
-    '''
 
     def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
         """
@@ -92,11 +71,3 @@ class IterativePolicyEvaluator(DPAlgoBase, WithValueTableMixin):
 
         # zero the value function
         self.v = np.zeros(env.observation_space.n)
-
-    def on_state(self, state: int) -> float:
-        """
-        Retrurns an action on the given state
-        :param state:
-        :return:
-        """
-        return self.v[state]
