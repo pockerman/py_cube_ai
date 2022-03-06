@@ -161,35 +161,6 @@ class DPAlgoBase(RLAgentBase):
         """
         pass
 
-    def play(self, env: Env, criterion: Criterion) -> PlayInfo:
-        """Apply the agent on the given environment
 
-        Parameters
-        ----------
-        env: The environment to play on
-        criterion: Specifies the criteria such that the play stops
 
-        Returns
-        -------
-
-        An instance of PlayInfo
-
-        """
-
-        pass
-
-    def on_state(self, state: int) -> Any:
-        """Get an agent specific result whilst on the given state
-
-        Parameters
-        ----------
-        state: The state to observe
-
-        Returns
-        -------
-
-        Agent specific result
-
-        """
-        pass
 
