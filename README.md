@@ -6,7 +6,9 @@ PyCubeAI is an effort to create an environment for design, devlopment simulation
 that target robotic platforms. 
 
 The project documentation can be found at <a href="https://pockerman-py-cubeai.readthedocs.io/en/latest/">CubeAI documentaion</a>.
-The C++ flavor of the project can be found as <a href="https://github.com/pockerman/cubeai">CubeAI</a>.
+The C++ flavor of the project can be found at <a href="https://github.com/pockerman/cubeai">CubeAI</a>.
+
+
 
 
 Implementation of reinforcement learning algorithms. Algorithms have been refactored/reimplemented
@@ -88,6 +90,8 @@ TODO
 ## References
 
 - ```Deep Reinforcement Learning in Action```
+- <a href="https://www.youtube.com/watch?v=2GEfuYoSXqg">tinyML Talks: Deploying AI to Embedded Systems</a>
+- <a href="https://www.youtube.com/watch?v=ZDGlx2ulJv0">tinyML Talks: Exploring techniques to build efficient and robust TinyML deployments</a>
 
 
 

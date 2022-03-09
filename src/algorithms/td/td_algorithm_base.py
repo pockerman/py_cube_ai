@@ -47,13 +47,12 @@ class TDAlgoBase(RLAgentBase, ABC):
         return self.config.alpha
 
     def actions_before_training_begins(self, env: Env, **options) -> None:
-        """
-        Execute any actions the algorithm needs before
+        """Execute any actions the algorithm needs before
 
         Parameters
         ----------
-        env The environment to train on
-        options Any options passed by the client code
+        env: The environment to train on
+        options: Any options passed by the client code
 
         Returns
         -------
@@ -85,55 +84,19 @@ class TDAlgoBase(RLAgentBase, ABC):
         return average_rewards
 
     def actions_after_training_ends(self, env: Env, **options) -> None:
-        """
-        Execute any actions the algorithm needs after
+        """Execute any actions the algorithm needs after
         the iterations are finished
 
         Parameters
         ----------
-        env The environment to train on
-        options Any options passed by the client code
+
+        env: The environment to train on
+        options: Any options passed by the client code
 
         Returns
         -------
 
         None
-
-        """
-        pass
-
-    def play(self, env: Env, criterion: Criterion) -> PlayInfo:
-        """
-        Play the trained agent on the given environment
-
-        Parameters
-        ----------
-
-        env The environment to play on
-        criterion Specifies the criteria such that the play stops
-
-        Returns
-        -------
-
-        An instance of PlayInfo
-
-        """
-        return PlayInfo()
-
-    def on_state(self, state) -> Any:
-        """Get an agent specific result e.g. an action or
-        the state value
-
-        Parameters
-        ----------
-
-        state The state instance presented to the agent
-
-        Returns
-        -------
-
-        An agent specific result e.g. an action or
-        the state value
 
         """
         pass

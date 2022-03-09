@@ -12,6 +12,8 @@ API
    API/policy_improvement
    API/policy_iteration
    API/value_iteration
+   API/td_algorithm_base
+   API/td_zero
    API/q_learning
    API/episodic_sarsa_semi_gradient
    API/gym_world_wrapper

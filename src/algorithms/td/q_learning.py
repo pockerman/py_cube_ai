@@ -9,6 +9,7 @@ from src.utils.mixins import WithMaxActionMixin
 from src.worlds.world_helpers import n_actions, n_states, step
 from src.utils.episode_info import EpisodeInfo
 from src.utils.time_step import TimeStep
+from src.utils.wrappers import time_func_wrapper
 from src.utils import INFO
 
 Env = TypeVar('Env')
@@ -22,8 +23,7 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
     """
 
     def __init__(self, algo_config: TDAlgoConfig) -> None:
-        """
-        Constructor. Initialize by passing the configuration options
+        """Constructor. Initialize by passing the configuration options
 
         Parameters
         ----------
@@ -41,25 +41,20 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
     def policy(self) -> Policy:
         return self.config.policy
 
-    def on_state(self, state) -> Any:
-        """Get an agent specific result e.g. an action or
-        the state value
+    def actions_before_training_begins(self, env: Env, **options) -> None:
+        """Execute any actions the algorithm needs before training starts
 
         Parameters
         ----------
-
-        state The state instance presented to the agent
+        env: The environment to train on
+        options: Any options passed by the client code
 
         Returns
         -------
 
-        An agent specific result e.g. an action or
-        the state value
+        None
 
         """
-        return self.policy.select_action(self.q_table, state)
-
-    def actions_before_training_begins(self, env: Env, **options) -> None:
         super(QLearning, self).actions_before_training_begins(env, **options)
 
         n_states_ = n_states(env)
@@ -69,18 +64,41 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
                 self.q_table[state, action] = 0.0
 
     def actions_after_episode_ends(self, env: Env, episode_idx: int,  **options) -> None:
-        """
-        Execute any actions the algorithm needs before
-        starting the episode
-        :param options:
-        :return:
+        """Execute any actions the algorithm needs after
+        ending the episode
+
+        Parameters
+        ----------
+
+        env: The environment to train on
+        episode_idx: The episode index
+        options: Any options passed by the client code
+
+        Returns
+        -------
+
+        None
+
         """
         super(QLearning, self).actions_after_episode_ends(env, episode_idx, **options)
         self.policy.actions_after_episode(episode_idx)
 
-    def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
-        """
-        Perform one step of the algorithm
+    @time_func_wrapper(show_time=False)
+    def do_on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
+        """Train the agent on the environment at the given episode.
+
+        Parameters
+        ----------
+
+        env: The environment to train on
+        episode_idx: The episode index
+        options: Any options passes by the client code
+
+        Returns
+        -------
+
+        An instance of the EpisodeInfo class
+
         """
 
         # episode score
@@ -97,11 +115,11 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
 
             # take action A, observe R, S'
             # next_state, reward, done, info = step(env, action)
-            time_step: TimeStep = step(env, action)
+            time_step: TimeStep = env.step(action)
 
             # add reward to agent's score
             episode_score += time_step.reward
-            next_state = time_step.state
+            next_state = time_step.observation
             self._update_q_table(env=env, state=self.state, action=action,
                                  reward=time_step.reward, next_state=next_state)
             self.state = next_state  # S <- S'
@@ -110,9 +128,8 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
             if time_step.done:
                 break
 
-        # self.iterations_per_episode.append(counter)
-        # self.total_rewards[self.current_episode_index] = episode_score
-        episode_info = EpisodeInfo(episode_reward=episode_score, episode_iterations=counter)
+        episode_info = EpisodeInfo(episode_reward=episode_score, episode_iterations=counter,
+                                   episode_index=episode_idx)
         return episode_info
 
     def _update_q_table(self, env: Env, state: int, action: int,

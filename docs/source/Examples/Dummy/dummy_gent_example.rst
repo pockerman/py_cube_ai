@@ -1,4 +1,4 @@
-Example 0: Some basic concepts 
+Some basic concepts 
 ===============================
 
 This example uses the ```DummyAlgorithm`` to train a ``DummyAgent`` agent. As its name

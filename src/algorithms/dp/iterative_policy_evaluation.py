@@ -1,7 +1,9 @@
-"""
-Iterative policy evaluation
-Implementation refactored from
-https://github.com/udacity/deep-reinforcement-learning
+"""Module iterative_policy_evaluation. Implements
+a tabular version of the iterative policy evaluation
+algorithm as described in the book
+
+http://incompleteideas.net/book/RLbook2020.pdf
+
 """
 
 import numpy as np
@@ -10,6 +12,8 @@ from typing import TypeVar
 from src.algorithms.dp.dp_algorithm_base import DPAlgoBase, DPAlgoConfig
 from src.utils.episode_info import EpisodeInfo
 from src.utils.mixins import WithValueTableMixin
+from src.utils.wrappers import time_func_wrapper
+
 # from src.algorithms.dp.utils import state_actions_from_v as q_s_a
 # from src.algorithms.dp.utils import q_from_v
 
@@ -23,18 +27,31 @@ class IterativePolicyEvaluator(DPAlgoBase, WithValueTableMixin):
 
     def __init__(self, algo_config: DPAlgoConfig) -> None:
         super(IterativePolicyEvaluator, self).__init__(algo_config)
-        self.vtable = None
+        self.vtable: np.array = None
 
-    def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
-        """
-        Do one step of the algorithm
+    @time_func_wrapper(show_time=False)
+    def do_on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
+        """Train the algorithm on the episode
+
+        Parameters
+        ----------
+
+        env: The environment to run the training episode
+        episode_idx: The episode index
+        options: Options that client code may pass
+
+        Returns
+        -------
+
+        An instance of EpisodeInfo
+
         """
         episode_reward = 0.0
         episode_itrs = 0
 
         delta = 0.0
         # we loop over the states of the environment
-        for s in range(env.observation_space.n):
+        for s in range(env.n_states):
 
             old_value_s = self.v[s]
 
@@ -54,11 +71,10 @@ class IterativePolicyEvaluator(DPAlgoBase, WithValueTableMixin):
             # update the value function table
             self.v[s] = value_s
 
-        info = EpisodeInfo()
-        info.episode_reward = episode_reward
-        info.episode_iterations = episode_itrs
+        info = EpisodeInfo(episode_reward=episode_reward, episode_iterations=episode_itrs,
+                           episode_index=episode_idx)
 
-        if delta <= self.get_configuration().tolerance:
+        if delta <= self.config.tolerance:
             info.info["break_training"] = True
 
         return info
@@ -70,4 +86,4 @@ class IterativePolicyEvaluator(DPAlgoBase, WithValueTableMixin):
         """
 
         # zero the value function
-        self.v = np.zeros(env.observation_space.n)
+        self.v = np.zeros(env.n_states)
