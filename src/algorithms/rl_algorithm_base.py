@@ -4,8 +4,7 @@ exposes the following functions
 
 - __init__(AgentConfig) -> None
 - on_training_episode(env, episode_idx, **info) -> EpisodeInfo
-- play(env, Criterion) -> PlayInfo
-- on_state(state) -> Action
+
 - actions_before_training_begins(env, **info) -> None
 - actions_before_episode_begins(env, episode_idx, **info) -> None
 - actions_after_episode_ends(env, episode_idx, **info) -> None
@@ -15,6 +14,7 @@ exposes the following functions
 
 import abc
 from typing import TypeVar, Any
+from src.utils.wrappers import time_func_wrapper
 
 Env = TypeVar('Env')
 EpisodeInfo = TypeVar('EpisodeInfo')
@@ -43,12 +43,34 @@ class RLAgentBase(metaclass=abc.ABCMeta):
         self.config = config
         self.state: State = None
 
-    @abc.abstractmethod
     def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
         """Train the algorithm on the episode
 
         Parameters
         ----------
+        env: The environment to run the training episode
+        episode_idx: The episode index
+        options: Options that client code may pass
+
+        Returns
+        -------
+
+        An instance of EpisodeInfo
+
+        """
+        episode_info, total_time = self.do_on_training_episode(env, episode_idx, **options)
+        episode_info.episode_index = episode_idx
+        episode_info.total_execution_time = total_time
+        return episode_info
+
+    @abc.abstractmethod
+    @time_func_wrapper(show_time=True)
+    def do_on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
+        """Train the algorithm on the episode
+
+        Parameters
+        ----------
+
         env: The environment to run the training episode
         episode_idx: The episode index
         options: Options that client code may pass
@@ -102,6 +124,7 @@ class RLAgentBase(metaclass=abc.ABCMeta):
 
         Parameters
         ----------
+
         env: The environment to train on
         episode_idx: The episode index
         options: Any options passed by the client code

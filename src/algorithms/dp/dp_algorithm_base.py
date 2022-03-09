@@ -74,23 +74,6 @@ class DPAlgoBase(RLAgentBase):
     def policy(self, value: Policy) -> None:
         self.config.policy = value
 
-    @abc.abstractmethod
-    def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
-        """Train the algorithm on the episode
-
-        Parameters
-        ----------
-        env: The environment to run the training episode
-        episode_idx: The episode index
-        options: Any named options passed by the client code
-
-        Returns
-        -------
-
-        An instance of EpisodeInfo
-
-        """
-
     def actions_before_training_begins(self, env: Env, **options) -> None:
         """ Execute any actions the algorithm needs before
         starting the training episodes

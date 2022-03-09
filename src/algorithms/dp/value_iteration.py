@@ -13,6 +13,7 @@ from src.policies.policy_adaptor_base import PolicyAdaptorBase
 from src.utils.mixins import WithValueTableMixin
 from src.utils.episode_info import EpisodeInfo
 from src.worlds.world_helpers import n_states
+from src.utils.wrappers import time_func_wrapper
 
 Env = TypeVar("Env")
 
@@ -24,8 +25,7 @@ class ValueIteration(DPAlgoBase, WithValueTableMixin):
 
     def __init__(self, algo_config: DPAlgoConfig,
                  policy_adaptor: PolicyAdaptorBase) -> None:
-        """
-        Constructor
+        """Constructor
 
         Parameters
         ----------
@@ -35,7 +35,7 @@ class ValueIteration(DPAlgoBase, WithValueTableMixin):
 
         """
         super(ValueIteration, self).__init__(algo_config=algo_config)
-        self._p_imprv = PolicyImprovement(algo_in=algo_config,
+        self._p_imprv = PolicyImprovement(algo_config=algo_config,
                                           v=None,  policy_adaptor=policy_adaptor)
 
     def actions_before_training_begins(self, env: Env,  **options) -> None:
@@ -59,28 +59,9 @@ class ValueIteration(DPAlgoBase, WithValueTableMixin):
         self.v = np.zeros(n_states(env))
         self._p_imprv.v = self.v
 
-    def on_state(self, state: int) -> float:
-        """
-        Returns the value of the value function
-        on the given state
-
-        Parameters
-        ----------
-
-        state: The state presented to the agent
-
-        Returns
-        -------
-
-        The value of the value function
-
-        """
-
-        return self.v[state]
-
-    def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
-        """
-        Train the agent on the environment at the given episode.
+    @time_func_wrapper(show_time=False)
+    def do_on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
+        """Train the agent on the environment at the given episode.
 
         Parameters
         ----------
@@ -96,7 +77,7 @@ class ValueIteration(DPAlgoBase, WithValueTableMixin):
 
         """
 
-        delta = 0
+        delta = 0.0
 
         n_states_ = n_states(env)
         for s in range(n_states_):
@@ -104,7 +85,7 @@ class ValueIteration(DPAlgoBase, WithValueTableMixin):
             self.v[s] = max(q_s_a(env=env, v=self.v, state=s, gamma=self.gamma))
             delta = max(delta, abs(self.v[s] - v))
 
-        episode_info = EpisodeInfo()
+        episode_info = EpisodeInfo(episode_index=episode_idx)
         if delta < self.config.tolerance:
             episode_info.info["break_training"] = True
 

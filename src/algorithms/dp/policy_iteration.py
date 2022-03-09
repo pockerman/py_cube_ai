@@ -1,4 +1,4 @@
-"""Implementation of Policy iteration algorithm. In policy
+"""Module policy_iteration. Implementation of Policy iteration algorithm. In policy
 iteration at each step we do one policy evaluation and one policy
 improvement.
 
@@ -14,7 +14,7 @@ from src.algorithms.dp.iterative_policy_evaluation import IterativePolicyEvaluat
 from src.algorithms.dp.policy_improvement import PolicyImprovement
 from src.policies.policy_adaptor_base import PolicyAdaptorBase
 from src.utils.episode_info import EpisodeInfo
-from src.utils.wrappers import time_fn
+from src.utils.wrappers import time_func_wrapper
 
 
 Env = TypeVar('Env')
@@ -26,8 +26,7 @@ class PolicyIteration(DPAlgoBase):
     """
 
     def __init__(self, algo_config: DPAlgoConfig,  policy_adaptor: PolicyAdaptorBase):
-        """
-        Constructor.
+        """Constructor.
 
         Parameters
         ----------
@@ -39,7 +38,7 @@ class PolicyIteration(DPAlgoBase):
         super(PolicyIteration, self).__init__(algo_config=algo_config)
 
         self._p_eval = IterativePolicyEvaluator(algo_config=algo_config)
-        self._p_imprv = PolicyImprovement(algo_in=algo_config, v=self._p_eval.v, policy_adaptor=policy_adaptor)
+        self._p_imprv = PolicyImprovement(algo_config=algo_config, v=self._p_eval.v, policy_adaptor=policy_adaptor)
 
     @property
     def v(self) -> np.array:
@@ -99,11 +98,9 @@ class PolicyIteration(DPAlgoBase):
         self._p_eval.actions_after_training_ends(env,  **options)
         self._p_imprv.actions_after_training_ends(env,  **options)
 
-    @time_fn
-    def on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
-        """
-
-        Train the agent on the given environment and the given episode
+    @time_func_wrapper(show_time=False)
+    def do_on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
+        """Train the agent on the given environment and the given episode
 
         Parameters
         ----------
@@ -134,9 +131,9 @@ class PolicyIteration(DPAlgoBase):
 
         new_policy = self._p_imprv.policy
 
-        episode_info = EpisodeInfo()
-        episode_info.episode_reward = train_info.episode_reward
-        episode_info.episode_iterations = train_info.episode_iterations
+        episode_info = EpisodeInfo(episode_reward=train_info.episode_reward,
+                                   episode_iterations=train_info.episode_iterations,
+                                   episode_index=episode_idx)
 
         # check of the two policies are the same
         if old_policy == new_policy:
