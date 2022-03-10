@@ -1,4 +1,3 @@
-
 QLearning on ``FrozenLake-v0``
 ==============================
 
@@ -13,7 +12,6 @@ step in the ``FrozenLake-v0`` environment.
 	from src.algorithms.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 	from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
 	from src.worlds.world_helpers import n_actions
-
 
 .. code-block::
 

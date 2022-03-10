@@ -15,6 +15,7 @@ API
    API/td_algorithm_base
    API/td_zero
    API/q_learning
+   API/double_q_learning
    API/episodic_sarsa_semi_gradient
    API/gym_world_wrapper
    API/world_helpers
