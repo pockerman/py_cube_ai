@@ -1,87 +1,145 @@
-"""
-Tabular Double Q-learning algorithm. The algorithm can be
-found at https://www.researchgate.net/publication/221619239_Double_Q-learning
+"""Module double_q_learning. Implements tabular double Q-learning
+algorithm as presented in the paper
+
+https://www.researchgate.net/publication/221619239_Double_Q-learning
+
 """
 
 import numpy as np
-from typing import  TypeVar
+from typing import TypeVar
 
 from src.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoConfig
 from src.utils.mixins import WithDoubleMaxActionMixin
-from src.utils import INFO
+from src.utils.episode_info import EpisodeInfo
+from src.utils.time_step import TimeStep
+from src.utils.wrappers import time_func_wrapper
+
 
 Env = TypeVar('Env')
 Policy = TypeVar('Policy')
 
 
 class DoubleQLearning(TDAlgoBase, WithDoubleMaxActionMixin):
+    """The class DoubleQLearning implements double q-learning tabular
+    algorithm
+
     """
-    epsilon-greedy Q-learning algorithm
-    """
 
-    def __init__(self, algo_in: TDAlgoConfig) -> None:
+    def __init__(self, algo_config: TDAlgoConfig) -> None:
+        """Constructor. Initialize the algorithm with the given configuration
 
-        super(DoubleQLearning, self).__init__(algo_in=algo_in)
+        Parameters
+        ----------
+        algo_config: The algorithm configuration
 
-        self._policy = algo_in.policy
+        """
+
+        super(DoubleQLearning, self).__init__(algo_config=algo_config)
+
+        self.policy: Policy = algo_config.policy
         self.q1_table = {}
         self.q2_table = {}
 
-    def actions_before_training_begins(self, **options) -> None:
-        super(DoubleQLearning, self).actions_before_training_begins(**options)
+    def actions_before_training_begins(self, env: Env, **options) -> None:
+        """Execute any actions the algorithm needs before training begins
 
-        for state in self.train_env.discrete_observation_space:
-            for action in range(self.train_env.action_space.n):
+        Parameters
+        ----------
+
+        env: The environment to train on
+        options: Any options passed by the client code
+
+        Returns
+        -------
+
+        None
+
+        """
+        super(DoubleQLearning, self).actions_before_training_begins(env, **options)
+
+        for state in range(env.n_states):
+            for action in range(env.n_actions):
                 self.q1_table[state, action] = 0.0
                 self.q2_table[state, action] = 0.0
 
-    def actions_after_episode_ends(self, **options):
-        """
-        Execute any actions the algorithm needs before
-        starting the episode
-        :param options:
-        :return:
-        """
-        super(DoubleQLearning, self).actions_after_episode_ends()
-        self._policy.actions_after_episode(self.current_episode_index)
+    def actions_after_episode_ends(self, env: Env, episode_idx: int, **options):
+        """Execute any actions the algorithm needs after
+        ending the episode
 
-    def on_episode(self, **options) -> None:
+        Parameters
+        ----------
+
+        env: The environment to train on
+        episode_idx: The episode index
+        options: Any options passed by the client code
+
+        Returns
+        -------
+
+        None
+
         """
-        Perform one step of the algorithm
+        super(DoubleQLearning, self).actions_after_episode_ends(env, episode_idx, **options)
+        self.policy.actions_after_episode(episode_idx)
+
+    @time_func_wrapper(show_time=False)
+    def do_on_training_episode(self, env: Env, episode_idx: int, **options) -> EpisodeInfo:
+        """Train the agent on the environment at the given episode.
+
+        Parameters
+        ----------
+
+        env: The environment to train on
+        episode_idx: The episode index
+        options: Any options passes by the client code
+
+        Returns
+        -------
+
+        An instance of the EpisodeInfo class
+
         """
 
         # episode score
         episode_score = 0
         counter = 0
 
-        for itr in range(self.n_itrs_per_episode):
+        for itr in range(self.config.n_itrs_per_episode):
 
-            if self.render_env:
-                self.train_env.render()
-
-            # epsilon-greedy action selection
-            action = self._policy(self.q1_table, self.q2_table, self.state)
+            # select an action
+            action = self.policy(self.q1_table, self.q2_table, self.state)
 
             # take action A, observe R, S'
-            next_state, reward, done, info = self.train_env.step(action)
-            episode_score += reward  # add reward to agent's score
-            self._update_Q_table(self.state, action, reward, next_state)
-            self.state = next_state  # S <- S'
+            time_step: TimeStep = env.step(action)
+            episode_score += time_step.reward  # add reward to agent's score
+            self._update_q_table(self.state, action, time_step.reward, time_step.observation)
+            self.state = time_step.observation  # S <- S'
 
-            if done:
+            if time_step.done:
                 break
 
-        if self.current_episode_index % self.output_msg_frequency == 0:
-            print("{0}: On episode {1} training finished with  "
-                  "{2} iterations. Total reward={3}".format(INFO, self.current_episode_index, counter, episode_score))
+            counter += 1
 
-        self.iterations_per_episode.append(counter)
-        self.total_rewards[self.current_episode_index] = episode_score
+        episode_info = EpisodeInfo(episode_reward=episode_score, episode_index=episode_idx, episode_iterations=counter)
+        return episode_info
 
-    def _update_Q_table(self, state: int, action: int, reward: float, next_state: int = None) -> None:
-        """
-        Update the Q-value function for the given state when taking the given action.
+    def _update_q_table(self, env: Env, state: int, action: int, reward: float, next_state: int = None) -> None:
+        """Update the Q-value function for the given state when taking the given action.
         The implementation chooses which of the two tables to update using a coin flip
+
+        Parameters
+        ----------
+
+        env: The environment to train on
+        state: The state currently on
+        action: The action taken at the state
+        reward: The reward taken
+        next_state: The state to go when taking the given action
+
+        Returns
+        -------
+
+        None
         """
 
         rand = np.random.random()
@@ -92,7 +150,7 @@ class DoubleQLearning(TDAlgoBase, WithDoubleMaxActionMixin):
             q1_s = self.q1_table[state, action]
 
             max_act = self.one_table_max_action(self.q1_table, next_state,
-                                                n_actions=self.train_env.action_space.n)
+                                                n_actions=env.action_space.n)
 
             # value of next state
             Qsa_next = \
@@ -110,7 +168,7 @@ class DoubleQLearning(TDAlgoBase, WithDoubleMaxActionMixin):
             q2_s = self.q2_table[state, action]
 
             max_act = self.one_table_max_action(self.q2_table, next_state,
-                                                n_actions=self.train_env.action_space.n)
+                                                n_actions=env.action_space.n)
 
             # value of next state
             Qsa_next = \
