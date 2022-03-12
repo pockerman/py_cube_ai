@@ -18,7 +18,7 @@ if __name__ == '__main__':
     algo = DummyAlgorithm(algo_config=algo_config)
 
     trainer_config = RLSerialTrainerConfig(n_episodes=10)
-    trainer = RLSerialAgentTrainer(agent=algo, config=trainer_config)
+    trainer = RLSerialAgentTrainer(algorithm=algo, config=trainer_config)
 
     trainer.train(env)
 
