@@ -1,4 +1,4 @@
-Some basic concepts 
+Some basic concepts (Python)
 ===============================
 
 This example uses the ```DummyAlgorithm`` to train a ``DummyAgent`` agent. As its name
@@ -12,6 +12,11 @@ concepts in ``PyCubeAI``. Namely, we have three core ideas:
 Moreover, we use the `GymWorldWrapper <../../API/gym_world_wrapper.html>`_. This class wraps an OpenAI-Gym environment so that it conforms to 
 the `DeepMind acme environment <https://github.com/deepmind/acme>`_.
 
+
+Import statements
+-----------------
+
+
 Let's start with the necessary imports
 
 .. code-block:: 
@@ -24,6 +29,9 @@ Let's start with the necessary imports
 	from src.trainers.rl_serial_agent_trainer import RLSerialAgentTrainer, RLSerialTrainerConfig
 	from src.utils.iteration_controller import IterationController
 
+
+Driver code
+-----------
 
 The driver code is shown below. 
 .. code-block::
@@ -52,4 +60,7 @@ The driver code is shown below.
 
 	    criteria = IterationController(tol=1.0e-8, n_max_itrs=len(algo.policy))
 	    agent.play(env, criteria)
+	    
+Results
+-------	
 

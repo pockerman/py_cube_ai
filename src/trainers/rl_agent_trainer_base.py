@@ -16,7 +16,7 @@ from dataclasses import dataclass
 Env = TypeVar('Env')
 TrainInfo = TypeVar('TrainInfo')
 Config = TypeVar('Config')
-Agent = TypeVar('Agent')
+Algorithm = TypeVar('Algorithm')
 
 
 @dataclass
@@ -34,7 +34,7 @@ class RLAgentTrainerBase(metaclass=abc.ABCMeta):
 
     """
 
-    def __init__(self, config: Config, agent: Agent) -> None:
+    def __init__(self, config: Config, algorithm: Algorithm):
         """Constructor
 
         Parameters

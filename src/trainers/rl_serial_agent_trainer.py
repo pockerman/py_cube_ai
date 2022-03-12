@@ -33,7 +33,7 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
     for serial reinforcement learning agents
     """
 
-    def __init__(self, config: RLSerialTrainerConfig, agent: Agent) -> None:
+    def __init__(self, config: RLSerialTrainerConfig, agent: Agent):
         super(RLSerialAgentTrainer, self).__init__(config=config, agent=agent)
         self._itr_ctrl = IterationController(tol=config.tolerance, n_max_itrs=config.n_episodes)
         self.break_training_flag: bool = False
