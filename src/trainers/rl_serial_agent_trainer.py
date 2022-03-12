@@ -7,7 +7,7 @@ from src.utils.wrappers import time_fn
 from src.utils import INFO
 
 Env = TypeVar('Env')
-Agent = TypeVar('Agent')
+Algorithm = TypeVar('Algorithm')
 
 
 @dataclass(init=True, repr=True,)
@@ -33,8 +33,8 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
     for serial reinforcement learning agents
     """
 
-    def __init__(self, config: RLSerialTrainerConfig, agent: Agent):
-        super(RLSerialAgentTrainer, self).__init__(config=config, agent=agent)
+    def __init__(self, config: RLSerialTrainerConfig, algorithm: Algorithm):
+        super(RLSerialAgentTrainer, self).__init__(config=config, algorithm=algorithm)
         self._itr_ctrl = IterationController(tol=config.tolerance, n_max_itrs=config.n_episodes)
         self.break_training_flag: bool = False
         self.rewards = []
@@ -72,7 +72,7 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
                                                                         self.itr_control.n_max_itrs,
                                                                         (self.itr_control.current_itr_counter / self.itr_control.n_max_itrs) * 100.0))
             self.actions_before_episode_begins(env, **options)
-            episode_info = self.agent.on_training_episode(env, self.current_episode_index, **options)
+            episode_info = self.algorithm.on_training_episode(env, self.current_episode_index, **options)
             self.rewards.append(episode_info.episode_reward)
             self.iterations_per_episode.append(episode_info.episode_iterations)
 
@@ -113,7 +113,7 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
         env.reset()
         self.rewards = []
         self.iterations_per_episode = []
-        self.agent.actions_before_training_begins(env,  **options)
+        self.algorithm.actions_before_training_begins(env,  **options)
 
     def actions_before_episode_begins(self, env: Env, **options) -> None:
         """
@@ -122,7 +122,7 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
         :param options:
         :return:
         """
-        self.agent.actions_before_episode_begins(env, self.current_episode_index, **options)
+        self.algorithm.actions_before_episode_begins(env, self.current_episode_index, **options)
 
     def actions_after_episode_ends(self, env: Env, **options) -> None:
         """
@@ -131,11 +131,11 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
         :param options:
         :return:
         """
-        self.agent.actions_after_episode_ends(env, self.current_episode_index, **options)
+        self.algorithm.actions_after_episode_ends(env, self.current_episode_index, **options)
 
     def actions_after_training_ends(self, env: Env, **options) -> None:
         """
         Execute any actions the algorithm needs after
         the iterations are finished
         """
-        self.agent.actions_after_training_ends(env, **options)
+        self.algorithm.actions_after_training_ends(env, **options)

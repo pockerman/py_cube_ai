@@ -44,7 +44,7 @@ class RLAgentTrainerBase(metaclass=abc.ABCMeta):
 
         """
         self.trainer_config: Config = config
-        self.agent: Agent = agent
+        self.algorithm: Algorithm = algorithm
 
     @abc.abstractmethod
     def train(self, env: Env, **options) -> TrainInfo:
