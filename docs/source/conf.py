@@ -56,8 +56,8 @@ extensions = [
    'sphinx.ext.autosummary',
    #"numpydoc",
    'sphinx.ext.napoleon',
-   "breathe", 
-   "m2r2"
+   #"breathe", 
+   #"m2r2"
 ]
 
 #extensions = ['sphinx.ext.napoleon']
