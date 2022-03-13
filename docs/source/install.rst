@@ -45,9 +45,9 @@ Installation then follows the usual steps
 
 .. code-block:: console
 
-	 ``mkdir build && cd build``
-	 ``cmake ..``
-	 ``make install``
+	 mkdir build && cd build
+	 cmake ..
+	 make install
 
 Generate documentation
 ----------------------
