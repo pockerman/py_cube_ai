@@ -1,5 +1,5 @@
-Semi-gradient SARSA on ``MountainCar-v0``
-=========================================
+Semi-gradient SARSA on ``MountainCar-v0`` (Python)
+==================================================
 
 
 .. code-block::

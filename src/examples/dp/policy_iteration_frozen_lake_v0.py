@@ -6,7 +6,7 @@ from src.algorithms.dp.policy_iteration import PolicyIteration, DPAlgoConfig
 from src.policies.uniform_policy import UniformPolicy
 from src.policies.max_action_policy_adaptor import MaxActionPolicyAdaptor
 from src.worlds.world_helpers import n_actions, n_states
-from src.trainers.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
+from src.trainers.rl_serial_algorithm_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 
 
 """

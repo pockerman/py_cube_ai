@@ -1,5 +1,5 @@
-Double Q-learning on ``CartPole-v0``
-====================================
+Double Q-learning on ``CartPole-v0`` (Python)
+=============================================
 
 
 .. code-block::

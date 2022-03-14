@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from src.algorithms.dummy.dummy_algorithm import DummyAlgorithm, DummyAlgoConfig
 from src.agents.dummy_agent import DummyAgent
 from src.worlds.gym_world_wrapper import GymWorldWrapper
-from src.trainers.rl_serial_agent_trainer import RLSerialAgentTrainer, RLSerialTrainerConfig
+from src.trainers.rl_serial_algorithm_trainer import RLSerialAgentTrainer, RLSerialTrainerConfig
 from src.utils.iteration_controller import IterationController
 
 

@@ -1,4 +1,4 @@
-"""the module episode_info. Specifies a helper
+"""Module episode_info. Specifies a helper
 class to wrap the result returned by on_training_episode
 of a reinforcement learning algorithm
 

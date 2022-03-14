@@ -11,7 +11,7 @@ from src.algorithms.td.double_q_learning import DoubleQLearning
 from src.worlds.state_aggregation_cart_pole_env import StateAggregationCartPoleEnv
 from src.algorithms.td.td_algorithm_base import TDAlgoConfig
 from src.policies.epsilon_greedy_policy import EpsilonDoubleGreedyPolicy, EpsilonDecayOption
-from src.trainers.rl_serial_agent_trainer import RLSerialAgentTrainer, RLSerialTrainerConfig
+from src.trainers.rl_serial_algorithm_trainer import RLSerialAgentTrainer, RLSerialTrainerConfig
 
 
 def plot_running_avg(avg_rewards):

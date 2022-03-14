@@ -30,6 +30,10 @@ class StateAggregationEnvWrapper(metaclass=abc.ABCMeta):
     def action_space(self) -> Any:
         return self.raw_env.action_space
 
+    @property
+    def state_space(self) -> list:
+        return self.discrete_observation_space
+
     def reset(self) -> State:
         """
         Reset the underlying environment
