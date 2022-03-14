@@ -54,8 +54,6 @@ N_ITRS_PER_EPISODE = 2000
 EPS = 1.0
 EPS_DECAY_OP = EpsilonDecayOption.INVERSE_STEP
 
-#State = namedtuple("State", ["sensors", "motors"])
-
 
 def plot_running_avg(avg_rewards, step):
 
