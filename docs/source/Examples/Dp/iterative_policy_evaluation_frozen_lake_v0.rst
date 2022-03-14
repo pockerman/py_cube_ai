@@ -1,5 +1,5 @@
-Iterative policy evaluation on ``FrozenLake-v0``
-================================================
+Iterative policy evaluation on ``FrozenLake-v0`` (Python)
+=========================================================
 
 In this example, we use the iterative policy iteration algorithm to train an
 agent on the ``FrozenLake-v0`` environment. In ``PyCubeAI`` there is a

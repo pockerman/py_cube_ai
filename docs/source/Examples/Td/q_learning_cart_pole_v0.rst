@@ -1,5 +1,5 @@
-QLearning on ``CartPole-v0``
-============================
+QLearning on ``CartPole-v0`` (Python)
+=====================================
 
 In this example we use Q-learning to train an agent on the ``CartPole-v0`` environment.
 The state for this environment exposed to the agent, consists of four floating point

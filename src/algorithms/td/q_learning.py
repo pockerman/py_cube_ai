@@ -18,8 +18,8 @@ QTable = TypeVar('QTable')
 
 
 class QLearning(TDAlgoBase, WithMaxActionMixin):
-    """
-    epsilon-greedy Q-learning algorithm
+    """Q-learning algorithm
+
     """
 
     def __init__(self, algo_config: TDAlgoConfig) -> None:

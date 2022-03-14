@@ -1,5 +1,5 @@
-Value iteration on ``FrozenLake-v0``
-====================================
+Value iteration on ``FrozenLake-v0`` (Python)
+=============================================
 
 In this example, we use the value iteration algorithm to train an
 agent on the ``FrozenLake-v0`` environment. In ``PyCubeAI`` there is a

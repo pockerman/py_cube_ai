@@ -1,5 +1,5 @@
-QLearning on ``FrozenLake-v0``
-==============================
+QLearning on ``FrozenLake-v0`` (Python)
+=======================================
 
 In this example, we use the ``QLearning`` class to train a Qlearning based agent to
 step in the ``FrozenLake-v0`` environment.

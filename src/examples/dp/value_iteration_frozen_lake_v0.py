@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from src.algorithms.dp.value_iteration import ValueIteration, DPAlgoConfig
-from src.trainers.rl_serial_agent_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
+from src.trainers.rl_serial_algorithm_trainer import RLSerialTrainerConfig, RLSerialAgentTrainer
 from src.policies.uniform_policy import UniformPolicy
 from src.policies.max_action_equal_probability_stochastic_policy_adaptor import MaxActionEqualProbabilityAdaptorPolicy
 from src.worlds.world_helpers import n_states, n_actions

@@ -1,5 +1,5 @@
-Policy iteration on ``FrozenLake-v0``
-=====================================
+Policy iteration on ``FrozenLake-v0`` (Python)
+==============================================
 
 .. code-block::
 
