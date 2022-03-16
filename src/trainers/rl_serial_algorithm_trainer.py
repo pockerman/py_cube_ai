@@ -180,7 +180,8 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
         self.algorithm.actions_after_episode_ends(env, self.current_episode_index, **options)
 
     def actions_after_training_ends(self, env: Env, **options) -> None:
-        """
+        """Execute any actions the algorithm needs after
+        training episodes are finished
 
         Parameters
         ----------
@@ -190,9 +191,7 @@ class RLSerialAgentTrainer(RLAgentTrainerBase):
         Returns
         -------
 
+        None
         """
-        """
-        Execute any actions the algorithm needs after
-        the iterations are finished
-        """
+
         self.algorithm.actions_after_training_ends(env, **options)

@@ -1,10 +1,11 @@
-"""
-Enumeration for optimizer types
+"""Module optimizer_type. Specifies an
+enumeration for various PyTorch optimizers
+
 """
 import enum
 
 
-class OptimzerType(enum.IntEnum):
+class OptimizerType(enum.IntEnum):
 
     INVALID = -1
     GD = 0
