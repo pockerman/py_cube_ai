@@ -6,7 +6,7 @@ for A2C like algorithms
 import copy
 from typing import TypeVar
 from torch import nn
-from src.optimization.optimizer_type import OptimzerType
+from src.optimization.optimizer_type import OptimizerType
 from src.algorithms.rl_algorithm_base import RLAgentBase
 from src.parallel_utils.torch_processes_handler import TorchProcsHandler
 from src.optimization.pytorch_optimizer_builder import pytorch_optimizer_builder
@@ -25,7 +25,7 @@ class A2CConfig(object):
     def __init__(self):
         #self.n_episodes: int = 0
         self.n_itrs_per_episode: int = 0
-        self.opt_type: OptimzerType = OptimzerType.INVALID
+        self.opt_type: OptimizerType = OptimizerType.INVALID
         self.n_procs: int = 1
 
 

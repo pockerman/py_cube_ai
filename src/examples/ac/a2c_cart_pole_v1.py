@@ -9,14 +9,14 @@ from torch.nn import functional as F
 
 from src.algorithms.ac.a2c_base import A2CBase, A2CConfig
 from src.parallel_utils.torch_processes_handler import TorchProcsHandler
-from src.optimization.optimizer_type import OptimzerType
+from src.optimization.optimizer_type import OptimizerType
 from src.optimization.pytorch_optimizer_builder import pytorch_optimizer_builder
 
 N_EPISODES = 1000
 N_ITRS_PER_EPISODE = 100
 N_PROCS = 7
 LEARNING_RATE = 1e-4
-OPTIMIZER_TYPE = OptimzerType.ADAM
+OPTIMIZER_TYPE = OptimizerType.ADAM
 
 
 class A2CCartPole(A2CBase):

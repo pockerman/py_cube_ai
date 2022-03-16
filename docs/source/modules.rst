@@ -22,3 +22,5 @@ API
    API/episode_info
    API/gym_world_wrapper
    API/world_helpers
+   API/optimizer_type
+   API/pytorch_optimizer_builder
