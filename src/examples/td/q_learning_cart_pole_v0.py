@@ -40,7 +40,7 @@ if __name__ == '__main__':
     agent = QLearning(agent_config)
 
     trainer_config = RLSerialTrainerConfig(n_episodes=50000, output_msg_frequency=5000)
-    trainer = RLSerialAgentTrainer(trainer_config, agent=agent)
+    trainer = RLSerialAgentTrainer(trainer_config, algorithm=agent)
     trainer.train(env)
 
     plot_running_avg(agent.total_rewards)

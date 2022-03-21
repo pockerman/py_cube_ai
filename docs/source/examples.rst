@@ -12,6 +12,7 @@ The following is a list of examples a user can go through
    Examples/Dp/policy_iteration_frozen_lake_v0
    Examples/Dp/value_iteration_frozen_lake_v0
    Examples/Td/q_learning_frozen_lake_v0
+   Examples/Td/q_learning_cliff_walking_v0.rst
    Examples/Td/q_learning_cart_pole_v0
    Examples/Td/double_q_learning_cart_pole_v0
    Examples/Td/sarsa_cart_pole_v0

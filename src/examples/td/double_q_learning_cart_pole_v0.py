@@ -42,7 +42,7 @@ if __name__ == '__main__':
     agent = DoubleQLearning(algo_config=q_algo_config)
 
     trainer_config = RLSerialTrainerConfig(n_episodes=50000, output_msg_frequency=5000)
-    trainer = RLSerialAgentTrainer(agent=agent, config=trainer_config)
+    trainer = RLSerialAgentTrainer(algorithm=agent, config=trainer_config)
 
     trainer.train(env)
 

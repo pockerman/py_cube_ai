@@ -1,7 +1,10 @@
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
-from src.algorithms.td import QLearning
+from src.algorithms import QLearning
+from src.algorithms import TDAlgoConfig
+from src.worlds import GymWorldWrapper
+from src.trainers import RLSerialAgentTrainer, RLSerialTrainerConfig
 from src.policies.epsilon_greedy_policy import EpsilonDecayOption, EpsilonGreedyPolicy
 
 
@@ -20,18 +23,28 @@ def plot_values(V):
 
 
 if __name__ == '__main__':
-    env = gym.make('CliffWalking-v0')
 
-    num_episodes = 5000
+    train_env = GymWorldWrapper(gym.make('CliffWalking-v0'))
+
+    ALPHA = 0.01
+    GAMMA = 1.0
+    N_ITRS_EPISODES = 1000
+    N_EPISODES = 5000
+    EPS = 1.0
     plot_every = 100
-    policy = EpsilonGreedyPolicy(eps=1.0, env=env,
-                                 decay_op=EpsilonDecayOption.INVERSE_STEP,
-                                 min_eps=0.0001)
-    q_learner = QLearning(env=env, n_max_iterations=num_episodes, gamma=1.0, alpha=0.01,
-                          plot_freq=plot_every, policy=policy, max_num_iterations_per_episode=1000,
-                          tolerance=1.0e-4)
 
-    q_learner.train()
+    agent_config = TDAlgoConfig(gamma=GAMMA, alpha=ALPHA,
+                                n_itrs_per_episode=N_ITRS_EPISODES,
+                                n_episodes=N_EPISODES,
+                                policy=EpsilonGreedyPolicy(n_actions=train_env.n_actions,
+                                                           eps=EPS, decay_op=EpsilonDecayOption.INVERSE_STEP))
+
+    q_learner = QLearning(agent_config)
+
+    trainer_config = RLSerialTrainerConfig(n_episodes=N_EPISODES, output_msg_frequency=100)
+    trainer = RLSerialAgentTrainer(config=trainer_config, algorithm=q_learner)
+
+    trainer.train(train_env)
 
     q_func = q_learner.q_function
 
@@ -43,7 +56,7 @@ if __name__ == '__main__':
     print(policy_q_learning)
 
     # plot performance
-    plt.plot(np.linspace(0, num_episodes, len(q_learner.avg_scores), endpoint=False), np.asarray(q_learner.avg_scores))
+    plt.plot(np.linspace(0, N_EPISODES, len(trainer.avg_rewards), endpoint=False), np.asarray(trainer.avg_rewards))
     plt.xlabel('Episode Number')
     plt.ylabel('Average Reward (Over Next %d Episodes)' % plot_every)
     plt.show()

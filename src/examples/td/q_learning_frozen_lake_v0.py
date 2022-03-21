@@ -27,7 +27,7 @@ if __name__ == '__main__':
     agent = QLearning(agent_config)
 
     trainer_config = RLSerialTrainerConfig(n_episodes=N_EPISODES, output_msg_frequency=10)
-    trainer = RLSerialAgentTrainer(config=trainer_config, agent=agent)
+    trainer = RLSerialAgentTrainer(config=trainer_config, algorithm=agent)
     ctrl_res = trainer.train(test_env, **{"n_episodes": N_EPISODES})
 
     print(f"Converged {ctrl_res.converged}")
