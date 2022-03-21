@@ -20,3 +20,11 @@ class InvalidParameterValue(Exception):
 
     def __str__(self):
         return "Parameter: " + self.param_name + " has invalid value=" + str(self.param_val)
+
+
+class InvalidAttribute(Exception):
+    def __init__(self, attribute_name: str):
+        self.message = "The attribute {0} does not exist".format(attribute_name)
+
+    def __str__(self):
+        return self.message

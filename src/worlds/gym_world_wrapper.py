@@ -6,6 +6,7 @@ or step
 
 from typing import TypeVar
 from src.utils.time_step import TimeStep, StepType
+from src.utils.exceptions import InvalidAttribute
 
 Env = TypeVar('Env')
 Action = TypeVar('Action')
@@ -28,6 +29,35 @@ class GymWorldWrapper(object):
         """
         self.gym_env = gym_env
         self.discount = discount
+
+    @property
+    def n_actions(self) -> int:
+        """Returns the number of actions in the action space
+
+        Returns
+        -------
+
+        Number of actions
+        """
+
+        try:
+            return self.gym_env.action_space.n
+        except:
+            raise InvalidAttribute(attribute_name="action_space.n")
+
+    @property
+    def n_states(self) -> int:
+        """Returns the number of states in the state space
+
+        Returns
+        -------
+
+        Number of states
+        """
+        try:
+            return self.gym_env.observation_space.n
+        except:
+            raise InvalidAttribute(attribute_name="observation_space.n")
 
     def reset(self) -> TimeStep:
         """Reset the environment
@@ -59,7 +89,7 @@ class GymWorldWrapper(object):
         if done:
             step_type = StepType.LAST
 
-        return TimeStep(step_type=step_type, reward=0.0,
+        return TimeStep(step_type=step_type, reward=reward,
                         observation=observation, discount=self.discount, info={})
 
     def sample_action(self) -> Action:

@@ -110,8 +110,13 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
             if self.config.render_env:
                 env.render()
 
+            state = self.state
+
+            if isinstance(state, TimeStep):
+                state = self.state.observation
+
             # epsilon-greedy action selection
-            action = self.policy(q_func=self.q_function, state=self.state)
+            action = self.policy(q_func=self.q_function, state=state)
 
             # take action A, observe R, S'
             # next_state, reward, done, info = step(env, action)
@@ -151,18 +156,28 @@ class QLearning(TDAlgoBase, WithMaxActionMixin):
 
         """
 
+        obs = state
+
+        if isinstance(state, TimeStep):
+            obs = state.observation
+
+        next_obs = next_state
+
+        if isinstance(next_state, TimeStep):
+            next_obs = next_state.observation
+
         # estimate in Q-table (for current state, action pair)
-        q_s = self.q_function[state, action]
+        q_s = self.q_function[obs, action]
 
         # value of next state
         Qsa_next = \
-            self.q_function[next_state, self.max_action(self.q_table, state=next_state,
-                                                        n_actions=n_actions(env))] if next_state is not None else 0
+            self.q_function[next_obs, self.max_action(self.q_table, state=next_obs,
+                                                       n_actions=n_actions(env))] if next_obs is not None else 0
         # construct TD target
         target = reward + (self.gamma * Qsa_next)
 
         # get updated value
         new_value = q_s + (self.alpha * (target - q_s))
-        self.q_function[state, action] = new_value
+        self.q_function[obs, action] = new_value
 
 
