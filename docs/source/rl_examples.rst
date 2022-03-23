@@ -1,7 +1,7 @@
-Examples
-========
+RL Examples
+===========
 
-The following is a list of examples a user can go through
+The following is a list of reinforcement learning examples a user can go through
 
 .. toctree::
    :maxdepth: 2

@@ -21,6 +21,19 @@ def plot_values(V):
     plt.title('State-Value Function')
     plt.show()
 
+def max_state(state_key, q_func):
+
+    state_values = []
+
+    for state, action in q_func:
+        if state == state_key:
+            state_values.append(q_func[(state, action)])
+
+    if len(state_values) != -1:
+        return np.max(state_values)
+    return -1
+
+
 
 if __name__ == '__main__':
 
@@ -50,7 +63,7 @@ if __name__ == '__main__':
 
     # print the estimated optimal policy
     policy_q_learning = np.array(
-        [np.argmax(q_func[key]) if key in q_func else -1 for key in np.arange(48)]).reshape((4, 12))
+        [max_state(key, q_func) for key in np.arange(48)]).reshape((4, 12))
 
     print("\nEstimated Optimal Policy (UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, N/A = -1):")
     print(policy_q_learning)
@@ -62,4 +75,5 @@ if __name__ == '__main__':
     plt.show()
 
     # plot the estimated optimal state-value function
-    plot_values([np.max(q_func[key]) if key in q_func else 0 for key in np.arange(48)])
+    #plot_values([np.max(q_func[key]) if key in q_func else 0 for key in np.arange(48)])
+    plot_values(policy_q_learning)

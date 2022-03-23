@@ -17,7 +17,8 @@ Contents
 
    overview
    install
-   examples
+   rl_examples
+   ml_examples
    specification
    modules
    
