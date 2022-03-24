@@ -26,6 +26,7 @@ import gym
 from collections import namedtuple
 from typing import TypeVar, Any
 from src.worlds.state_aggregation_world_wrapper import StateAggregationEnvWrapper
+from src.utils import TimeStep, StepType
 from src.utils.exceptions import InvalidParameterValue
 
 State = TypeVar('State')
@@ -63,13 +64,26 @@ class StateAggregationMountainCarEnv(StateAggregationEnvWrapper):
     def action_space(self) -> Any:
         return self.raw_env.action_space
 
+    @property
+    def car_position_bounds(self) -> tuple:
+        return self.state_boundaries.car_velocity_space
+
+    @property
+    def car_velocity_bounds(self) -> tuple:
+        return self.state_boundaries.car_position_space
+
     def reset(self) -> State:
         """
         Reset the underlying environment
         :return: State
         """
         obs = self.raw_env.reset()
-        return self.get_state_from_obs(obs=obs)
+
+        time_step = TimeStep(reward=0.0, info={},
+                             observation=self.get_state_from_obs(obs=obs),
+                             step_type=StepType.FIRST,
+                             discount=1.0)
+        return time_step
 
     def get_property(self, prop_str: str) -> Any:
         """
@@ -86,7 +100,11 @@ class StateAggregationMountainCarEnv(StateAggregationEnvWrapper):
         :return:
         """
         obs, reward, done, info = self.raw_env.step(action=action)
-        return self.get_state_from_obs(obs=obs), reward, done, info
+        time_step = TimeStep(reward=reward, info=info,
+                             observation=self.get_state_from_obs(obs=obs),
+                             step_type=StepType.MID if not done else StepType.LAST,
+                             discount=1.0)
+        return time_step
 
     def get_state_from_obs(self, obs: State) -> TiledState:
         """

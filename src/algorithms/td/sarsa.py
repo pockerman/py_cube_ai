@@ -97,17 +97,18 @@ class Sarsa(TDAlgoBase, WithQTableMixin):
         for itr in range(self.config.n_itrs_per_episode):
 
             # Take a step
-            next_state, reward, done, _ = env.step(action)
-            episode_score += reward
+            time_step = env.step(action)
+            episode_score += time_step.reward
 
+            next_state = time_step.observation
             next_action = self.policy(q_func=self.q_function, state=next_state)
-            self.update_q_table(reward=reward, current_action=action, next_state=next_state, next_action=next_action)
+            self.update_q_table(reward=time_step.reward, current_action=action, next_state=next_state, next_action=next_action)
 
             action = next_action
             self.state = next_state
             counter += 1
 
-            if done:
+            if time_step.done:
                 break
 
         episode_info = EpisodeInfo(episode_reward=episode_score, episode_index=episode_idx,

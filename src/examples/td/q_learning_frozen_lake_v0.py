@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     trainer_config = RLSerialTrainerConfig(n_episodes=N_EPISODES, output_msg_frequency=10)
     trainer = RLSerialAgentTrainer(config=trainer_config, algorithm=agent)
-    ctrl_res = trainer.train(test_env, **{"n_episodes": N_EPISODES})
+    ctrl_res = trainer.train(test_env)
 
     print(f"Converged {ctrl_res.converged}")
     print(f"Number of iterations {ctrl_res.n_itrs}")

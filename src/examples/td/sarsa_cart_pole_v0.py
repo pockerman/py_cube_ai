@@ -46,7 +46,6 @@ class CartPoleV0SARSA(Sarsa):
         super(CartPoleV0SARSA, self).actions_before_training_begins(env, **options)
 
         # initialize properly the state
-
         for state in env.state_space:
             for action in range(env.n_actions):
                 self.q_table[state, action] = 0.0

@@ -1,23 +1,17 @@
-
-
 import gym
-import highway_env
 import numpy as np
-import os
-import collections
-from collections import defaultdict, deque
-
-
+from typing import TypeVar
 import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 20})
-#import matplotlib.image as mpimg
-#from mpl_toolkits.mplot3d import Axes3D
-#import matplotlib.animation as animation
-#import matplotlib
 
 from src.utils import INFO
 from src.algorithms.td.q_learning import QLearning
+from src.algorithms import TDAlgoConfig
+from src.trainers import RLSerialAgentTrainer, RLSerialTrainerConfig
+from src.worlds import StateAggregationMountainCarEnv
 from src.policies.epsilon_greedy_policy import EpsilonGreedyPolicy, EpsilonDecayOption
+
+
+Env = TypeVar('Env')
 
 # We have to limit the states to small finite number.
 N_STATES = 36
@@ -25,6 +19,7 @@ GAMMA = 1.0
 INIT_LR = 1.0
 MIN_LR = 0.003
 EPS = 0.02
+N_EPISODES = 10000
 
 
 def get_pos_vel_bins(env, obs, n_states):
@@ -74,45 +69,47 @@ class MyMountainCarEnv(object):
 
 
 class MyQLearning(QLearning):
-    def __init__(self, n_episodes, tolerance,
-                          env, gamma, policy, n_itrs_per_episode) -> None:
-        super(MyQLearning, self).__init__(n_episodes=n_episodes, tolerance=tolerance,
-                                          env=env, gamma=gamma, policy=policy,
-                                          n_itrs_per_episode=n_itrs_per_episode, alpha=INIT_LR)
+    def __init__(self, algo_config: TDAlgoConfig) -> None:
+        super(MyQLearning, self).__init__(algo_config=algo_config)
 
     def actions_before_training_begins(self, **options) -> None:
 
         super(MyQLearning, self).actions_before_training_begins(**options)
 
-        # initialize Q(s, a) as a table of shape (N_STATES, N_STATES, 3)
-        self._q = np.zeros((N_STATES, N_STATES, 3))
+        # initialize properly the state
+        for state in env.state_space:
+            for action in range(env.n_actions):
+                self.q_table[state, action] = 0.0
 
-    def actions_before_episode_begins(self, **options):
+    def actions_before_episode_begins(self, env: Env, episode_idx: int, **options):
         super(MyQLearning, self).actions_before_episode_begins(**options)
 
-        self.alpha = max(MIN_LR, INIT_LR * (0.85 ** (self.current_episode_index // 100)))
+        self.config.alpha = max(MIN_LR, INIT_LR * (0.85 ** (episode_idx // 100)))
 
 
 if __name__ == '__main__':
 
-    env = MyMountainCarEnv()
+    #env = MyMountainCarEnv()
+
+    env = StateAggregationMountainCarEnv(version="v0", n_states=N_STATES)
 
     # Only 3 actions allowed move left(0), not move(1) and move right(2).
     print('{0} Action Space for Mountain Car Env: {1}'.format(INFO, str(env.action_space)))
 
-    # From observation space we get position and speed of the agent.
-    print('{0} Observation Space for Mountain Car Env: {1}'.format(INFO, str(env.observation_space)))
+    print("{0} Car position bounds {1}".format(INFO, env.car_position_bounds))
+    print("{0} Car velocity bounds {1}".format(INFO, env.car_velocity_bounds))
 
-    print('{0} Observation space and speed values (MAX): {1}'.format(INFO, str(env.observation_space.high)))
-    print('{0} Observation space and speed values (MIN): {1}'.format(INFO, str(env.observation_space.low)))
+    algo_config = TDAlgoConfig(n_itrs_per_episode=N_EPISODES,
+                               policy=EpsilonGreedyPolicy(n_actions=env.n_actions,
+                                                          decay_op=EpsilonDecayOption.NONE, eps=EPS),
+                               n_episodes=10000, gamma=GAMMA, alpha=INIT_LR)
 
-    policy_init = EpsilonGreedyPolicy(env=env, decay_op=EpsilonDecayOption.NONE, eps=0.02)
+    qlearner = MyQLearning(algo_config=algo_config)
 
-    qlearner = MyQLearning(n_episodes=10000, tolerance=1e-10,
-                           env=env, gamma=GAMMA, policy=policy_init,
-                           n_itrs_per_episode=10000)
+    trainer_config = RLSerialTrainerConfig(n_episodes=N_EPISODES, output_msg_frequency=100)
+    trainer = RLSerialAgentTrainer(config=trainer_config, algorithm=qlearner)
 
-    qlearner.train()
+    trainer.train(env)
 
 
 
