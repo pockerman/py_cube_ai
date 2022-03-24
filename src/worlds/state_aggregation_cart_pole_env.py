@@ -20,6 +20,7 @@ from typing import TypeVar
 from collections import namedtuple
 from src.worlds.state_aggregation_world_wrapper import StateAggregationEnvWrapper
 from src.utils.exceptions import InvalidParameterValue
+from src.utils import TimeStep, StepType
 
 Env = TypeVar('Env')
 State = TypeVar('State')
@@ -35,6 +36,7 @@ class StateAggregationCartPoleEnv(StateAggregationEnvWrapper):
     
     def __init__(self, n_states: int, #state_var_idx: int = 2,
                  #n_actions: int = 2,
+                 discount: float=1.0,
                  version: str = "v0",
                  boundaries: StateAggregationCartPoleBounds = StateAggregationCartPoleBounds((-2.4, 2.4), (-4, 4), (-0.20943951, 0.20943951), (-4, 4))) -> None:
         super(StateAggregationCartPoleEnv, self).__init__(env=gym.make("CartPole-" + version),
@@ -45,6 +47,7 @@ class StateAggregationCartPoleEnv(StateAggregationEnvWrapper):
         if 0 > self.state_var_idx > 4:
             raise InvalidParameterValue("state_var_idx", param_val=[0, 3])
 
+        self.discount: float = discount
         # bins for the pole position space
         self.pole_theta_space = []
 
@@ -66,16 +69,23 @@ class StateAggregationCartPoleEnv(StateAggregationEnvWrapper):
         Reset the underlying environment
         :return: State
         """
-        return self.get_state_from_obs(self.raw_env.reset())
 
-    def step(self, action: Action):
+        time_step = TimeStep(observation=self.get_state_from_obs(self.raw_env.reset()),
+                             reward=0.0, step_type=StepType.FIRST, info={},
+                             discount=self.discount)
+        return time_step
+
+    def step(self, action: Action) -> TimeStep:
         """
         Step in the environment
         :param action:
         :return:
         """
         obs, reward, done, info = self.raw_env.step(action=action)
-        return self.get_state_from_obs(obs), reward, done, info
+        time_step = TimeStep(reward=reward, info=info, observation=self.get_state_from_obs(obs),
+                             step_type=StepType.MID if not done else StepType.LAST,
+                             discount=self.discount)
+        return time_step
 
     def get_tiled_state(self, obs: State, action: Action) -> TiledState:
         """
