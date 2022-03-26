@@ -6,11 +6,12 @@ The following is a list of reinforcement learning examples a user can go through
 .. toctree::
    :maxdepth: 2
    
-   Examples/Dummy/dummy_gent_example
    ExamplesCpp/rl/rl_example_0
+   Examples/Dummy/dummy_gent_example
    ExamplesCpp/rl/rl_example_6
    Examples/Dp/iterative_policy_evaluation_frozen_lake_v0
    Examples/Dp/policy_iteration_frozen_lake_v0
+   ExamplesCpp/rl/rl_example_7
    Examples/Dp/value_iteration_frozen_lake_v0
    Examples/Td/q_learning_frozen_lake_v0
    Examples/Td/q_learning_cliff_walking_v0.rst
