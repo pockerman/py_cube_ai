@@ -98,3 +98,26 @@ return 0;
 Results
 -------
 
+Number of rows=150
+Number of columns=4
+Path=/home/alex/qi3/cubeAI/data/iris_data.csv
+Has ones column=false
+Class map...
+	0->Iris-setosa
+	1->Iris-versicolor
+	2->Iris-virginica
+
+
+Trained examples=150
+Total training time=0.000350952secs
+
+True class=0->Iris-setosa
+Predicted class=0->Iris-setosa
+INFO:  Query point is (5.1 3.5 1.4 0.2, 0)
+Distance=0, (5.1 3.5 1.4 0.2, 0)
+Distance=0.141421, (5 3.6 1.4 0.2, 0)
+Distance=0.141421, (5.2 3.5 1.5 0.2, 0)
+Distance=0.173205, (5 3.5 1.3 0.3, 0)
+Distance=0.469042, (4.9 3.1 1.5 0.1, 0)
+
+
