@@ -48,6 +48,28 @@ Installation then follows the usual steps
 	 mkdir build && cd build
 	 cmake ..
 	 make install
+	 
+	 
+If you are using ```gymfcpp``` you need to export the path to the Python version you are using. For ecample:
+
+.. code-block:: console
+	
+	export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/usr/include/python3.8/"
+
+
+Depending on the values of the ```CMAKE_BUILD_TYPE```, the produced shared library will be installed in ```CMAKE_INSTALL_PREFIX/dbg/``` or ```CMAKE_INSTALL_PREFIX/opt/``` directories.
+
+Issues with C++ installation
+----------------------------
+
+
+- ``pyconfig.h`` not found
+
+In this case we may have to export the path to your Python library directory as shown above.
+
+- Problems with Blaze includes
+
+``cubeai`` is using Blaze-3.8. As of this version the ``FIND_PACKAGE( blaze )`` command does not populate ``BLAZE_INCLUDE_DIRS``  therefore you manually have to set the variable appropriately for your system. So edit the project's ``CMakeLists.txt`` file and populate appropriately the variable ``BLAZE_INCLUDE_DIRS``.
 
 Generate documentation
 ----------------------

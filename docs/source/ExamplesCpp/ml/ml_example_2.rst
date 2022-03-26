@@ -1,6 +1,10 @@
 K-nearest neigbors classification (C++)
 =======================================
 
+Overview
+---------
+
+
 Code
 ----
 
@@ -9,6 +13,7 @@ Code
 	#include "cubeai/base/cubeai_config.h"
 	#include "cubeai/base/cubeai_types.h"
 	#include "cubeai/base/cubeai_consts.h"
+	#include "cubeai/datasets/iris_data_set.h"
 	#include "cubeai/io/data_set_loaders.h"
 	#include "cubeai/ml/classifiers/k_nearest_neighbors.h"
 	#include "cubeai/maths/lp_metric.h"
@@ -19,7 +24,7 @@ Code
 
 .. code-block::
 
-	namespace example21{
+	namespace ml_example_2{
 
 	using cubeai::real_t;
 	using cubeai::uint_t;
@@ -45,58 +50,51 @@ Code
 
 .. code-block::
 
-	int main(){
+int main(){
 
-	using namespace example21;
-
-
-	 try{
-
-	       auto data = cubeai::io::load_iris_data_set(false);
-
-	       std::cout<<cubeai::CubeAIConsts::info_str()<<" Number of training examples "<<std::get<0>(data).rows()<<std::endl;
-
-	       auto meta = std::get<2>(data);
-
-	       auto begin = meta.class_map.cbegin();
-	       auto end = meta.class_map.cend();
-
-	       while( begin != end){
-		   std::cout<<cubeai::CubeAIConsts::info_str()<<begin->first<<", "<<begin->second<<std::endl;
-		   ++begin;
-	       }
+using namespace ml_example_2;
 
 
-	       KNearestNeighbors<DynVec<real_t>> classifier(std::get<0>(data).columns());
+ try{
 
-	       auto comparison = [](const auto& v1, const auto& v2){
-		   return v1.first[0] == v2.first[0] && v1.first[1] == v2.first[1] && v1.first[2] == v2.first[2] && v1.first[3] == v2.first[3];
-	       };
+       cubeai::datasets::IrisDataSet data;
 
-	       auto info = classifier.fit(std::get<0>(data), std::get<1>(data), comparison);
-	       std::cout<<cubeai::CubeAIConsts::info_str()<<info<<std::endl;
+       std::cout<<cubeai::CubeAIConsts::info_str()<<data<<std::endl;
 
-	       DynVec<real_t> row = cubeai::maths::get_row(std::get<0>(data), 0);
-	       auto index = classifier.template predict<LpMetricWrapper>(row, 5);
-	       std::cout<<cubeai::CubeAIConsts::info_str()<<" class for first point "<<index<<"->"<<meta.class_map[index]<<std::endl;
 
-	       auto closest_points = classifier.template nearest_k_points<LpMetricWrapper>(row, 5);
+       KNearestNeighbors<cubeai::datasets::IrisDataSet::point_type> classifier(data.n_columns());
 
-	      std::cout<<cubeai::CubeAIConsts::info_str()<<" Query point is "<<row<<std::endl;
-	       for(auto& p : closest_points){
+       auto comparison = [](const auto& v1, const auto& v2){
+           return v1.first[0] == v2.first[0] && v1.first[1] == v2.first[1] && v1.first[2] == v2.first[2] && v1.first[3] == v2.first[3];
+       };
 
-		   std::cout<<"Distance="<<p.first<<", "<<p.second<<std::endl;
-	       }
+       auto info = classifier.fit(data, comparison);
+       std::cout<<cubeai::CubeAIConsts::info_str()<<info<<std::endl;
 
-	}
-	catch(std::exception& e){
-	   std::cout<<e.what()<<std::endl;
-	}
-	catch(...){
+       auto row = data[0];
+       std::cout<<"True class="<<row.second<<"->"<<data.get_class_name(row.second)<<std::endl;
+       auto index = classifier.template predict<LpMetricWrapper>(row.first, 5);
+       std::cout<<"Predicted class="<<row.second<<"->"<<data.get_class_name(index)<<std::endl;
 
-	   std::cout<<"Unknown exception occured"<<std::endl;
-	}
+       auto closest_points = classifier.template nearest_k_points<LpMetricWrapper>(row.first, 5);
 
-	return 0;
-	}
+       std::cout<<cubeai::CubeAIConsts::info_str()<<" Query point is "<<row<<std::endl;
+       for(auto& p : closest_points){
+           std::cout<<"Distance="<<p.first<<", "<<p.second<<std::endl;
+       }
+
+}
+catch(std::exception& e){
+   std::cout<<e.what()<<std::endl;
+}
+catch(...){
+
+   std::cout<<"Unknown exception occured"<<std::endl;
+}
+
+return 0;
+}
+
+Results
+-------
 
