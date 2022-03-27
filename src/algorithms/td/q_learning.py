@@ -10,7 +10,6 @@ from src.worlds.world_helpers import n_actions, n_states, step
 from src.utils.episode_info import EpisodeInfo
 from src.utils.time_step import TimeStep
 from src.utils.wrappers import time_func_wrapper
-from src.utils import INFO
 
 Env = TypeVar('Env')
 Policy = TypeVar('Policy')
