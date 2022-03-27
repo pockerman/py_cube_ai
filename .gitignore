@@ -42,3 +42,6 @@ src/worlds/__pycache__/
 src/algorithms/planning/__pycache__/
 src/examples/webots/epuck_robot/controllers/__pycache__/
 src/py_cubeai_io/__pycache__/
+src/parallel_utils/__pycache__/
+src/trainers/__pycache__/
+src/examples/dp/__pycache__/
