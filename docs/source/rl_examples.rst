@@ -14,6 +14,7 @@ The following is a list of reinforcement learning examples a user can go through
    Examples/Dp/policy_iteration_frozen_lake_v0
    ExamplesCpp/rl/rl_example_8
    Examples/Dp/value_iteration_frozen_lake_v0
+   ExamplesCpp/rl/rl_example_9
    Examples/Td/q_learning_frozen_lake_v0
    Examples/Td/q_learning_cliff_walking_v0
    Examples/Td/q_learning_cart_pole_v0
