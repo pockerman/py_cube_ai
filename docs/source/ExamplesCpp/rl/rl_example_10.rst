@@ -1,4 +1,4 @@
-SARSA on ``CliffWalking-v0`` (C++)
+Q-learning on ``CliffWalking-v0`` (C++)
 ==================================
 
 Overview
@@ -10,25 +10,26 @@ Code
 .. code-block::
 
 	#include "cubeai/base/cubeai_types.h"
-	#include "cubeai/rl/algorithms/td/sarsa.h"
+	#include "cubeai/rl/algorithms/td/q_learning.h"
 	#include "cubeai/rl/policies/epsilon_greedy_policy.h"
 	#include "cubeai/rl/trainers/rl_serial_agent_trainer.h"
 
 	#include "gymfcpp/gymfcpp_types.h"
 	#include "gymfcpp/cliff_world_env.h"
 	#include "gymfcpp/time_step.h"
-	
+
+	#include <deque>
 	#include <iostream>
 
 .. code-block::
 
-	namespace rl_example_9{
+	namespace rl_example_10{
 
 	using cubeai::real_t;
 	using cubeai::uint_t;
 	using cubeai::rl::policies::EpsilonGreedyPolicy;
-	using cubeai::rl::algos::td::Sarsa;
-	using cubeai::rl::algos::td::SarsaConfig;
+	using cubeai::rl::algos::td::QLearning;
+	using cubeai::rl::algos::td::QLearningConfig;
 	using cubeai::rl::policies::EpsilonDecayOption;
 	using cubeai::rl::RLSerialAgentTrainer;
 	using cubeai::rl::RLSerialTrainerConfig;
@@ -39,7 +40,7 @@ Code
 
 	int main(){
 
-	    using namespace rl_example_9;
+	    using namespace example;
 
 	    try{
 
@@ -55,19 +56,19 @@ Code
 
 		EpsilonGreedyPolicy policy(1.0, env.n_actions(), EpsilonDecayOption::INVERSE_STEP);
 
-		SarsaConfig sarsa_config;
-		sarsa_config.gamma = 1.0;
-		sarsa_config.eta = 0.01;
-		sarsa_config.tolerance = 1.0e-8;
-		sarsa_config.max_num_iterations_per_episode = 1000;
-		sarsa_config.path = "sarsa_cliff_walking_v0.csv";
+		QLearningConfig qlearn_config;
+		qlearn_config.gamma = 1.0;
+		qlearn_config.eta = 0.01;
+		qlearn_config.tolerance = 1.0e-8;
+		qlearn_config.max_num_iterations_per_episode = 1000;
+		qlearn_config.path = "qlearning_cliff_walking_v0.csv";
 
-		Sarsa<gymfcpp::CliffWorld, EpsilonGreedyPolicy> algorithm(sarsa_config, policy);
+		QLearning<gymfcpp::CliffWorld, EpsilonGreedyPolicy> algorithm(qlearn_config, policy);
 
 		RLSerialTrainerConfig trainer_config = {10, 10000, 1.0e-8};
 
 		RLSerialAgentTrainer<gymfcpp::CliffWorld,
-		        Sarsa<gymfcpp::CliffWorld, EpsilonGreedyPolicy>> trainer(trainer_config, algorithm);
+		        QLearning<gymfcpp::CliffWorld, EpsilonGreedyPolicy>> trainer(trainer_config, algorithm);
 
 		auto info = trainer.train(env);
 		std::cout<<info<<std::endl;
@@ -80,9 +81,8 @@ Code
 
 		std::cout<<"Unknown exception occured"<<std::endl;
 	    }
-
 	    return 0;
 	}
 	
 Results
--------
+=======
