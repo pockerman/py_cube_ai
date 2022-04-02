@@ -24,3 +24,4 @@ API (Python)
    API/world_helpers
    API/optimizer_type
    API/pytorch_optimizer_builder
+   API/filtering/extended_kalman_filter

@@ -18,7 +18,7 @@ Contents
    overview
    install
    rl_examples
-   localization_examples
+   filtering_examples
    ml_examples
    specification
    modules

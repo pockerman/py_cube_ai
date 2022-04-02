@@ -24,9 +24,12 @@ class ExtendedKalmanFilter(object):
     def __init__(self, config: EKFConfig):
         self.config: EKFConfig = config
         self.sigma_points: np.ndarray = None
+        self.old_state = None
 
     def predict(self, u: np.ndarray):
-        pass
+
+        # predict the state
+        state = self.config.motion_model(self.old_state, u)
 
 
     def _init_sigma_points(self):
