@@ -18,8 +18,10 @@ Contents
    overview
    install
    rl_examples
+   filtering_examples
    ml_examples
    specification
+   resources
    modules
    
 Indices and tables

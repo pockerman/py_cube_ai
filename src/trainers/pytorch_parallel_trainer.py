@@ -59,7 +59,7 @@ class PyTorchParallelTrainer(RLAgentTrainerBase):
         """
         return self.config
 
-    def train(self, env: Env) -> TrainInfo:
+    def train(self, env: Env, **options) -> TrainInfo:
         """
 
         :return:
@@ -95,7 +95,7 @@ class PyTorchParallelTrainer(RLAgentTrainerBase):
         """
         pass
 
-    def actions_after_episode_ends(self, env: Env, **info) -> None:
+    def actions_after_episode_ends(self, env:Env, **info) -> None:
         """
         Execute any actions the algorithm needs after
         ending the episode
@@ -110,8 +110,6 @@ class PyTorchParallelTrainer(RLAgentTrainerBase):
         the iterations are finished
         """
         pass
-
-
 
     def _validate(self, env: Env) -> None:
 

@@ -4,7 +4,7 @@ import os
 from typing import List
 
 
-def make_gif(images_path: Path, gif_filename: Path):
+def make_gif(images_path: Path, gif_filename: Path, extensions: List[str]):
     """
     Creates a gif from a set of images. The images are located
     in images_path. Note that only images should be located in the
@@ -20,7 +20,10 @@ def make_gif(images_path: Path, gif_filename: Path):
     images = []
 
     for filename in filenames:
-        images.append(imageio.imread(str(images_path) + "/" + filename))
+
+        for ext in extensions:
+            if filename.endswith(ext):
+                images.append(imageio.imread(str(images_path) + "/" + filename))
 
     imageio.mimsave(gif_filename, images)
 

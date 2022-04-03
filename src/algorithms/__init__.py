@@ -1,3 +1,4 @@
+from src.algorithms.rl_algorithm_base import RLAgentBase
 from src.algorithms.td.q_learning import QLearning
 from src.algorithms.td.sarsa import Sarsa
 from src.algorithms.td.td_algorithm_base import TDAlgoConfig
