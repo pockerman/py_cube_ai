@@ -21,6 +21,7 @@ Contents
    filtering_examples
    ml_examples
    specification
+   resources
    modules
    
 Indices and tables
