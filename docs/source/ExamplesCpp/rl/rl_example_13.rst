@@ -138,29 +138,24 @@ Code
 
 	    try{
 
-		Py_Initialize();
-		auto gym_module = boost::python::import("__main__");
-		auto gym_namespace = gym_module.attr("__dict__");
+		   Py_Initialize();
+		   auto gym_module = boost::python::import("__main__");
+		   auto gym_namespace = gym_module.attr("__dict__");
 
-		auto env = CartPole("v0", gym_namespace, false);
-		env.make();
+		   auto env = CartPole("v0", gym_namespace, false);
+		   env.make();
 
-		Policy policy;
+		   Policy policy;
+		   auto optimizer_ptr = std::make_unique<torch::optim::Adam>(policy->parameters(), torch::optim::AdamOptions(1e-2));
 
-		// reinforce options
-		ReinforceConfig opts = {1000, 100, 100, 100, 1.0e-2, 0.1, 195.0, true};
-		SimpleReinforce<CartPole, Policy> algorithm(opts, policy);
+		   // reinforce options
+		   ReinforceConfig opts = {1000, 100, 100, 100, 1.0e-2, 0.1, 195.0, true};
+		   SimpleReinforce<CartPole, Policy> algorithm(opts, policy);
 
-		std::map<std::string, std::any> options;
-		options.insert({"lr", 0.01});
+		   PyTorchRLTrainerConfig trainer_config{1.0e-8, 1001, 50};
+		   PyTorchRLTrainer<CartPole, SimpleReinforce<CartPole, Policy>> trainer(trainer_config, algorithm, std::move(optimizer_ptr));
 
-		auto optimizer_opts = cubeai::optim::pytorch::build_pytorch_optimizer_options(cubeai::optim::OptimzerType::ADAM, options);
-		auto optimizer_ptr = cubeai::optim::pytorch::build_pytorch_optimizer(cubeai::optim::OptimzerType::ADAM, policy->parameters(), optimizer_opts);
-
-		PyTorchRLTrainerConfig trainer_config{1.0e-8, 1000, 50};
-		PyTorchRLTrainer<CartPole, SimpleReinforce<CartPole, Policy>> trainer(trainer_config, algorithm, std::move(optimizer_ptr));
-
-		trainer.train(env);
+		   trainer.train(env);
 
 	    }
 	    catch(const boost::python::error_already_set&){
