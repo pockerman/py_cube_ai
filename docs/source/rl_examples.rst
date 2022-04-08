@@ -22,6 +22,7 @@ The following is a list of reinforcement learning examples a user can go through
    Examples/Td/double_q_learning_cart_pole_v0
    Examples/Td/sarsa_cart_pole_v0
    Examples/Td/sarsa_semi_gradient_mountain_car_v0
+   ExamplesCpp/rl/rl_example_13
    Examples/Webots/webots_ctrl_dev_101
    Examples/Webots/Epuck_robot/epuck_q_learn_simple_controller
    
