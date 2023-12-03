@@ -1,8 +1,8 @@
 import unittest
 
 """
-from src.algorithms.planning.monte_carlo_tree_search import MCTreeSearch
-from src.algorithms.algo_config import AlgoConfig
+from pycubeai.algorithms.planning.monte_carlo_tree_search import MCTreeSearch
+from pycubeai.algorithms.algo_config import AlgoConfig
 """
 
 class TestMCTreeSearch(unittest.TestCase):

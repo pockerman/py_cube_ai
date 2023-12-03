@@ -3,8 +3,8 @@
 import unittest
 import pytest
 
-from src.algorithms.td.q_learning import QLearning, TDAlgoConfig
-from src.utils.exceptions import InvalidParameterValue
+from pycubeai.algorithms.td.q_learning import QLearning, TDAlgoConfig
+from pycubeai.utils.exceptions import InvalidParameterValue
 
 class TestQLearning(unittest.TestCase):
 
