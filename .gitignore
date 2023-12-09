@@ -1,47 +1,161 @@
-utils/__pycache__/
-algorithms/__pycache__
-algorithms/dp/__pycache__/
-policies/__pycache__/
-.ipynb_checkpoints/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pdm
+#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
+#pdm.lock
+#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
+#   in version control.
+#   https://pdm.fming.dev/#use-with-ide
+.pdm.toml
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
+#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+#  and can be added to the global gitignore or merged into this file.  For a more nuclear
+#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
-algorithms/dqn/__pycache__/
-algorithms/mc/__pycache__/
-algorithms/td/__pycache__/
-pycubeai/policies/__pycache__/
-pycubeai/utils/__pycache__/
-pycubeai/networks_org/__pycache__/
-pycubeai/algorithms/td_org/
-pycubeai/networks_org/
-pycubeai/agents/__pycache__
-pycubeai/algorithms/dp/__pycache__/
-pycubeai/algorithms/mc/__pycache__/
-pycubeai/algorithms/__pycache__/
-pycubeai/actions/__pycache__/
-pycubeai/algorithms/dqn/__pycache__/
-pycubeai/__pycache__/
-pycubeai/simulator/__pycache__/
-pycubeai/simulator/gui/__pycache__
-pycubeai/simulator/robots/__pycache__/
-pycubeai/simulator/worlds/__pycache__/
-pycubeai/algorithms/pg/__pycache__/
-pycubeai/simulator/models/__pycache__/
-pycubeai/simulator/control/__pycache__/
-pycubeai/simulator/control/controllers/__pycache__/
-tests/__pycache__/
-pycubeai/simulator/viewers/controllers/__pycache__/
-pycubeai/simulator/viewers/__pycache__/
-pycubeai/simulator/simulators/__pycache__/
-pycubeai/simulator/simulator_utils/__pycache__/
-pycubeai/simulator/simulator_exceptions/__pycache__/
-pycubeai/simulator/physics/__pycache__/
-pycubeai/simulator/maps/__pycache__/
-pycubeai/simulator/dynamics/__pycache__/
-pycubeai/algorithms/td/__pycache__/
-pycubeai/algorithms/dummy/__pycache__/
-pycubeai/worlds/__pycache__/
-pycubeai/algorithms/planning/__pycache__/
-pycubeai/examples/webots/epuck_robot/controllers/__pycache__/
-pycubeai/py_cubeai_io/__pycache__/
-pycubeai/parallel_utils/__pycache__/
-pycubeai/trainers/__pycache__/
-pycubeai/examples/dp/__pycache__/
+
+# Project specific:
+mir_api/api/v1/__pycache__/
+mir_api/__pycache__/
+mir_api/api/__pycache__/
+mir_api/api/v1/endpoints/__pycache__/
+mir_api/api/v1/schemas/__pycache__/
+mir_api/api/v1/db_migration/__pycache__/
+mir_api/api/v1/crud/__pycache__/
+mir_api/api/v1/aws/__pycache__/
+mir_api/api/utils/__pycache__/
+mir_api/api/tests/utils/db_collections/vessel_resources/__pycache__/
+mir_api/api/tests/utils/db_collections/__pycache__/
+mir_api/api/tests/utils/__pycache__/
+mir_api/api/tests/__pycache__/
+mir_api/api/schedulers/__pycache__/
+mir_api/api/dbs/__pycache__/
+
+# MacOS stuff
+.DS_Store
