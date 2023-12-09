@@ -21,7 +21,3 @@ class RobotBase(ABC):
     @property
     def is_initialized(self) -> bool:
         return self._is_initialized
-
-    @abstractmethod
-    def load_from_specification(self, specification: Path) -> "RobotBase":
-        pass
