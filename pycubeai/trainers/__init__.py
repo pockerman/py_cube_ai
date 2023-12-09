@@ -1,0 +1,2 @@
+from pycubeai.trainers.rl_serial_algorithm_trainer import RLSerialTrainerConfig
+from pycubeai.trainers.rl_serial_algorithm_trainer import RLSerialAgentTrainer

@@ -2,7 +2,7 @@
 Unit-tests for ReplayBuffer
 """
 import unittest
-from src.utils.replay_buffer import ReplayBuffer
+from pycubeai.utils.replay_buffer import ReplayBuffer
 
 
 class TestReplayBuffer(unittest.TestCase):

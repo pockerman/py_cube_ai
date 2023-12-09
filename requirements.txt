@@ -2,3 +2,5 @@ numpy
 pgi
 gym
 torch
+slycot
+control
