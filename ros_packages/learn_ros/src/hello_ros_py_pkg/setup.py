@@ -20,6 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'hello_ros_publisher = hello_ros_py_pkg.hello_ros_publisher:main',
+            'hello_ros_subscriber = hello_ros_py_pkg.hello_ros_subscriber:main',
         ],
     },
 )

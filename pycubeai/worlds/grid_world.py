@@ -23,9 +23,8 @@ Each matrix encodes the position of one of the four objects: the player, the goa
 
 """
 import enum
-import numpy as np
 from pycubeai.worlds.grid_board import *
-from pycubeai.utils.time_step import TimeStep, StepType
+from pycubeai.worlds.time_step import TimeStep, StepType
 
 
 class GridWorldActionType(enum.IntEnum):

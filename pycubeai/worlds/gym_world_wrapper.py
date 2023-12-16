@@ -5,7 +5,7 @@ or step
 """
 
 from typing import TypeVar
-from pycubeai.utils.time_step import TimeStep, StepType
+from pycubeai.worlds.time_step import TimeStep, StepType
 from pycubeai.utils.exceptions import InvalidAttribute
 
 Env = TypeVar('Env')

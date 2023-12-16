@@ -11,7 +11,7 @@ from typing import TypeVar
 from pycubeai.algorithms.td.td_algorithm_base import TDAlgoBase, TDAlgoConfig
 from pycubeai.utils.mixins import WithDoubleMaxActionMixin
 from pycubeai.utils.episode_info import EpisodeInfo
-from pycubeai.utils.time_step import TimeStep
+from pycubeai.worlds.time_step import TimeStep
 from pycubeai.utils.wrappers import time_func_wrapper
 
 
